@@ -1,0 +1,45 @@
+# Environment & Configuration Secrets
+.env
+.env.local
+.env.*.local
+
+# Telegram Sessions & Database (Never commit!)
+*.session
+*.session-journal
+*.db
+*.db-shm
+*.db-wal
+*.db-journal
+
+# Media Cache & Temporary Storage
+media_cache/
+downloads/
+temp/
+
+# Logs
+*.log
+bot.log
+ttl_saver.log
+
+# Python bytecode & cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Virtual Environments
+.venv/
+env/
+venv/
+ENV/
+
+# IDE & Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
