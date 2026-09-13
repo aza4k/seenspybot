@@ -36,17 +36,22 @@ Loyiha Railway platformasida **Worker** sifatida ishlashga to'liq tayyorlangan (
 2. **"New Project"** -> **"Deploy from GitHub repo"** ni tanlang.
 3. `aza4k/seenspybot` repozitoriyasini tanlang.
 
-### 2-qadam: Muhit o'zgaruvchilarini sozlash (Variables)
-Railway loyiha sozlamalarida **Variables** bo'limiga o'tib, quyidagi o'zgaruvchilarni qo'shing:
+### 2-qadam: PostgreSQL ma'lumotlar bazasini qo'shish (Tavsiya etiladi)
+1. Railway loyihangizda **"+ New"** tugmasini bosing.
+2. **"Database"** -> **"Add PostgreSQL"** ni tanlang.
+3. Bo'ldi! Railway avtomatik tarzda `DATABASE_URL` muhit o'zgaruvchisini ulaydi. Bot buni o'zi aniqlaydi va **PostgreSQL** rejimiga (`asyncpg` ulanishlar puli bilan) o'tadi.
 
-| O'zgaruvchi | Tavsif | Misol |
-| :--- | :--- | :--- |
-| `BOT_TOKEN` | @BotFather dan olingan bot tokeni | `862628...` |
-| `ADMIN_ID` | Bot adminining Telegram ID raqami | `842321...` |
-| `ARCHIVE_CHANNEL_ID` | (Ixtiyoriy) Saqlash uchun kanal ID | `-100...` |
-| `DB_PATH` | Ma'lumotlar bazasi fayli yo'li | `spyware.db` |
+### 3-qadam: Muhit o'zgaruvchilarini sozlash (Variables)
+Railway bot xizmati sozlamalarida **Variables** bo'limiga o'tib, quyidagi o'zgaruvchilarni qo'shing:
 
-> ⚠️ **Eslatma:** Hech qachon shaxsiy `.env` faylingizni GitHub-ga yuklamang! Barcha maxfiy kalitlar faqat Railway **Variables** qismida saqlanadi.
+| O'zgaruvchi | Tavsif | Majburiymi? | Misol |
+| :--- | :--- | :--- | :--- |
+| `BOT_TOKEN` | @BotFather dan olingan bot tokeni | Ha | `862628...` |
+| `ADMIN_ID` | Bot adminining Telegram ID raqami | Ha | `842321...` |
+| `DATABASE_URL` | PostgreSQL ulanish manzili | Postgres bo'lsa | Railway avtomatik to'ldiradi |
+| `ARCHIVE_CHANNEL_ID` | (Ixtiyoriy) Saqlash uchun kanal ID | Yo'q | `-100...` |
+
+> 💡 **Eslatma:** Agar PostgreSQL ulanmasa, bot avtomatik tarzda lokal **SQLite (WAL)** rejimida ishlashni davom ettiradi.
 
 ---
 
@@ -78,7 +83,9 @@ python run.py
 │   ├── business.py        # Telegram Business xabar va o'chirishlarni tutish
 │   ├── common.py          # /start, /help, referal, til almashtirish
 │   └── payments.py        # Obuna va to'lovlar
-├── database.py            # SQLite WAL bazasi va optimallashgan so'rovlar
+├── database.py            # Baza shlyuzi (Postgres yoki SQLite avtomatik tanlaydi)
+├── db_postgres.py         # PostgreSQL (asyncpg Connection Pool, BIGINT)
+├── db_sqlite.py           # SQLite (aiosqlite WAL rejimi)
 ├── locales.py             # Rus va O'zbek tillari matnlari
 ├── config.py              # Konfiguratsiya va sozlamalar
 ├── scheduler.py           # Obunalarni tekshirish va eslatmalar
@@ -88,3 +95,4 @@ python run.py
 ├── railway.json           # Railway deploy sozlamalari
 └── requirements.txt       # Python kutubxonalari
 ```
+

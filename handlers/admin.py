@@ -26,7 +26,10 @@ from database import (
     cleanup_old_messages,
     is_referral_enabled,
     set_referral_enabled,
+    get_db_info,
+    DB_ENGINE,
 )
+
 
 logger = logging.getLogger(__name__)
 router = Router(name="admin_router")
@@ -447,10 +450,10 @@ async def cb_admin_system(call: types.CallbackQuery):
     if not is_admin(call.from_user.id):
         return
 
-    # 1. DB hajmi
-    db_size_mb = 0.0
-    if os.path.exists(DB_PATH):
-        db_size_mb = os.path.getsize(DB_PATH) / (1024 * 1024)
+    # 1. DB ma'lumotlari
+    db_info = await get_db_info()
+    db_engine_name = db_info.get("engine", "SQLite")
+    db_size_str = db_info.get("size_str", "0.0 MB")
 
     # 2. Media kesh hajmi
     cache_files_count = 0
@@ -463,7 +466,8 @@ async def cb_admin_system(call: types.CallbackQuery):
 
     text = (
         "💾 <b>Tizim Xotirasi va Fayllar Holati:</b>\n\n"
-        f"🗄 <b>Baza hajmi (SQLite WAL):</b> <code>{db_size_mb:.2f} MB</code>\n"
+        f"🗄 <b>Baza turi:</b> <code>{db_engine_name}</code>\n"
+        f"📊 <b>Baza hajmi:</b> <code>{db_size_str}</code>\n"
         f"📁 <b>Media kesh papkasi:</b> <code>{cache_size_mb:.2f} MB</code> ({cache_files_count} ta fayl)\n\n"
         "💡 <i>Eslatma: Barcha o'chirilgan xabarlar shaxsiy arxiv kanalida saqlangan bo'lsa, "
         "3 kundan eski lokal kesh fayllarini xavfsiz tozalash mumkin.</i>"
@@ -472,7 +476,7 @@ async def cb_admin_system(call: types.CallbackQuery):
     kb = InlineKeyboardMarkup(
         inline_keyboard=[
             [InlineKeyboardButton(text="🧹 3 kundan eski keshni tozalash", callback_data="admin:clean_cache")],
-            [InlineKeyboardButton(text="📥 Baza faylini yuklab olish", callback_data="admin:backup")],
+            [InlineKeyboardButton(text="📥 Baza zaxirasini yuklab olish", callback_data="admin:backup")],
             [InlineKeyboardButton(text="🔙 Ortga", callback_data="admin:menu")],
         ]
     )
@@ -518,19 +522,46 @@ async def cb_backup_db(call: types.CallbackQuery, bot: Bot):
     if not is_admin(call.from_user.id):
         return
 
-    if not os.path.exists(DB_PATH):
-        await call.answer("Baza fayli topilmadi!", show_alert=True)
-        return
-
-    await call.answer("📥 Baza fayli yuborilmoqda...")
+    await call.answer("📥 Baza zaxirasi tayyorlanmoqda...")
     try:
-        doc = FSInputFile(DB_PATH, filename=f"spyware_backup_{datetime.now().strftime('%Y%m%d_%H%M%S')}.db")
-        await bot.send_document(
-            chat_id=call.from_user.id,
-            document=doc,
-            caption=f"📦 <b>Ma'lumotlar bazasi zaxirasi (Backup)</b>\nSana: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
-            parse_mode="HTML"
-        )
+        if DB_ENGINE == "sqlite":
+            if not os.path.exists(DB_PATH):
+                await call.message.answer("❌ SQLite baza fayli topilmadi!")
+                return
+            doc = FSInputFile(DB_PATH, filename=f"spyware_backup_{datetime.now().strftime('%Y%m%d_%H%M%S')}.db")
+            await bot.send_document(
+                chat_id=call.from_user.id,
+                document=doc,
+                caption=f"📦 <b>SQLite WAL Baza zaxirasi</b>\nSana: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
+                parse_mode="HTML"
+            )
+        else:
+            # PostgreSQL: Export summary JSON
+            from database import get_admin_detailed_stats, get_all_broadcast_users
+            import json
+            stats = await get_admin_detailed_stats()
+            users = await get_all_broadcast_users()
+            backup_data = {
+                "engine": "PostgreSQL",
+                "timestamp": datetime.now().isoformat(),
+                "stats": stats,
+                "users_count": len(users),
+                "user_ids": users
+            }
+            tmp_path = Path(f"backup_pg_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json")
+            tmp_path.write_text(json.dumps(backup_data, indent=2, ensure_ascii=False), encoding="utf-8")
+            doc = FSInputFile(str(tmp_path), filename=tmp_path.name)
+            await bot.send_document(
+                chat_id=call.from_user.id,
+                document=doc,
+                caption=f"🐘 <b>PostgreSQL Baza statistikasi va Userlar ro'yxati</b>\nSana: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
+                parse_mode="HTML"
+            )
+            try:
+                tmp_path.unlink()
+            except Exception:
+                pass
     except Exception as e:
         logger.error(f"Backup yuborishda xatolik: {e}")
         await call.message.answer(f"❌ Backup yuborishda xatolik: {e}")
+
