@@ -119,6 +119,12 @@ MESSAGES: Dict[str, Dict[str, str]] = {
             "🕒 <b>Отправлено:</b> {sent_time}\n"
             "🗑 <b>Удалено:</b> {delete_time}\n\n"
         ),
+        "promo_footer": (
+            "\n\n➖➖➖➖➖➖➖➖➖➖\n"
+            "🕵️‍♂️ <b>Сохранено через @seenspybot</b>\n"
+            "👉 <i>Узнай, что удаляют в твоих чатах!</i>"
+        ),
+
 
         # Teaserlar (obunasi yo'q foydalanuvchilar uchun)
         "teaser_deleted_title": "🔒 <b>У вас новое удалённое сообщение!</b>\n\n",
@@ -292,6 +298,12 @@ MESSAGES: Dict[str, Dict[str, str]] = {
             "🕒 <b>Yuborilgan:</b> {sent_time}\n"
             "🗑 <b>O'chirilgan:</b> {delete_time}\n\n"
         ),
+        "promo_footer": (
+            "\n\n➖➖➖➖➖➖➖➖➖➖\n"
+            "🕵️‍♂️ <b>@seenspybot orqali saqlab olindi</b>\n"
+            "👉 <i>Profilingizdagi o'chirilgan xabarlarni ko'ring!</i>"
+        ),
+
 
         # Teaserlar
         "teaser_deleted_title": "🔒 <b>Sizda yangi o'chirilgan xabar bor!</b>\n\n",

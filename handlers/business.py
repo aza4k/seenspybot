@@ -308,19 +308,23 @@ async def on_edited_business_message(message: types.Message, bot: Bot):
                 sender_name = old_msg.get("sender_name") or format_sender_name(message.from_user)
                 chat_title = format_chat_title(message.chat)
 
-                edit_text = get_text(
-                    "msg_edited",
-                    lang,
-                    who=who,
-                    sender_name=html.escape(sender_name),
-                    chat_title=html.escape(chat_title),
-                    old_text=html.escape(old_msg.get("text")),
-                    new_text=html.escape(new_text)
+                edit_text = (
+                    get_text(
+                        "msg_edited",
+                        lang,
+                        who=who,
+                        sender_name=html.escape(sender_name),
+                        chat_title=html.escape(chat_title),
+                        old_text=html.escape(old_msg.get("text")),
+                        new_text=html.escape(new_text)
+                    )
+                    + get_text("promo_footer", lang)
                 )
                 try:
                     await bot.send_message(owner_chat_id, edit_text, parse_mode="HTML")
                 except Exception as e:
                     logger.error(f"Tahrirlangan xabarni yuborishda xatolik: {e}")
+
 
 
 
@@ -514,7 +518,28 @@ async def handle_reply_media_capture(
         if r_caption:
             caption_label = "Подпись" if lang == "ru" else "Izoh"
             user_caption += f"📝 <b>{caption_label}:</b>\n<blockquote>{html.escape(r_caption)}</blockquote>\n"
-        user_caption += get_text("msg_view_once_footer", lang)
+        promo_footer = get_text("promo_footer", lang)
+        user_caption += get_text("msg_view_once_footer", lang) + promo_footer
+
+        if len(user_caption) > 1024:
+            # Sarlavha 1024 belgidan oshmasligini ta'minlash
+            overflow = len(user_caption) - 1020
+            if r_caption and len(r_caption) > overflow:
+                short_caption = r_caption[:-overflow] + "..."
+                user_caption = (
+                    get_text(
+                        "msg_view_once",
+                        lang,
+                        sender_name=html.escape(r_sender_name),
+                        chat_title=html.escape(chat_title),
+                        time_str=time_str
+                    )
+                    + f"📝 <b>{caption_label}:</b>\n<blockquote>{html.escape(short_caption)}</blockquote>\n"
+                    + get_text("msg_view_once_footer", lang)
+                    + promo_footer
+                )
+            else:
+                user_caption = user_caption[:1020] + "..."
 
         await send_saved_media(
             bot=bot,
@@ -525,6 +550,7 @@ async def handle_reply_media_capture(
             caption=user_caption,
         )
         logger.info(f"✅ 1 martalik media bot chatiga muvaffaqiyatli yetkazildi: {owner_chat}")
+
     else:
         # Obuna yo'q - teaser yuborish
         total_missed = await count_undelivered_messages(owner_chat)
@@ -629,15 +655,29 @@ async def on_deleted_business_messages(action: types.BusinessMessagesDeleted, bo
                 )
 
                 try:
+                    promo_footer = get_text("promo_footer", lang)
                     if content_type == "text":
                         msg_label = "Сообщение" if lang == "ru" else "Xabar"
-                        body = f"{header_info}💬 <b>{msg_label}:</b>\n<blockquote>{html.escape(text_content)}</blockquote>"
+                        body = f"{header_info}💬 <b>{msg_label}:</b>\n<blockquote>{html.escape(text_content)}</blockquote>{promo_footer}"
                         await bot.send_message(owner_chat_id, body, parse_mode="HTML")
                     else:
                         caption = header_info
                         if text_content:
                             title_label = "Подпись" if lang == "ru" else "Sarlavha"
-                            caption += f"💬 <b>{title_label}:</b>\n<blockquote>{html.escape(text_content)}</blockquote>"
+                            caption += f"💬 <b>{title_label}:</b>\n<blockquote>{html.escape(text_content)}</blockquote>\n"
+                        caption += promo_footer
+
+                        if len(caption) > 1024:
+                            overflow = len(caption) - 1020
+                            if text_content and len(text_content) > overflow:
+                                short_text = text_content[:-overflow] + "..."
+                                caption = (
+                                    header_info
+                                    + f"💬 <b>{title_label}:</b>\n<blockquote>{html.escape(short_text)}</blockquote>\n"
+                                    + promo_footer
+                                )
+                            else:
+                                caption = caption[:1020] + "..."
 
                         await send_saved_media(
                             bot=bot,
@@ -649,6 +689,7 @@ async def on_deleted_business_messages(action: types.BusinessMessagesDeleted, bo
                         )
                 except Exception as e:
                     logger.error(f"O'chirilgan xabarni yuborishda xatolik: {e}")
+
 
     # 4. Agar foydalanuvchida obuna BO'LMASA, xabar matni berilmaydi, teaser yuboriladi
     if not is_active and saved_any_count > 0:

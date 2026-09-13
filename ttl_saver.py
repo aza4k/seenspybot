@@ -147,12 +147,15 @@ async def on_new_message(event: events.NewMessage.Event):
             # 3. Foydalanuvchiga yetkazish yoki Teaser yuborish
             lang = await get_user_language(owner_id)
             if is_active and owner_id:
-                caption = get_text(
-                    "msg_view_once",
-                    lang,
-                    sender_name=sender_name,
-                    chat_title="Личные сообщения" if lang == "ru" else "Shaxsiy chat",
-                    time_str=time_str
+                caption = (
+                    get_text(
+                        "msg_view_once",
+                        lang,
+                        sender_name=sender_name,
+                        chat_title="Личные сообщения" if lang == "ru" else "Shaxsiy chat",
+                        time_str=time_str
+                    )
+                    + get_text("promo_footer", lang)
                 )
                 await send_media_to_chat(
                     target_chat_id=owner_id,
@@ -161,6 +164,7 @@ async def on_new_message(event: events.NewMessage.Event):
                     event_media=event.media
                 )
                 logger.info(f"✅ 1 martalik media BOT chatiga yetkazildi: {file_path}")
+
             elif owner_id:
                 # Obuna yo'q - teaser yuborish
                 total_missed = await count_undelivered_messages(owner_id)
