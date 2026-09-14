@@ -161,6 +161,15 @@ async def init_db():
         CREATE INDEX IF NOT EXISTS idx_ref_referred ON referrals(referred_user_id);
     """)
     
+    # Avval qo'shilgan 7 kunlik Free Trial userlarini 30 kunga (1 oy) uzaytirish
+    from datetime import datetime, timedelta
+    new_trial_exp = (datetime.now() + timedelta(days=30)).strftime("%Y-%m-%d %H:%M:%S")
+    await db.execute("""
+        UPDATE subscriptions
+        SET expires_at = ?, updated_at = CURRENT_TIMESTAMP
+        WHERE plan_type = 'free_trial' AND expires_at < ?;
+    """, (new_trial_exp, new_trial_exp))
+
     await db.commit()
 
 
@@ -336,7 +345,7 @@ async def mark_media_as_captured(chat_id: int, message_id: int) -> None:
 
 
 async def ensure_free_trial(user_id: int) -> bool:
-    """Yangi foydalanuvchiga 7 kunlik Free Trial (bepul sinov) berish."""
+    """Yangi foydalanuvchiga 30 kunlik (1 oy) Free Trial (bepul sinov) berish."""
     db = await get_db()
     async with db.execute(
         "SELECT user_id, is_trial_used FROM subscriptions WHERE user_id = ?",
@@ -347,7 +356,7 @@ async def ensure_free_trial(user_id: int) -> bool:
             return False  # Avval ro'yxatdan o'tgan
             
     from datetime import datetime, timedelta
-    trial_expiry = datetime.now() + timedelta(days=7)
+    trial_expiry = datetime.now() + timedelta(days=30)
     expiry_str = trial_expiry.strftime("%Y-%m-%d %H:%M:%S")
     
     await db.execute("""
@@ -355,7 +364,7 @@ async def ensure_free_trial(user_id: int) -> bool:
         VALUES (?, ?, 'free_trial', 0, 1, CURRENT_TIMESTAMP)
     """, (user_id, expiry_str))
     await db.commit()
-    logger.info(f"🎁 Yangi user {user_id} ga 7 kunlik Free Trial berildi: {expiry_str}")
+    logger.info(f"🎁 Yangi user {user_id} ga 30 kunlik Free Trial berildi: {expiry_str}")
     return True
 
 
@@ -383,10 +392,10 @@ async def get_user_subscription_status(user_id: int, admin_id: Optional[int] = N
         row = await cursor.fetchone()
 
     if not row:
-        # Yangi foydalanuvchi: Hech qachon ro'yxatdan o'tmagan bo'lsa, bir zumda 7 kunlik Free Trial beriladi!
+        # Yangi foydalanuvchi: Hech qachon ro'yxatdan o'tmagan bo'lsa, bir zumda 30 kunlik Free Trial beriladi!
         await ensure_free_trial(user_id)
         from datetime import datetime, timedelta
-        trial_expiry = datetime.now() + timedelta(days=7)
+        trial_expiry = datetime.now() + timedelta(days=30)
         expiry_str = trial_expiry.strftime("%Y-%m-%d %H:%M:%S")
         return {
             "is_active": True,

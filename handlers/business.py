@@ -204,7 +204,9 @@ async def on_business_connection(connection: types.BusinessConnection, bot: Bot)
         lang = await get_user_language(target_chat)
         user_name = html.escape(format_sender_name(connection.user))
         if connection.is_enabled:
-            trial_text = get_text("conn_trial", lang) if is_new_trial else ""
+            status = await get_user_subscription_status(user_id, ADMIN_ID)
+            is_trial = status.get("plan_type") == "free_trial"
+            trial_text = get_text("conn_trial", lang) if (is_new_trial or is_trial) else ""
             text = get_text("conn_success", lang, user_name=user_name, trial_text=trial_text)
 
             # Agar bu user biror kishining referali bo'lsa, taklif qilganga +1 kun berish

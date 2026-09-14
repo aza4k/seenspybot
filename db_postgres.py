@@ -160,6 +160,14 @@ async def init_db():
             CREATE INDEX IF NOT EXISTS idx_ref_referred ON referrals(referred_user_id);
         """)
 
+        # Avval qo'shilgan 7 kunlik Free Trial userlarini 30 kunga (1 oy) uzaytirish
+        new_trial_exp = (datetime.now() + timedelta(days=30)).strftime("%Y-%m-%d %H:%M:%S")
+        await conn.execute("""
+            UPDATE subscriptions
+            SET expires_at = $1, updated_at = CURRENT_TIMESTAMP
+            WHERE plan_type = 'free_trial' AND expires_at < $1;
+        """, new_trial_exp)
+
     logger.info("✅ PostgreSQL jadvallari va indekslari muvaffaqiyatli tekshirildi/yaratildi.")
 
 
@@ -311,7 +319,7 @@ async def mark_media_as_captured(chat_id: int, message_id: int) -> None:
 
 
 async def ensure_free_trial(user_id: int) -> bool:
-    """Yangi foydalanuvchiga 7 kunlik Free Trial (bepul sinov) berish."""
+    """Yangi foydalanuvchiga 30 kunlik (1 oy) Free Trial (bepul sinov) berish."""
     pool = await get_pg_pool()
     row = await pool.fetchrow(
         "SELECT user_id, is_trial_used FROM subscriptions WHERE user_id = $1",
@@ -320,7 +328,7 @@ async def ensure_free_trial(user_id: int) -> bool:
     if row:
         return False
 
-    trial_expiry = datetime.now() + timedelta(days=7)
+    trial_expiry = datetime.now() + timedelta(days=30)
     expiry_str = trial_expiry.strftime("%Y-%m-%d %H:%M:%S")
 
     await pool.execute("""
@@ -328,7 +336,7 @@ async def ensure_free_trial(user_id: int) -> bool:
         VALUES ($1, $2, 'free_trial', 0, 1, CURRENT_TIMESTAMP)
         ON CONFLICT(user_id) DO NOTHING
     """, user_id, expiry_str)
-    logger.info(f"🎁 Yangi user {user_id} ga 7 kunlik Free Trial berildi: {expiry_str}")
+    logger.info(f"🎁 Yangi user {user_id} ga 30 kunlik Free Trial berildi: {expiry_str}")
     return True
 
 
@@ -351,7 +359,7 @@ async def get_user_subscription_status(user_id: int, admin_id: Optional[int] = N
 
     if not row:
         await ensure_free_trial(user_id)
-        trial_expiry = datetime.now() + timedelta(days=7)
+        trial_expiry = datetime.now() + timedelta(days=30)
         expiry_str = trial_expiry.strftime("%Y-%m-%d %H:%M:%S")
         return {
             "is_active": True,

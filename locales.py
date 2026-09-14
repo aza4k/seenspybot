@@ -33,7 +33,7 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         # Sub status
         "sub_admin": "👑 Безлимитный Админ",
         "sub_active": "🟢 Активна ({plan_name}, до <code>{expires_at}</code>)",
-        "sub_trial_name": "Бесплатный тест (7 дней)",
+        "sub_trial_name": "Бесплатный тест (30 дней)",
         "sub_inactive": "⚪️ Не активна",
 
         # Tugmalar
@@ -84,8 +84,8 @@ MESSAGES: Dict[str, Dict[str, str]] = {
 
         # Ulanish holati
         "conn_trial": (
-            "\n\n🎁 <b>Вам активирован БЕСПЛАТНЫЙ ТЕСТ НА 7 ДНЕЙ!</b>\n"
-            "В течение недели бот сохраняет абсолютно все удалённые и одноразовые медиа."
+            "\n\n🎁 <b>Вам активирован БЕСПЛАТНЫЙ ТЕСТ НА 30 ДНЕЙ (1 МЕСЯЦ)!</b>\n"
+            "В течение месяца бот сохраняет абсолютно все удалённые и одноразовые медиа."
         ),
         "conn_success": (
             "✅ <b>Бот успешно подключён к вашему профилю!</b>\n\n"
@@ -235,7 +235,7 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         # Sub status
         "sub_admin": "👑 Cheksiz Admin",
         "sub_active": "🟢 Faol ({plan_name}, <code>{expires_at}</code> gacha)",
-        "sub_trial_name": "Free Trial (7 kun)",
+        "sub_trial_name": "Free Trial (30 kun)",
         "sub_inactive": "⚪️ Faol emas",
 
         # Tugmalar
@@ -286,8 +286,8 @@ MESSAGES: Dict[str, Dict[str, str]] = {
 
         # Ulanish holati
         "conn_trial": (
-            "\n\n🎁 <b>Sizga 7 KUNLIK BEPUL SINOV (Free Trial) faollashtirildi!</b>\n"
-            "1 hafta davomida bot barcha o'chirilgan xabarlar va 1 martalik medialarni to'liq tutib beradi."
+            "\n\n🎁 <b>Sizga 1 OYLIK BEPUL SINOV (Free Trial) faollashtirildi!</b>\n"
+            "1 oy davomida bot barcha o'chirilgan xabarlar va 1 martalik medialarni to'liq tutib beradi."
         ),
         "conn_success": (
             "✅ <b>Bot profilingizga muvaffaqiyatli ulandi!</b>\n\n"
