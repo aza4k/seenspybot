@@ -15,12 +15,14 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         # Boshlang'ich xabarlar
         "trial_banner": "",
         "start_text": (
-            "🎁 <b>Вам активирован бесплатный доступ на 7 дней!</b>\n\n"
-            "Бот моментально сохраняет и присылает:\n"
-            "• 🗑 <b>Удалённые</b> сообщения собеседника\n"
-            "• ✏️ <b>Изменённые</b> сообщения (до и после)\n"
-            "• 👁 <b>Одноразовые</b> фото и видео\n\n"
-            "👇 Нажмите зелёную кнопку ниже для подключения:"
+            "⚠️ <b>Чтобы бот начал работать, подключите его к профилю:</b>\n\n"
+            "1. Нажмите зелёную кнопку <b>«Подключить бота»</b> ниже\n"
+            "2. Перейдите в <b>«Telegram Business»</b> ➔ <b>«Чат-боты»</b>\n"
+            "3. Введите юзернейм бота: <code>@seenspybot</code>\n\n"
+            "🛡 <b>Возможности бота:</b>\n"
+            "• <b>Удалённые сообщения:</b> Моментально сохраняет текст и медиа\n"
+            "• <b>Изменённые сообщения:</b> Показывает историю до и после правки\n"
+            "• <b>Одноразовые медиа:</b> Сохраняет фото/видео с таймером при ответе точкой <code>.</code>"
         ),
         "status_title": "📊 <b>Статус бота:</b> {status_icon}\n\n",
         "status_connections": "🔗 Подключений: <b>{active_connections} профилей</b>\n",
@@ -37,7 +39,7 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         # Tugmalar
         "btn_connect": "🟢 Подключить бота",
 
-        "btn_plans": "⭐ Подписка / Тарифы",
+        "btn_plans": "⭐ Тарифы",
         "btn_stats": "📊 Статус",
         "btn_language": "🌐 Язык / Til",
         "btn_back": "🔙 Назад",
@@ -153,9 +155,23 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         "btn_unlock": "🔓 Посмотреть сообщения ({total_missed} шт.)",
 
         # Tariflar va to'lovlar
+        "plans_current_active": (
+            "👤 <b>Текущий тариф:</b> {plan_name}\n"
+            "⏳ <b>Осталось:</b> <b>{remaining_str}</b> (до <code>{expires_at}</code>)\n\n"
+            "➖➖➖➖➖➖➖➖➖➖\n\n"
+        ),
+        "plans_current_inactive": (
+            "👤 <b>Текущий тариф:</b> ⚪️ Не активна\n\n"
+            "➖➖➖➖➖➖➖➖➖➖\n\n"
+        ),
+        "plans_current_admin": (
+            "👤 <b>Текущий тариф:</b> 👑 Безлимитный Админ\n"
+            "⏳ <b>Срок:</b> Бессрочно\n\n"
+            "➖➖➖➖➖➖➖➖➖➖\n\n"
+        ),
         "plans_title": (
-            "⭐️ <b>Тарифные планы подписки</b>\n\n"
-            "Выберите подходящий период для доступа ко всем удалённым сообщениям и одноразовым медиа:\n\n"
+            "⭐️ <b>Тарифные планы</b>\n\n"
+            "Выберите период для подключения или продления доступа:\n\n"
             "• <b>1 Неделя</b> — 5 Stars\n"
             "• <b>1 Месяц</b> — 15 Stars <i>(Скидка 25%)</i>\n"
             "• <b>1 Год</b> — 180 Stars <i>(Самый выгодный)</i>\n\n"
@@ -200,12 +216,14 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         # Boshlang'ich xabarlar
         "trial_banner": "",
         "start_text": (
-            "🎁 <b>7 kunlik bepul sinov muddati faollashtirildi!</b>\n\n"
-            "Bot darhol saqlab, sizga yetkazadi:\n"
-            "• 🗑 <b>O'chirilgan</b> xabarlar nusxasi\n"
-            "• ✏️ <b>Tahrirlangan</b> xabarlar tarixi\n"
-            "• 👁 <b>1 martalik</b> rasm va videolar\n\n"
-            "👇 Ulanish uchun quyidagi yashil tugmani bosing:"
+            "⚠️ <b>Bot to'liq ishlashi uchun uni profilingizga ulang:</b>\n\n"
+            "1. Quyidagi yashil <b>«Botni ulash»</b> tugmasini bosing\n"
+            "2. <b>«Telegram Business»</b> ➔ <b>«Chat-botlar»</b> bo'limiga kiring\n"
+            "3. Qidiruvga bot nomini yozing: <code>@seenspybot</code>\n\n"
+            "🛡 <b>Bot imkoniyatlari:</b>\n"
+            "• <b>O'chirilgan xabarlar:</b> Matn va medialar nusxasini saqlab yetkazadi\n"
+            "• <b>Tahrirlangan xabarlar:</b> Xabarning eski va yangi ko'rinishini ko'rsatadi\n"
+            "• <b>1 martalik medialar:</b> Taymerli rasm/videolarga nuqta <code>.</code> bilan javob berganda saqlaydi"
         ),
 
         "status_title": "📊 <b>Bot Holati:</b> {status_icon}\n\n",
@@ -223,7 +241,7 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         # Tugmalar
         "btn_connect": "🟢 Botni ulash",
 
-        "btn_plans": "⭐ Obuna / Tariflar",
+        "btn_plans": "⭐ Tariflar",
         "btn_stats": "📊 Statistika",
         "btn_language": "🌐 Til / Язык",
         "btn_back": "🔙 Orqaga",
@@ -339,9 +357,23 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         "btn_unlock": "🔓 Xabarlarni ko'rish ({total_missed} ta)",
 
         # Tariflar va to'lovlar
+        "plans_current_active": (
+            "👤 <b>Joriy tarif:</b> {plan_name}\n"
+            "⏳ <b>Qoldi:</b> <b>{remaining_str}</b> (<code>{expires_at}</code> gacha)\n\n"
+            "➖➖➖➖➖➖➖➖➖➖\n\n"
+        ),
+        "plans_current_inactive": (
+            "👤 <b>Joriy tarif:</b> ⚪️ Faol emas\n\n"
+            "➖➖➖➖➖➖➖➖➖➖\n\n"
+        ),
+        "plans_current_admin": (
+            "👤 <b>Joriy tarif:</b> 👑 Cheksiz Admin\n"
+            "⏳ <b>Muddati:</b> Cheksiz\n\n"
+            "➖➖➖➖➖➖➖➖➖➖\n\n"
+        ),
         "plans_title": (
-            "⭐️ <b>Obuna Tariflari</b>\n\n"
-            "O'chirilgan xabarlar va 1 martalik medialarni to'liq ko'rish uchun mos tarifni tanlang:\n\n"
+            "⭐️ <b>Obuna tariflari</b>\n\n"
+            "Ulanish yoki muddatni uzaytirish uchun tarifni tanlang:\n\n"
             "• <b>1 Hafta</b> — 5 Stars\n"
             "• <b>1 Oy</b> — 15 Stars <i>(25% chegirma)</i>\n"
             "• <b>1 Yil</b> — 180 Stars <i>(Eng manfaatli)</i>\n\n"
@@ -407,7 +439,8 @@ def get_main_keyboard(lang: str = "ru") -> InlineKeyboardMarkup:
             [
                 InlineKeyboardButton(
                     text=get_text("btn_connect", lang),
-                    url="tg://settings/edit"
+                    url="tg://settings/edit",
+                    style="success"
                 )
             ],
             [

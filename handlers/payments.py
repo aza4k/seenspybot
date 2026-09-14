@@ -1,5 +1,6 @@
 import asyncio
 import logging
+from datetime import datetime
 from aiogram import Router, Bot, types, F
 from aiogram.filters import Command
 from aiogram.types import (
@@ -15,9 +16,10 @@ from database import (
     get_undelivered_archive_logs,
     mark_archive_logs_delivered,
     get_user_language,
+    get_user_subscription_status,
 )
 from config import ADMIN_ID, ARCHIVE_CHANNEL_ID
-from locales import get_text, get_plans_keyboard
+from locales import get_text, get_plans_keyboard, MESSAGES
 
 logger = logging.getLogger(__name__)
 router = Router(name="payments_router")
@@ -38,12 +40,74 @@ PLANS = {
 }
 
 
+def format_remaining_time(days: int, hours: int, lang: str) -> str:
+    """Qolgan muddatni chiroyli formatda chiqarish."""
+    if lang == "uz":
+        if days > 0:
+            return f"{days} kun {hours} soat"
+        elif hours > 0:
+            return f"{hours} soat"
+        return "1 soatdan kam"
+    else:
+        if days > 0:
+            if days % 10 == 1 and days % 100 != 11:
+                d_word = "день"
+            elif 2 <= days % 10 <= 4 and (days % 100 < 10 or days % 100 >= 20):
+                d_word = "дня"
+            else:
+                d_word = "дней"
+            return f"{days} {d_word} {hours} ч."
+        elif hours > 0:
+            return f"{hours} ч."
+        return "менее 1 часа"
+
+
+async def get_plans_text(user_id: int, lang: str) -> str:
+    """Tariflar xabarini foydalanuvchi joriy obunasi bilan birga tuzish."""
+    status = await get_user_subscription_status(user_id, ADMIN_ID)
+    if user_id == ADMIN_ID:
+        header = get_text("plans_current_admin", lang)
+    elif status.get("is_active"):
+        plan_type = status.get("plan_type", "active")
+        if plan_type == "free_trial":
+            plan_name = get_text("sub_trial_name", lang)
+        elif f"plan_{plan_type}_name" in MESSAGES.get(lang, {}):
+            plan_name = get_text(f"plan_{plan_type}_name", lang)
+        else:
+            plan_name = plan_type
+
+        expires_at_str = status.get("expires_at", "")
+        remaining_str = "—"
+        if expires_at_str:
+            try:
+                exp_date = datetime.strptime(expires_at_str, "%Y-%m-%d %H:%M:%S")
+                now = datetime.now()
+                diff = exp_date - now
+                days = diff.days
+                hours = int(diff.seconds / 3600)
+                remaining_str = format_remaining_time(days, hours, lang)
+            except Exception:
+                remaining_str = "—"
+
+        header = get_text(
+            "plans_current_active",
+            lang,
+            plan_name=plan_name,
+            remaining_str=remaining_str,
+            expires_at=expires_at_str,
+        )
+    else:
+        header = get_text("plans_current_inactive", lang)
+
+    return header + get_text("plans_title", lang)
+
+
 @router.message(Command("buy"))
 @router.message(Command("plans"))
 async def cmd_buy(message: types.Message):
     """Tariflar menyusini ochish."""
     lang = await get_user_language(message.from_user.id)
-    text = get_text("plans_title", lang)
+    text = await get_plans_text(message.from_user.id, lang)
     await message.answer(text, reply_markup=get_plans_keyboard(lang), parse_mode="HTML")
 
 
@@ -51,7 +115,7 @@ async def cmd_buy(message: types.Message):
 async def cb_show_plans(call: types.CallbackQuery):
     """Inline tugma orqali tariflar menyusi."""
     lang = await get_user_language(call.from_user.id)
-    text = get_text("plans_title", lang)
+    text = await get_plans_text(call.from_user.id, lang)
     try:
         await call.message.edit_text(text, reply_markup=get_plans_keyboard(lang), parse_mode="HTML")
     except Exception:
