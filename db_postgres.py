@@ -160,14 +160,6 @@ async def init_db():
             CREATE INDEX IF NOT EXISTS idx_ref_referred ON referrals(referred_user_id);
         """)
 
-        # Avval qo'shilgan 7 kunlik Free Trial userlarini 30 kunga (1 oy) uzaytirish
-        new_trial_exp = (datetime.now() + timedelta(days=30)).strftime("%Y-%m-%d %H:%M:%S")
-        await conn.execute("""
-            UPDATE subscriptions
-            SET expires_at = $1, updated_at = CURRENT_TIMESTAMP
-            WHERE plan_type = 'free_trial' AND expires_at < $1;
-        """, new_trial_exp)
-
     logger.info("✅ PostgreSQL jadvallari va indekslari muvaffaqiyatli tekshirildi/yaratildi.")
 
 

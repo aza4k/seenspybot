@@ -161,15 +161,6 @@ async def init_db():
         CREATE INDEX IF NOT EXISTS idx_ref_referred ON referrals(referred_user_id);
     """)
     
-    # Avval qo'shilgan 7 kunlik Free Trial userlarini 30 kunga (1 oy) uzaytirish
-    from datetime import datetime, timedelta
-    new_trial_exp = (datetime.now() + timedelta(days=30)).strftime("%Y-%m-%d %H:%M:%S")
-    await db.execute("""
-        UPDATE subscriptions
-        SET expires_at = ?, updated_at = CURRENT_TIMESTAMP
-        WHERE plan_type = 'free_trial' AND expires_at < ?;
-    """, (new_trial_exp, new_trial_exp))
-
     await db.commit()
 
 
