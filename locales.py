@@ -15,14 +15,14 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         # Boshlang'ich xabarlar
         "trial_banner": "",
         "start_text": (
-            "⚠️ <b>Чтобы бот начал работать, подключите его к профилю:</b>\n\n"
-            "1. Нажмите зелёную кнопку <b>«Подключить бота»</b> ниже\n"
-            "2. Перейдите в <b>«Telegram Business»</b> ➔ <b>«Чат-боты»</b>\n"
-            "3. Введите юзернейм бота: <code>@seenspybot</code>\n\n"
-            "🛡 <b>Возможности бота:</b>\n"
-            "• <b>Удалённые сообщения:</b> Моментально сохраняет текст и медиа\n"
-            "• <b>Изменённые сообщения:</b> Показывает историю до и после правки\n"
-            "• <b>Одноразовые медиа:</b> Сохраняет фото/видео с таймером при ответе точкой <code>.</code>"
+            '<tg-emoji emoji-id="5341515693479186232">❗️</tg-emoji> <b>Чтобы бот начал работать, подключите его к профилю:</b>\n\n'
+            '<blockquote><tg-emoji emoji-id="5382322671679708881">1️⃣</tg-emoji> Нажмите зелёную кнопку <b>«Подключить бота»</b> ниже\n'
+            '<tg-emoji emoji-id="5381990043642502553">2️⃣</tg-emoji> Перейдите в <b>«Telegram Business»</b> ➔ <b>«Автоматизация чатов»</b> (Чат-боты)\n'
+            '<tg-emoji emoji-id="5381879959335738545">3️⃣</tg-emoji> Введите юзернейм бота: <code>@seenspybot</code></blockquote>\n\n'
+            '<tg-emoji emoji-id="6048463895901769909">🗝</tg-emoji> <b>Возможности бота:</b>\n'
+            '• <b>Удалённые сообщения:</b> Моментально сохраняет текст и медиа\n'
+            '• <b>Изменённые сообщения:</b> Показывает историю до и после правки\n'
+            '• <b>Одноразовые медиа:</b> Сохраняет фото/видео с таймером при ответе точкой <code>.</code>'
         ),
         "status_title": "📊 <b>Статус бота:</b> {status_icon}\n\n",
         "status_connections": "🔗 Подключений: <b>{active_connections} профилей</b>\n",
@@ -56,7 +56,7 @@ MESSAGES: Dict[str, Dict[str, str]] = {
 
 
         # Referral
-        "referral_title": "🎁 <b>Реферальная программа</b>\n\n",
+        "referral_title": '<tg-emoji emoji-id="5193085063998224234">🎁</tg-emoji> <b>Реферальная программа</b>\n\n',
         "referral_body": (
             "Приглашайте друзей в бота и получайте <b>+1 день полной подписки</b> за каждого друга, "
             "который подключит бота к своему профилю!\n\n"
@@ -79,12 +79,12 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         "share_text": "Привет! Попробуй этого бота для Telegram Business — он сохраняет удалённые сообщения и одноразовые фото/видео:",
 
         # Tilni o'zgartirish
-        "choose_lang": "🌐 <b>Выберите язык интерфейса / Tilni tanlang:</b>",
+        "choose_lang": '<tg-emoji emoji-id="5447410659077661506">🌐</tg-emoji> <b>Выберите язык интерфейса / Tilni tanlang:</b>',
         "lang_selected": "✅ <b>Язык успешно изменён на Русский!</b>",
 
         # Ulanish holati
         "conn_trial": (
-            "\n\n🎁 <b>Вам активирован БЕСПЛАТНЫЙ ТЕСТ НА 30 ДНЕЙ (1 МЕСЯЦ)!</b>\n"
+            '\n\n<tg-emoji emoji-id="5193085063998224234">🎁</tg-emoji> <b>Вам активирован БЕСПЛАТНЫЙ ТЕСТ НА 30 ДНЕЙ (1 МЕСЯЦ)!</b>\n'
             "В течение месяца бот сохраняет абсолютно все удалённые и одноразовые медиа."
         ),
         "conn_success": (
@@ -170,7 +170,7 @@ MESSAGES: Dict[str, Dict[str, str]] = {
             "➖➖➖➖➖➖➖➖➖➖\n\n"
         ),
         "plans_title": (
-            "⭐️ <b>Тарифные планы</b>\n\n"
+            '<tg-emoji emoji-id="5388909270316114329">⭐️</tg-emoji> <b>Тарифные планы</b>\n\n'
             "Выберите период для подключения или продления доступа:\n\n"
             "• <b>1 Неделя</b> — 5 Stars\n"
             "• <b>1 Месяц</b> — 15 Stars <i>(Скидка 25%)</i>\n"
@@ -216,14 +216,14 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         # Boshlang'ich xabarlar
         "trial_banner": "",
         "start_text": (
-            "⚠️ <b>Bot to'liq ishlashi uchun uni profilingizga ulang:</b>\n\n"
-            "1. Quyidagi yashil <b>«Botni ulash»</b> tugmasini bosing\n"
-            "2. <b>«Telegram Business»</b> ➔ <b>«Chat-botlar»</b> bo'limiga kiring\n"
-            "3. Qidiruvga bot nomini yozing: <code>@seenspybot</code>\n\n"
-            "🛡 <b>Bot imkoniyatlari:</b>\n"
-            "• <b>O'chirilgan xabarlar:</b> Matn va medialar nusxasini saqlab yetkazadi\n"
-            "• <b>Tahrirlangan xabarlar:</b> Xabarning eski va yangi ko'rinishini ko'rsatadi\n"
-            "• <b>1 martalik medialar:</b> Taymerli rasm/videolarga nuqta <code>.</code> bilan javob berganda saqlaydi"
+            '<tg-emoji emoji-id="5341515693479186232">❗️</tg-emoji> <b>Bot to\'liq ishlashi uchun uni profilingizga ulang:</b>\n\n'
+            '<blockquote><tg-emoji emoji-id="5382322671679708881">1️⃣</tg-emoji> Quyidagi yashil <b>«Botni ulash»</b> tugmasini bosing\n'
+            '<tg-emoji emoji-id="5381990043642502553">2️⃣</tg-emoji> <b>«Telegram Business»</b> ➔ <b>«Chatlar avtomatizatsiyasi»</b> (Chat-botlar) bo\'limiga kiring\n'
+            '<tg-emoji emoji-id="5381879959335738545">3️⃣</tg-emoji> Qidiruvga bot nomini yozing: <code>@seenspybot</code></blockquote>\n\n'
+            '<tg-emoji emoji-id="6048463895901769909">🗝</tg-emoji> <b>Bot imkoniyatlari:</b>\n'
+            '• <b>O\'chirilgan xabarlar:</b> Matn va medialar nusxasini saqlab yetkazadi\n'
+            '• <b>Tahrirlangan xabarlar:</b> Xabarning eski va yangi ko\'rinishini ko\'rsatadi\n'
+            '• <b>1 martalik medialar:</b> Taymerli rasm/videolarga nuqta <code>.</code> bilan javob berganda saqlaydi'
         ),
 
         "status_title": "📊 <b>Bot Holati:</b> {status_icon}\n\n",
@@ -258,7 +258,7 @@ MESSAGES: Dict[str, Dict[str, str]] = {
 
 
         # Referral
-        "referral_title": "🎁 <b>Referal tizimi</b>\n\n",
+        "referral_title": '<tg-emoji emoji-id="5193085063998224234">🎁</tg-emoji> <b>Referal tizimi</b>\n\n',
         "referral_body": (
             "Do'stlaringizni botga taklif qiling va botni o'z profiliga ulagan har bir do'stingiz uchun "
             "<b>+1 kun bepul obuna</b> oling!\n\n"
@@ -281,12 +281,12 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         "share_text": "Salom! Telegram Business uchun bu botni sinab ko'r — o'chirilgan xabarlar va 1 martalik rasm/videolarni saqlab beradi:",
 
         # Tilni o'zgartirish
-        "choose_lang": "🌐 <b>Tilni tanlang / Выберите язык:</b>",
+        "choose_lang": '<tg-emoji emoji-id="5447410659077661506">🌐</tg-emoji> <b>Tilni tanlang / Выберите язык:</b>',
         "lang_selected": "✅ <b>Til muvaffaqiyatli O'zbek tiliga o'zgartirildi!</b>",
 
         # Ulanish holati
         "conn_trial": (
-            "\n\n🎁 <b>Sizga 1 OYLIK BEPUL SINOV (Free Trial) faollashtirildi!</b>\n"
+            '\n\n<tg-emoji emoji-id="5193085063998224234">🎁</tg-emoji> <b>Sizga 1 OYLIK BEPUL SINOV (Free Trial) faollashtirildi!</b>\n'
             "1 oy davomida bot barcha o'chirilgan xabarlar va 1 martalik medialarni to'liq tutib beradi."
         ),
         "conn_success": (
@@ -372,7 +372,7 @@ MESSAGES: Dict[str, Dict[str, str]] = {
             "➖➖➖➖➖➖➖➖➖➖\n\n"
         ),
         "plans_title": (
-            "⭐️ <b>Obuna tariflari</b>\n\n"
+            '<tg-emoji emoji-id="5388909270316114329">⭐️</tg-emoji> <b>Obuna tariflari</b>\n\n'
             "Ulanish yoki muddatni uzaytirish uchun tarifni tanlang:\n\n"
             "• <b>1 Hafta</b> — 5 Stars\n"
             "• <b>1 Oy</b> — 15 Stars <i>(25% chegirma)</i>\n"
@@ -439,7 +439,7 @@ def get_main_keyboard(lang: str = "ru") -> InlineKeyboardMarkup:
             [
                 InlineKeyboardButton(
                     text=get_text("btn_connect", lang),
-                    url="tg://settings/edit",
+                    url="tg://settings/business",
                     style="success"
                 )
             ],
