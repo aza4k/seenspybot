@@ -36,45 +36,17 @@ async def cmd_start(message: types.Message):
                 await register_referral(referrer_id=referrer_id, referred_user_id=message.from_user.id)
 
     # Yangi foydalanuvchiga 7 kunlik Free Trial berish
-    is_new_trial = await ensure_free_trial(message.from_user.id)
+    await ensure_free_trial(message.from_user.id)
     lang = await get_user_language(message.from_user.id)
-    is_active = await is_subscription_active(message.from_user.id, ADMIN_ID)
-    sub_info = await get_subscription_info(message.from_user.id)
 
-    trial_banner = get_text("trial_banner", lang) if is_new_trial else ""
-
-    if is_active:
-        if message.from_user.id == ADMIN_ID:
-            sub_status = get_text("sub_admin", lang)
-        elif sub_info:
-            plan_name = (
-                get_text("sub_trial_name", lang)
-                if sub_info.get("plan_type") == "free_trial"
-                else sub_info.get("plan_type")
-            )
-            sub_status = get_text(
-                "sub_active",
-                lang,
-                plan_name=plan_name,
-                expires_at=sub_info.get("expires_at", "")
-            )
-        else:
-            sub_status = get_text("sub_inactive", lang)
-    else:
-        sub_status = get_text("sub_inactive", lang)
-
-    text = get_text(
-        "start_text",
-        lang,
-        trial_banner=trial_banner,
-        sub_status=sub_status
-    )
+    text = get_text("start_text", lang)
 
     await message.answer(
         text,
         reply_markup=get_main_keyboard(lang),
         parse_mode="HTML"
     )
+
 
 
 @router.message(Command("status"))
@@ -154,22 +126,14 @@ async def cb_set_language(call: types.CallbackQuery):
 async def cb_back_to_menu(call: types.CallbackQuery):
     """Bosh menyuga qaytish."""
     lang = await get_user_language(call.from_user.id)
-    is_active = await is_subscription_active(call.from_user.id, ADMIN_ID)
-    sub_status = get_text("sub_active", lang, plan_name="", expires_at="") if is_active else get_text("sub_inactive", lang)
-
-    trial_banner = ""
-    text = get_text(
-        "start_text",
-        lang,
-        trial_banner=trial_banner,
-        sub_status=sub_status
-    )
+    text = get_text("start_text", lang)
 
     try:
         await call.message.edit_text(text, reply_markup=get_main_keyboard(lang), parse_mode="HTML")
     except Exception:
         pass
     await call.answer()
+
 
 
 @router.callback_query(F.data == "refresh_stats")

@@ -13,19 +13,14 @@ DEFAULT_LANGUAGE = "ru"
 MESSAGES: Dict[str, Dict[str, str]] = {
     "ru": {
         # Boshlang'ich xabarlar
-        "trial_banner": "🎁 <b>Поздравляем! Вам активирован БЕСПЛАТНЫЙ ТЕСТОВЫЙ ПЕРИОД на 7 ДНЕЙ!</b>\n\n",
+        "trial_banner": "",
         "start_text": (
-            "{trial_banner}"
-            "⚠️ <b>Чтобы бот начал работать, подключите его к профилю:</b>\n\n"
-            "1. Нажмите кнопку <b>«🔌 Подключить»</b> ниже\n"
-            "2. Перейдите в <b>«Telegram Business»</b> ➔ <b>«Чат-боты»</b>\n"
-            "3. Введите юзернейм бота: <code>@seenspybot</code>\n\n"
-            "🛡 <b>Возможности бота:</b>\n"
-            "• <b>Удалённые сообщения:</b> Моментально сохраняет и присылает вам удалённые собеседником сообщения\n"
-            "• <b>Изменённые сообщения:</b> Показывает исходный и отредактированный текст\n"
-            "• <b>Одноразовые медиа:</b> Чтобы сохранить фото/видео с таймером, <b>до открытия</b> ответьте на него в диалоге любым сообщением (например точкой <code>.</code>). Бот сразу пришлёт его вам!\n\n"
-            "⭐️ <b>Статус подписки:</b> {sub_status}\n\n"
-            "<i>Чтобы ознакомиться с тарифами, нажмите «⭐ Подписка / Тарифы».</i>"
+            "🎁 <b>Вам активирован бесплатный доступ на 7 дней!</b>\n\n"
+            "Бот моментально сохраняет и присылает:\n"
+            "• 🗑 <b>Удалённые</b> сообщения собеседника\n"
+            "• ✏️ <b>Изменённые</b> сообщения (до и после)\n"
+            "• 👁 <b>Одноразовые</b> фото и видео\n\n"
+            "👇 Нажмите зелёную кнопку ниже для подключения:"
         ),
         "status_title": "📊 <b>Статус бота:</b> {status_icon}\n\n",
         "status_connections": "🔗 Подключений: <b>{active_connections} профилей</b>\n",
@@ -40,7 +35,8 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         "sub_inactive": "⚪️ Не активна",
 
         # Tugmalar
-        "btn_connect": "🔌 Подключить",
+        "btn_connect": "🟢 Подключить бота",
+
         "btn_plans": "⭐ Подписка / Тарифы",
         "btn_stats": "📊 Статус",
         "btn_language": "🌐 Язык / Til",
@@ -202,20 +198,16 @@ MESSAGES: Dict[str, Dict[str, str]] = {
     },
     "uz": {
         # Boshlang'ich xabarlar
-        "trial_banner": "🎁 <b>Tabriklaymiz! Sizga 7 KUNLIK BEPUL SINOV (Free Trial) obunasi taqdim etildi!</b>\n\n",
+        "trial_banner": "",
         "start_text": (
-            "{trial_banner}"
-            "⚠️ <b>Bot to'liq ishlashi uchun uni profilingizga ulang:</b>\n\n"
-            "1. Quyidagi <b>«🔌 Ulanish»</b> tugmasini bosing\n"
-            "2. <b>«Telegram Business»</b> ➔ <b>«Chat-botlar»</b> bo'limiga kiring\n"
-            "3. Qidiruvga bot nomini yozing: <code>@seenspybot</code>\n\n"
-            "🛡 <b>Bot imkoniyatlari:</b>\n"
-            "• <b>O'chirilgan xabarlar:</b> Suhbatdoshingiz xabarni o'chirsa, darhol sizga nusxasi keladi\n"
-            "• <b>O'zgartirilgan xabarlar:</b> Tahrirlangan xabarning eski va yangi matni ko'rsatiladi\n"
-            "• <b>1 martalik medialar:</b> Kelgan 1 martalik rasm/videoni <b>ochishdan oldin</b> unga istalgan belgi bilan <b>javob (Reply)</b> qaytaring (masalan nuqta <code>.</code>). Bot uni darhol saqlab, sizga yuboradi!\n\n"
-            "⭐️ <b>Obuna holati:</b> {sub_status}\n\n"
-            "<i>Tariflar va to'lov bilan tanishish uchun «⭐ Obuna / Tariflar» tugmasini bosing.</i>"
+            "🎁 <b>7 kunlik bepul sinov muddati faollashtirildi!</b>\n\n"
+            "Bot darhol saqlab, sizga yetkazadi:\n"
+            "• 🗑 <b>O'chirilgan</b> xabarlar nusxasi\n"
+            "• ✏️ <b>Tahrirlangan</b> xabarlar tarixi\n"
+            "• 👁 <b>1 martalik</b> rasm va videolar\n\n"
+            "👇 Ulanish uchun quyidagi yashil tugmani bosing:"
         ),
+
         "status_title": "📊 <b>Bot Holati:</b> {status_icon}\n\n",
         "status_connections": "🔗 Ulanishlar: <b>{active_connections} ta profil</b>\n",
         "status_messages": "💬 Xotiradagi xabarlar: <b>{total_messages} ta</b>\n",
@@ -229,7 +221,8 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         "sub_inactive": "⚪️ Faol emas",
 
         # Tugmalar
-        "btn_connect": "🔌 Ulanish",
+        "btn_connect": "🟢 Botni ulash",
+
         "btn_plans": "⭐ Obuna / Tariflar",
         "btn_stats": "📊 Statistika",
         "btn_language": "🌐 Til / Язык",
@@ -429,15 +422,9 @@ def get_main_keyboard(lang: str = "ru") -> InlineKeyboardMarkup:
             ],
             [
                 InlineKeyboardButton(
-                    text=get_text("btn_stats", lang),
-                    callback_data="refresh_stats"
-                ),
-                InlineKeyboardButton(
                     text=get_text("btn_language", lang),
                     callback_data="choose_lang"
-                )
-            ],
-            [
+                ),
                 InlineKeyboardButton(
                     text=get_text("btn_privacy", lang),
                     url=PRIVACY_POLICY_URL
@@ -445,6 +432,7 @@ def get_main_keyboard(lang: str = "ru") -> InlineKeyboardMarkup:
             ]
         ]
     )
+
 
 
 
