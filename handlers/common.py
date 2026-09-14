@@ -13,12 +13,13 @@ from database import (
     get_user_referral_stats,
     is_referral_enabled,
 )
-from config import ADMIN_ID
+from config import ADMIN_ID, PRIVACY_POLICY_URL
 from locales import (
     get_text,
     get_main_keyboard,
     get_language_keyboard,
 )
+
 
 router = Router(name="common_router")
 
@@ -260,3 +261,18 @@ async def cb_show_referral(event: types.Message | types.CallbackQuery, bot: Bot)
         await event.answer()
     else:
         await event.answer(f"{title}{body}", reply_markup=kb, parse_mode="HTML")
+
+
+@router.message(Command("privacy"))
+async def cmd_privacy(message: types.Message):
+    """Maxfiylik siyosati (Privacy Policy) komandasi."""
+    lang = await get_user_language(message.from_user.id)
+    text = get_text("privacy_text", lang)
+    kb = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text=get_text("btn_privacy", lang), url=PRIVACY_POLICY_URL)],
+            [InlineKeyboardButton(text=get_text("btn_back", lang), callback_data="back_to_menu")]
+        ]
+    )
+    await message.answer(text, reply_markup=kb, parse_mode="HTML")
+

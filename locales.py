@@ -3,8 +3,10 @@ Ko'p tillilik (Localization) moduli: Ruscha (birlamchi) va O'zbekcha.
 """
 from typing import Dict, Any, Optional
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from config import PRIVACY_POLICY_URL
 
 # Birlamchi til
+
 DEFAULT_LANGUAGE = "ru"
 
 # Xabarlar lug'ati
@@ -44,6 +46,16 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         "btn_language": "🌐 Язык / Til",
         "btn_back": "🔙 Назад",
         "btn_referral": "🎁 Пригласить друзей (+дни)",
+        "btn_privacy": "📄 Политика конфиденциальности",
+        "privacy_text": (
+            "📄 <b>Политика конфиденциальности (@seenspybot)</b>\n\n"
+            "Сервис работает в строгом соответствии с регламентом <b>Telegram Business API</b>:\n\n"
+            "• <b>Персональный доступ:</b> Все сохранённые копии удалённых сообщений доставляются исключительно вам.\n"
+            "• <b>Временный кэш:</b> Данные буферизируются до 3 дней и автоматически удаляются.\n"
+            "• <b>Полный контроль:</b> Вы можете в любой момент выбрать конкретные чаты или отключить бота в настройках Telegram.\n\n"
+            "🌐 Полный текст политики конфиденциальности опубликован на веб-сайте:"
+        ),
+
 
         # Referral
         "referral_title": "🎁 <b>Реферальная программа</b>\n\n",
@@ -223,6 +235,16 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         "btn_language": "🌐 Til / Язык",
         "btn_back": "🔙 Orqaga",
         "btn_referral": "🎁 Do'stlarni taklif qilish (+kunlar)",
+        "btn_privacy": "📄 Maxfiylik siyosati",
+        "privacy_text": (
+            "📄 <b>Maxfiylik siyosati (@seenspybot)</b>\n\n"
+            "Xizmat rasmiy <b>Telegram Business API</b> standartlari asosida ishlaydi:\n\n"
+            "• <b>Shaxsiy foydalanish:</b> O'chirilgan xabarlarning barcha nusxalari faqat sizning shaxsiy botingizga yetkaziladi.\n"
+            "• <b>Vaqtinchalik kesh:</b> Ma'lumotlar xotirada ko'pi bilan 3 kun saqlanadi va avtomatik o'chiriladi.\n"
+            "• <b>To'liq nazorat:</b> Siz istalgan vaqtda bot qaysi chatlarda ishlashini sozlashingiz yoki butunlay uzib qo'yishingiz mumkin.\n\n"
+            "🌐 Maxfiylik siyosatining to'liq veb-sahifasi bilan tanishing:"
+        ),
+
 
         # Referral
         "referral_title": "🎁 <b>Referal tizimi</b>\n\n",
@@ -414,9 +436,16 @@ def get_main_keyboard(lang: str = "ru") -> InlineKeyboardMarkup:
                     text=get_text("btn_language", lang),
                     callback_data="choose_lang"
                 )
+            ],
+            [
+                InlineKeyboardButton(
+                    text=get_text("btn_privacy", lang),
+                    url=PRIVACY_POLICY_URL
+                )
             ]
         ]
     )
+
 
 
 def get_language_keyboard() -> InlineKeyboardMarkup:

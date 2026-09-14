@@ -21,6 +21,10 @@ if DATABASE_URL.startswith("postgres://"):
 
 IS_POSTGRES = bool(DATABASE_URL and (DATABASE_URL.startswith("postgresql://") or DATABASE_URL.startswith("postgres://")))
 
+# Maxfiylik siyosati (Privacy Policy) veb-sahifasi havolasi
+PRIVACY_POLICY_URL = os.getenv("PRIVACY_POLICY_URL", "https://aza4k.github.io/seenspybot/").strip()
+
 if not BOT_TOKEN:
     print("OGOHLANTIRISH: BOT_TOKEN aniqlanmadi! Iltimos, .env faylida BOT_TOKEN ni belgilang.")
+
 

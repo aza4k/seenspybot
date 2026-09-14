@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Политика конфиденциальности — @seenspybot</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #0e1621;
+      --card-bg: #17212b;
+      --card-border: #242f3d;
+      --text-main: #f5f5f5;
+      --text-muted: #8e9ba8;
+      --primary: #2ea6ff;
+      --primary-hover: #1e96ef;
+      --accent-green: #4fae63;
+      --code-bg: #202b36;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      line-height: 1.65;
+      padding: 24px 16px;
+    }
+
+    .container {
+      max-width: 820px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      padding: 32px 0 24px;
+    }
+
+    .logo-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 72px;
+      height: 72px;
+      background: linear-gradient(135deg, #2ea6ff, #0077c9);
+      border-radius: 20px;
+      font-size: 34px;
+      margin-bottom: 16px;
+      box-shadow: 0 8px 24px rgba(46, 166, 255, 0.3);
+    }
+
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 15px;
+    }
+
+    .lang-switcher {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin: 24px 0 32px;
+    }
+
+    .lang-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      padding: 8px 18px;
+      border-radius: 24px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .lang-btn.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+      box-shadow: 0 4px 14px rgba(46, 166, 255, 0.35);
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 28px 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    h2 {
+      font-size: 19px;
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    p {
+      margin-bottom: 14px;
+      font-size: 15px;
+      color: #d1d8e0;
+    }
+
+    ul {
+      margin-left: 20px;
+      margin-bottom: 14px;
+    }
+
+    li {
+      margin-bottom: 8px;
+      font-size: 15px;
+      color: #d1d8e0;
+    }
+
+    .highlight-box {
+      background: rgba(46, 166, 255, 0.08);
+      border-left: 4px solid var(--primary);
+      padding: 14px 16px;
+      border-radius: 0 8px 8px 0;
+      margin: 16px 0;
+    }
+
+    .highlight-box p {
+      margin: 0;
+      color: #e3edf7;
+      font-size: 14px;
+    }
+
+    .btn-return {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: var(--primary);
+      color: #fff;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 15px;
+      padding: 12px 24px;
+      border-radius: 12px;
+      transition: background 0.2s ease;
+      margin-top: 10px;
+    }
+
+    .btn-return:hover {
+      background: var(--primary-hover);
+    }
+
+    footer {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 13px;
+      padding: 32px 0 16px;
+    }
+
+    .date-badge {
+      display: inline-block;
+      font-size: 12px;
+      color: var(--text-muted);
+      background: var(--code-bg);
+      padding: 4px 10px;
+      border-radius: 6px;
+      margin-bottom: 16px;
+    }
+
+    /* Tab Content */
+    .lang-content {
+      display: none;
+    }
+
+    .lang-content.active {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <div class="logo-badge">🕵️‍♂️</div>
+    <h1>SeenSpyBot (@seenspybot)</h1>
+    <div class="subtitle">Политика конфиденциальности / Maxfiylik siyosati</div>
+  </header>
+
+  <div class="lang-switcher">
+    <button class="lang-btn active" onclick="switchLang('ru')">🇷🇺 Русский</button>
+    <button class="lang-btn" onclick="switchLang('uz')">🇺🇿 O'zbekcha</button>
+  </div>
+
+  <!-- RUSSIAN CONTENT -->
+  <div id="content-ru" class="lang-content active">
+    <div class="card">
+      <span class="date-badge">Дата обновления: 15 сентября 2026 г.</span>
+      <h2>1. Общие положения</h2>
+      <p>
+        Настоящая Политика конфиденциальности разъясняет, как Telegram-бот <b>@seenspybot</b> 
+        (далее — «Сервис» или «Бот») взаимодействует с информацией пользователя при подключении через 
+        официальную платформу <b>Telegram Business</b>.
+      </p>
+      <p>
+        Сервис разработан исключительно как персональный вспомогательный инструмент для владельца 
+        Telegram Business аккаунта, помогающий восстанавливать случайно или преднамеренно удалённые сообщения, 
+        просматривать историю изменений текста и сохранять мультимедиа с таймером в выбранных чатах.
+      </p>
+    </div>
+
+    <div class="card">
+      <h2>2. Назначение и функции бота</h2>
+      <p>Бот предоставляет пользователю следующие возможности:</p>
+      <ul>
+        <li><b>Восстановление удалённых сообщений:</b> отправка владельцу копии сообщения (текст, фото, видео, голосовые), если собеседник удалил его в диалоге;</li>
+        <li><b>История редактирования:</b> уведомление об изменениях первоначального текста сообщений;</li>
+        <li><b>Поддержка медиа с таймером:</b> автоматическая фиксация и доставка одноразовых файлов владельцу аккаунта при ответе на них;</li>
+        <li><b>Реферальная система:</b> начисление бонусных дней подписки за приглашение друзей.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>3. Обработка и хранение данных</h2>
+      <p>
+        Бот функционирует в строгом соответствии с регламентом <b>Telegram Bot API</b> и правилами платформы <b>Telegram Business</b>:
+      </p>
+      <ul>
+        <li><b>Локальный кэш:</b> для сопоставления удалённых и отредактированных сообщений данные сохраняются во временном буфере (кэше) не более <b>3 дней</b>, после чего автоматически удаляются;</li>
+        <li><b>Конфиденциальность:</b> сохранённая информация отправляется <b>только владельцу аккаунта</b> в его личный диалог с ботом. Никакие данные не передаются сторонним лицам, рекламодателям или сервисам аналитики;</li>
+        <li><b>Шифрование и безопасность:</b> все базы данных и временные файлы защищены современными механизмами безопасности (WAL-протокол, ограничение доступа).</li>
+      </ul>
+      <div class="highlight-box">
+        <p>💡 <b>Важно:</b> Бот не продаёт, не собирает для маркетинга и не использует личные переписки пользователей для сторонних целей.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>4. Управление доступом и отключение</h2>
+      <p>Пользователь сохраняет 100% контроль над правами бота:</p>
+      <ul>
+        <li>Вы можете в любой момент выбрать, в каких именно чатах бот имеет право работать (или исключить конфиденциальные диалоги) через: <i>Настройки Telegram ➔ Telegram Business ➔ Чат-боты</i>;</li>
+        <li>Бот может быть отключён пользователем в 1 клик в любое время;</li>
+        <li>При отключении бота или отправке запроса администратору все привязанные данные и временные файлы удаляются без возможности восстановления.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>5. Контакты и обратная связь</h2>
+      <p>По любым вопросам относительно конфиденциальности или работы сервиса вы можете связаться с администрацией:</p>
+      <p>• Telegram-бот: <a href="https://t.me/seenspybot" style="color: var(--primary); text-decoration: none; font-weight: 600;">@seenspybot</a></p>
+      <a href="https://t.me/seenspybot" class="btn-return">🚀 Открыть бота в Telegram</a>
+    </div>
+  </div>
+
+  <!-- UZBEK CONTENT -->
+  <div id="content-uz" class="lang-content">
+    <div class="card">
+      <span class="date-badge">Oxirgi yangilanish: 2026-yil 15-sentyabr</span>
+      <h2>1. Umumiy qoidalar</h2>
+      <p>
+        Ushbu Maxfiylik siyosati <b>@seenspybot</b> Telegram boti (keyingi o'rinlarda — «Xizmat» yoki «Bot») 
+        <b>Telegram Business</b> platformasi orqali ulanganda foydalanuvchi ma'lumotlari bilan qanday ishlashini belgilaydi.
+      </p>
+      <p>
+        Xizmat faqatgina Telegram Business hisob egasiga o'z chatlaridagi o'chirilgan xabarlarni tiklash, 
+        tahrirlangan matnlarning asl holatini ko'rish va 1 martalik (taymerli) medialarni saqlab qolishda shaxsiy yordamchi vosita 
+        sifatida xizmat qiladi.
+      </p>
+    </div>
+
+    <div class="card">
+      <h2>2. Botning asosiy imkoniyatlari</h2>
+      <p>Bot foydalanuvchiga quyidagi funksiyalarni taqdim etadi:</p>
+      <ul>
+        <li><b>O'chirilgan xabarlarni tiklash:</b> Suhbatdosh xabarni o'chirib yuborgan taqdirda, uning nusxasini (matn, rasm, video, ovoz) hisob egasiga yetkazish;</li>
+        <li><b>Tahrirlash tarixi:</b> Xabar o'zgartirilganda uning eski va yangi ko'rinishini ko'rsatish;</li>
+        <li><b>1 martalik medialarni saqlash:</b> Taymerli rasm yoki videolarga javob (reply) qaytarilganda, uni avtomatik saqlab botga yetkazish;</li>
+        <li><b>Referal tizimi:</b> Do'stlarni taklif qilish orqali bepul obuna kunlarini qo'lga kiritish.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>3. Ma'lumotlarni qayta ishlash va saqlash</h2>
+      <p>
+        Bot <b>Telegram Bot API</b> va <b>Telegram Business</b> rasmiy xavfsizlik standartlariga qat'iy amal qiladi:
+      </p>
+      <ul>
+        <li><b>Vaqtinchalik kesh:</b> O'chirilgan xabarlarni aniqlash uchun ma'lumotlar xotirada maksimal <b>3 kun</b> vaqtincha saqlanadi va muddat o'tishi bilan avtomatik o'chiriladi;</li>
+        <li><b>Maxfiylik:</b> Saqlangan ma'lumotlar <b>faqatgina ushbu hisob egasiga</b> (uning bot bilan yozishmasiga) yuboriladi. Hech qanday ma'lumotlar uchinchi shaxslarga, reklama beruvchilarga sotilmaydi yoki uzatilmaydi;</li>
+        <li><b>Xavfsizlik:</b> Barcha ma'lumotlar bazasi va fayllar shifrlangan va xavfsiz holda boshqariladi.</li>
+      </ul>
+      <div class="highlight-box">
+        <p>💡 <b>Eslatma:</b> Bot shaxsiy yozishmalarni hech qanday reklama yoki tahliliy maqsadlarda to'plamaydi va tarqatmaydi.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>4. Ruxsatlarni boshqarish va to'xtatish</h2>
+      <p>Foydalanuvchi o'z ma'lumotlari ustidan to'liq 100% nazoratga ega:</p>
+      <ul>
+        <li>Siz istalgan paytda bot qaysi chatlarda ishlashini belgilashingiz (yoki maxfiy chatlarni chiqarib tashlashingiz) mumkin: <i>Telegram Sozlamalari ➔ Telegram Business ➔ Chat-botlar</i>;</li>
+        <li>Botni istalgan soniyada 1 ta tugma orqali butunlay uzib qo'yish mumkin;</li>
+        <li>Bot uzilganda yoki ma'lumotlarni o'chirish so'ralganda, barcha vaqtinchalik fayllar qayta tiklanmas darajada o'chiriladi.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>5. Aloqa va qo'llab-quvvatlash</h2>
+      <p>Maxfiylik siyosati yoki bot ishlashi bo'yicha har qanday savollar yuzasidan murojaat qilishingiz mumkin:</p>
+      <p>• Telegram-bot: <a href="https://t.me/seenspybot" style="color: var(--primary); text-decoration: none; font-weight: 600;">@seenspybot</a></p>
+      <a href="https://t.me/seenspybot" class="btn-return">🚀 Botni Telegramda ochish</a>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2026 SeenSpyBot. Все права защищены / Barcha huquqlar himoyalangan.</p>
+  </footer>
+</div>
+
+<script>
+  function switchLang(lang) {
+    document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.lang-content').forEach(content => content.classList.remove('active'));
+
+    if (lang === 'ru') {
+      document.querySelectorAll('.lang-btn')[0].classList.add('active');
+      document.getElementById('content-ru').classList.add('active');
+      document.title = "Политика конфиденциальности — @seenspybot";
+    } else {
+      document.querySelectorAll('.lang-btn')[1].classList.add('active');
+      document.getElementById('content-uz').classList.add('active');
+      document.title = "Maxfiylik siyosati — @seenspybot";
+    }
+  }
+</script>
+
+</body>
+</html>
