@@ -43,3 +43,7 @@ ENV/
 *.swo
 .DS_Store
 Thumbs.db
+
+# Local Admin Web Dashboard (Private, never commit to git)
+admin/
+run_admin.*
