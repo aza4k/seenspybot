@@ -639,7 +639,7 @@ async def update_message_text(chat_id: int, message_id: int, new_text: str):
     """, new_text, chat_id, message_id)
 
 
-async def cleanup_old_messages(days: int = 3):
+async def cleanup_old_messages(days: int = 7):
     """Eski xabarlarni tozalash (bazani yengil va tez saqlash uchun)."""
     try:
         pool = await get_pg_pool()

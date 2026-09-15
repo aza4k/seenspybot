@@ -692,6 +692,9 @@ async def on_deleted_business_messages(action: types.BusinessMessagesDeleted, bo
                 except Exception as e:
                     logger.error(f"O'chirilgan xabarni yuborishda xatolik: {e}")
 
+            # Telegram FloodWait himoyasi: ko'p xabarlar o'chirilganda kichik kechikish
+            await asyncio.sleep(0.3)
+
 
     # 4. Agar foydalanuvchida obuna BO'LMASA, xabar matni berilmaydi, teaser yuboriladi
     if not is_active and saved_any_count > 0:

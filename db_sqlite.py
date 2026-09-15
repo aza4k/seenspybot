@@ -701,7 +701,7 @@ async def update_message_text(chat_id: int, message_id: int, new_text: str):
     await db.commit()
 
 
-async def cleanup_old_messages(days: int = 3):
+async def cleanup_old_messages(days: int = 7):
     """Eski xabarlarni tozalash (bazani yengil va tez saqlash uchun)."""
     try:
         db = await get_db()

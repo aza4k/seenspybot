@@ -470,12 +470,12 @@ async def cb_admin_system(call: types.CallbackQuery):
         f"📊 <b>Baza hajmi:</b> <code>{db_size_str}</code>\n"
         f"📁 <b>Media kesh papkasi:</b> <code>{cache_size_mb:.2f} MB</code> ({cache_files_count} ta fayl)\n\n"
         "💡 <i>Eslatma: Barcha o'chirilgan xabarlar shaxsiy arxiv kanalida saqlangan bo'lsa, "
-        "3 kundan eski lokal kesh fayllarini xavfsiz tozalash mumkin.</i>"
+        "1 haftadan (7 kundan) eski lokal kesh fayllarini xavfsiz tozalash mumkin.</i>"
     )
 
     kb = InlineKeyboardMarkup(
         inline_keyboard=[
-            [InlineKeyboardButton(text="🧹 3 kundan eski keshni tozalash", callback_data="admin:clean_cache")],
+            [InlineKeyboardButton(text="🧹 1 haftadan eski keshni tozalash", callback_data="admin:clean_cache")],
             [InlineKeyboardButton(text="📥 Baza zaxirasini yuklab olish", callback_data="admin:backup")],
             [InlineKeyboardButton(text="🔙 Ortga", callback_data="admin:menu")],
         ]
@@ -494,7 +494,7 @@ async def cb_clean_cache(call: types.CallbackQuery):
 
     deleted_count = 0
     freed_mb = 0.0
-    cutoff_time = datetime.now() - timedelta(days=3)
+    cutoff_time = datetime.now() - timedelta(days=7)
 
     if MEDIA_DIR.exists():
         for f in MEDIA_DIR.glob("*"):
@@ -509,8 +509,8 @@ async def cb_clean_cache(call: types.CallbackQuery):
                     except Exception:
                         pass
 
-    # Shuningdek bazadagi 3 kundan eski xabarlarni tozalash
-    await cleanup_old_messages(days=3)
+    # Shuningdek bazadagi 1 haftadan (7 kundan) eski xabarlarni tozalash
+    await cleanup_old_messages(days=7)
 
     msg = f"🧹 <b>Kesh tozalandi:</b>\n{deleted_count} ta eski fayl o'chirildi, {freed_mb:.2f} MB joy bo'shatildi!"
     await call.answer(f"{deleted_count} ta fayl o'chirildi ({freed_mb:.2f} MB)", show_alert=True)

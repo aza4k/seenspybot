@@ -49,7 +49,7 @@ MESSAGES: Dict[str, Dict[str, str]] = {
             "📄 <b>Политика конфиденциальности (@seenspybot)</b>\n\n"
             "Сервис работает в строгом соответствии с регламентом <b>Telegram Business API</b>:\n\n"
             "• <b>Персональный доступ:</b> Все сохранённые копии удалённых сообщений доставляются исключительно вам.\n"
-            "• <b>Временный кэш:</b> Данные буферизируются до 3 дней и автоматически удаляются.\n"
+            "• <b>Временный кэш:</b> Данные буферизируются до 7 дней.\n"
             "• <b>Полный контроль:</b> Вы можете в любой момент выбрать конкретные чаты или отключить бота в настройках Telegram.\n\n"
             "🌐 Полный текст политики конфиденциальности опубликован на веб-сайте:"
         ),
@@ -251,7 +251,7 @@ MESSAGES: Dict[str, Dict[str, str]] = {
             "📄 <b>Maxfiylik siyosati (@seenspybot)</b>\n\n"
             "Xizmat rasmiy <b>Telegram Business API</b> standartlari asosida ishlaydi:\n\n"
             "• <b>Shaxsiy foydalanish:</b> O'chirilgan xabarlarning barcha nusxalari faqat sizning shaxsiy botingizga yetkaziladi.\n"
-            "• <b>Vaqtinchalik kesh:</b> Ma'lumotlar xotirada ko'pi bilan 3 kun saqlanadi va avtomatik o'chiriladi.\n"
+            "• <b>Vaqtinchalik kesh:</b> Ma'lumotlar xotirada ko'pi bilan 7 kun (1 hafta) saqlanadi.\n"
             "• <b>To'liq nazorat:</b> Siz istalgan vaqtda bot qaysi chatlarda ishlashini sozlashingiz yoki butunlay uzib qo'yishingiz mumkin.\n\n"
             "🌐 Maxfiylik siyosatining to'liq veb-sahifasi bilan tanishing:"
         ),
