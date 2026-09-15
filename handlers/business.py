@@ -492,8 +492,8 @@ async def handle_reply_media_capture(
         text_content=r_caption or "",
         file_path=str(destination) if destination.exists() else None,
         file_id=r_file_id,
-        event_tag="#VIEW_ONCE",
-        event_title="👁 <b>1 martalik (taymerli) media</b>"
+        event_tag="#MEDIA_SAVER",
+        event_title="📥 <b>Saqlangan media fayl (Media Saver)</b>"
     )
 
     # 2. Arxiv logiga yozish

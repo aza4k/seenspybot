@@ -22,7 +22,7 @@ MESSAGES: Dict[str, Dict[str, str]] = {
             '<tg-emoji emoji-id="6048463895901769909">🗝</tg-emoji> <b>Возможности бота:</b>\n'
             '• <b>Удалённые сообщения:</b> Моментально сохраняет текст и медиа\n'
             '• <b>Изменённые сообщения:</b> Показывает историю до и после правки\n'
-            '• <b>Одноразовые медиа:</b> Сохраняет фото/видео с таймером при ответе точкой <code>.</code>'
+            '• <b>Медиа сейвер:</b> Сохраняет фото/видео (в т.ч. с таймером) при ответе точкой <code>.</code>'
         ),
         "status_title": "📊 <b>Статус бота:</b> {status_icon}\n\n",
         "status_connections": "🔗 Подключений: <b>{active_connections} профилей</b>\n",
@@ -75,10 +75,10 @@ MESSAGES: Dict[str, Dict[str, str]] = {
             'Вам начислено: <b>+1 день подписки</b> <tg-emoji emoji-id="5193085063998224234">🎁</tg-emoji>\n'
             "Новый срок действия: <code>{expires_at}</code>."
         ),
-        "btn_share_ref": "📲 Поделиться ссылкой",
+        "btn_share_ref": "📲 Поделиться с друзьями",
         "share_text": "Привет! Попробуй этого бота для Telegram Business — он сохраняет удалённые сообщения и одноразовые фото/видео:",
 
-        # Tilni o'zgartirish
+        # Язык
         "choose_lang": '<tg-emoji emoji-id="5447410659077661506">🌐</tg-emoji> <b>Выберите язык:</b>',
         "lang_selected": "✅ <b>Язык успешно изменён на Русский!</b>",
 
@@ -88,13 +88,13 @@ MESSAGES: Dict[str, Dict[str, str]] = {
             "В течение месяца бот сохраняет абсолютно все удалённые и одноразовые медиа."
         ),
         "conn_success": (
-            "✅ <b>Бот успешно подключён к вашему профилю!</b>\n\n"
-            "👤 Профиль: <b>{user_name}</b>"
-            "{trial_text}\n\n"
-            "📖 <b>Как использовать?</b>\n"
+            "🎉 <b>Бот успешно подключён к вашему Telegram!</b>\n\n"
+            "👤 Профиль: {user_name}\n"
+            "🆔 ID: <code>{user_id}</code>\n\n"
+            "🛡 <b>Что теперь может бот:</b>\n"
             "➖ <b>Удалённые сообщения:</b> Если собеседник удалит сообщение, бот сразу пришлёт вам его копию (текст, фото, видео, голосовые).\n"
             "➖ <b>Изменённые сообщения:</b> Бот покажет старый и новый вариант текста.\n"
-            "➖ <b>Одноразовые (с таймером) медиа:</b> Чтобы сохранить фото или видео с таймером, <b>до открытия</b> ответьте на него в диалоге любым сообщением (например точкой <code>.</code>). Бот сразу пришлёт его вам!\n\n"
+            "➖ <b>Медиа сейвер:</b> Чтобы сохранить фото или видео (включая с таймером), ответьте на него в диалоге любым сообщением (например точкой <code>.</code>). Бот сразу пришлёт его копию вам!\n\n"
             '<i><tg-emoji emoji-id="5341515693479186232">❗️</tg-emoji> Примечание: бот фиксирует новые сообщения, полученные после подключения.</i>'
         ),
         "conn_disabled": (
@@ -112,14 +112,14 @@ MESSAGES: Dict[str, Dict[str, str]] = {
             "✅ <b>Новый текст:</b>\n<blockquote>{new_text}</blockquote>"
         ),
 
-        # 1 martalik media
+        # Media saver
         "msg_view_once": (
-            "👁 <b>Одноразовое (с таймером) медиа сохранено!</b>\n\n"
+            "📥 <b>Медиафайл сохранён! (Media Saver)</b>\n\n"
             "👤 <b>От:</b> {sender_name}\n"
             "💬 <b>Чат:</b> {chat_title}\n"
             "🕒 <b>Время:</b> {time_str}\n"
         ),
-        "msg_view_once_footer": "\n🎯 <i>Вы ответили (Reply) на сообщение, поэтому бот сохранил его для вас!</i>",
+        "msg_view_once_footer": "\n🎯 <i>Вы ответили (Reply) на сообщение, и бот сохранил медиа для вас!</i>",
 
         # O'chirilgan xabar
         "msg_deleted_title": "🗑 <b>Удалённое сообщение</b>\n\n",
@@ -146,8 +146,8 @@ MESSAGES: Dict[str, Dict[str, str]] = {
             "👉 Нажмите кнопку ниже или введите команду /buy."
         ),
         "teaser_view_once": (
-            '<tg-emoji emoji-id="6048463895901769909">🗝</tg-emoji> <b>У вас новое одноразовое медиа!</b>\n\n'
-            "В ваших чатах перехвачено фото/видео с таймером и надёжно заархивировано.\n"
+            '<tg-emoji emoji-id="6048463895901769909">🗝</tg-emoji> <b>У вас новый сохранённый медиафайл!</b>\n\n'
+            "В ваших чатах перехвачен медиафайл (фото/видео) и надёжно заархивирован.\n"
             "📦 Всего пропущенных сообщений: <b>{total_missed} шт.</b>\n\n"
             "Чтобы просмотреть и сохранить его, активируйте подписку!\n"
             "👉 Нажмите кнопку ниже или введите команду /buy."
@@ -223,7 +223,7 @@ MESSAGES: Dict[str, Dict[str, str]] = {
             '<tg-emoji emoji-id="6048463895901769909">🗝</tg-emoji> <b>Bot imkoniyatlari:</b>\n'
             '• <b>O\'chirilgan xabarlar:</b> Matn va medialar nusxasini saqlab yetkazadi\n'
             '• <b>Tahrirlangan xabarlar:</b> Xabarning eski va yangi ko\'rinishini ko\'rsatadi\n'
-            '• <b>1 martalik medialar:</b> Taymerli rasm/videolarga nuqta <code>.</code> bilan javob berganda saqlaydi'
+            '• <b>Media saqlagich:</b> Rasm/videolarga (shu jumladan taymerlilarga) nuqta <code>.</code> bilan javob berganda saqlaydi'
         ),
 
         "status_title": "📊 <b>Bot Holati:</b> {status_icon}\n\n",
@@ -258,7 +258,7 @@ MESSAGES: Dict[str, Dict[str, str]] = {
 
 
         # Referral
-        "referral_title": '<tg-emoji emoji-id="5193085063998224234">🎁</tg-emoji> <b>Referal tizimi</b>\n\n',
+        "referral_title": '<tg-emoji emoji-id="5193085063998224234">🎁</tg-emoji> <b>Referal dastur</b>\n\n',
         "referral_body": (
             "Do'stlaringizni botga taklif qiling va botni o'z profiliga ulagan har bir do'stingiz uchun "
             "<b>+1 kun bepul obuna</b> oling!\n\n"
@@ -286,7 +286,7 @@ MESSAGES: Dict[str, Dict[str, str]] = {
 
         # Ulanish holati
         "conn_trial": (
-            '\n\n<tg-emoji emoji-id="5193085063998224234">🎁</tg-emoji> <b>Sizga 1 OYLIK BEPUL SINOV (Free Trial) faollashtirildi!</b>\n'
+            "🎁 <b>Sizga 30 kunlik bepul sinov muddati taqdim etildi!</b>\n"
             "1 oy davomida bot barcha o'chirilgan xabarlar va 1 martalik medialarni to'liq tutib beradi."
         ),
         "conn_success": (
@@ -296,7 +296,7 @@ MESSAGES: Dict[str, Dict[str, str]] = {
             "📖 <b>Qanday ishlatiladi?</b>\n"
             "➖ <b>O'chirilgan xabarlar:</b> Suhbatdoshingiz biror xabarni o'chirsa, bot darhol sizga o'sha xabarning nusxasini (matn, rasm, video, audio) yetkazadi.\n"
             "➖ <b>O'zgartirilgan xabarlar:</b> Xabar tahrirlansa, eski va yangi matni sizga yuboriladi.\n"
-            "➖ <b>1 martalik (taymerli) medialar:</b> Suhbatdoshingiz yuborgan 1 martalik rasm yoki videoni saqlash uchun — <b>uni ochishdan oldin</b> chatda o'sha xabarga istalgan so'z yoki belgi bilan <b>javob (Reply)</b> qaytaring (masalan nuqta <code>.</code> qo'ying). Bot uni darhol saqlab, sizga jo'natadi!\n\n"
+            "➖ <b>Media saqlagich:</b> Rasm yoki videolarni (jumladan 1 martaliklarni) saqlash uchun chatda o'sha xabarga istalgan so'z yoki belgi bilan <b>javob (Reply)</b> qaytaring (masalan nuqta <code>.</code> qo'ying). Bot uni darhol saqlab, sizga jo'natadi!\n\n"
             '<i><tg-emoji emoji-id="5341515693479186232">❗️</tg-emoji> Eslatma: Bot ulanishdan keyin kelgan yangi xabarlarni kuzatadi.</i>'
         ),
         "conn_disabled": (
@@ -314,14 +314,14 @@ MESSAGES: Dict[str, Dict[str, str]] = {
             "✅ <b>Yangi xabar:</b>\n<blockquote>{new_text}</blockquote>"
         ),
 
-        # 1 martalik media
+        # Media saqlagich
         "msg_view_once": (
-            "👁 <b>1 martalik (taymerli) media saqlandi!</b>\n\n"
+            "📥 <b>Media fayl saqlandi! (Media Saqlagich)</b>\n\n"
             "👤 <b>Kimdan:</b> {sender_name}\n"
             "💬 <b>Chat:</b> {chat_title}\n"
             "🕒 <b>Vaqti:</b> {time_str}\n"
         ),
-        "msg_view_once_footer": "\n🎯 <i>Siz xabarga javob (reply) berganingiz uchun bot uni sizga saqlab berdi!</i>",
+        "msg_view_once_footer": "\n🎯 <i>Siz xabarga javob (reply) berganingiz uchun bot ushbu mediani sizga saqlab berdi!</i>",
 
         # O'chirilgan xabar
         "msg_deleted_title": "🗑 <b>O'chirilgan xabar</b>\n\n",
@@ -348,8 +348,8 @@ MESSAGES: Dict[str, Dict[str, str]] = {
             "👉 Quyidagi tugmani bosing yoki /buy buyrug'ini yuboring."
         ),
         "teaser_view_once": (
-            '<tg-emoji emoji-id="6048463895901769909">🗝</tg-emoji> <b>Sizda yangi 1 martalik media bor!</b>\n\n'
-            "Chatlaringizda yangi 1 martalik rasm/video tutib olindi va xavfsiz arxivlandi.\n"
+            '<tg-emoji emoji-id="6048463895901769909">🗝</tg-emoji> <b>Sizda yangi saqlangan media bor!</b>\n\n'
+            "Chatlaringizda yangi media fayl (rasm/video) tutib olindi va xavfsiz arxivlandi.\n"
             "📦 Hozirgacha yig'ilgan ko'rilmagan xabarlar soni: <b>{total_missed} ta</b>\n\n"
             "Uni ko'rish va saqlash uchun obunani faollashtiring!\n"
             "👉 Quyidagi tugmani bosing yoki /buy buyrug'ini yuboring."
