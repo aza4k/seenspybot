@@ -17,7 +17,7 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         "start_text": (
             '<tg-emoji emoji-id="5341515693479186232">❗️</tg-emoji> <b>Чтобы бот начал работать, подключите его к профилю:</b>\n\n'
             '<blockquote><tg-emoji emoji-id="5382322671679708881">1️⃣</tg-emoji> Нажмите зелёную кнопку <b>«Подключить бота»</b> ниже\n'
-            '<tg-emoji emoji-id="5381990043642502553">2️⃣</tg-emoji> Перейдите в <b>«Telegram Business»</b> ➔ <b>«Автоматизация чатов»</b> (Чат-боты)\n'
+            '<tg-emoji emoji-id="5381990043642502553">2️⃣</tg-emoji> Выберите <b>«Автоматизация чатов»</b> ➔ <b>«Чат-боты»</b>\n'
             '<tg-emoji emoji-id="5381879959335738545">3️⃣</tg-emoji> Введите юзернейм бота: <code>@seenspybot</code></blockquote>\n\n'
             '<tg-emoji emoji-id="6048463895901769909">🗝</tg-emoji> <b>Возможности бота:</b>\n'
             '• <b>Удалённые сообщения:</b> Моментально сохраняет текст и медиа\n'
@@ -27,7 +27,7 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         "status_title": "📊 <b>Статус бота:</b> {status_icon}\n\n",
         "status_connections": "🔗 Подключений: <b>{active_connections} профилей</b>\n",
         "status_messages": "💬 Сообщений в памяти: <b>{total_messages}</b>\n",
-        "status_subscription": "⭐ Ваша подписка: <b>{sub_status}</b>\n\n",
+        "status_subscription": '<tg-emoji emoji-id="5388909270316114329">⭐️</tg-emoji> Ваша подписка: <b>{sub_status}</b>\n\n',
         "status_footer": "Бот отслеживает <b>удалённые</b> и <b>одноразовые</b> медиа.",
         
         # Sub status
@@ -41,9 +41,9 @@ MESSAGES: Dict[str, Dict[str, str]] = {
 
         "btn_plans": "⭐ Тарифы",
         "btn_stats": "📊 Статус",
-        "btn_language": "🌐 Язык / Til",
+        "btn_language": "🌐 Язык",
         "btn_back": "🔙 Назад",
-        "btn_referral": "🎁 Пригласить друзей (+дни)",
+        "btn_referral": "🎁 Пригласить друзей",
         "btn_privacy": "📄 Политика конфиденциальности",
         "privacy_text": (
             "📄 <b>Политика конфиденциальности (@seenspybot)</b>\n\n"
@@ -60,26 +60,26 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         "referral_body": (
             "Приглашайте друзей в бота и получайте <b>+1 день полной подписки</b> за каждого друга, "
             "который подключит бота к своему профилю!\n\n"
-            "📊 <b>Ваша статистика:</b>\n"
+            '<tg-emoji emoji-id="5388909270316114329">⭐️</tg-emoji> <b>Ваша статистика:</b>\n'
             "• Приглашено друзей: <b>{invited} / {max_limit}</b>\n"
             "• Подключили бота: <b>{connected} человек</b>\n"
             "• Получено бонусных дней: <b>+{reward_days} дней</b>\n"
             "• Осталось мест для приглашения: <b>{remaining} мест</b>\n\n"
             "🔗 <b>Ваша персональная ссылка:</b>\n<code>{ref_link}</code>\n\n"
-            "⚠️ <i>Бонус начисляется сразу, как только ваш друг подключит бота через Telegram Business!</i>"
+            '<tg-emoji emoji-id="5341515693479186232">❗️</tg-emoji> <i>Бонус начисляется сразу, как только ваш друг подключит бота через Telegram Business!</i>'
         ),
-        "referral_disabled": "⚠️ <b>Реферальная программа временно отключена администратором.</b>",
+        "referral_disabled": '<tg-emoji emoji-id="5341515693479186232">❗️</tg-emoji> <b>Реферальная программа временно отключена администратором.</b>',
         "referral_reward_notify": (
             "🎉 <b>Отличная новость!</b>\n\n"
             "Приглашённый вами друг подключил бота к своему профилю!\n"
-            "Вам начислено: <b>+1 день подписки</b> 🎁\n"
+            'Вам начислено: <b>+1 день подписки</b> <tg-emoji emoji-id="5193085063998224234">🎁</tg-emoji>\n'
             "Новый срок действия: <code>{expires_at}</code>."
         ),
         "btn_share_ref": "📲 Поделиться ссылкой",
         "share_text": "Привет! Попробуй этого бота для Telegram Business — он сохраняет удалённые сообщения и одноразовые фото/видео:",
 
         # Tilni o'zgartirish
-        "choose_lang": '<tg-emoji emoji-id="5447410659077661506">🌐</tg-emoji> <b>Выберите язык интерфейса / Tilni tanlang:</b>',
+        "choose_lang": '<tg-emoji emoji-id="5447410659077661506">🌐</tg-emoji> <b>Выберите язык:</b>',
         "lang_selected": "✅ <b>Язык успешно изменён на Русский!</b>",
 
         # Ulanish holati
@@ -95,10 +95,10 @@ MESSAGES: Dict[str, Dict[str, str]] = {
             "➖ <b>Удалённые сообщения:</b> Если собеседник удалит сообщение, бот сразу пришлёт вам его копию (текст, фото, видео, голосовые).\n"
             "➖ <b>Изменённые сообщения:</b> Бот покажет старый и новый вариант текста.\n"
             "➖ <b>Одноразовые (с таймером) медиа:</b> Чтобы сохранить фото или видео с таймером, <b>до открытия</b> ответьте на него в диалоге любым сообщением (например точкой <code>.</code>). Бот сразу пришлёт его вам!\n\n"
-            "❗️ <i>Примечание: бот фиксирует новые сообщения, полученные после подключения.</i>"
+            '<i><tg-emoji emoji-id="5341515693479186232">❗️</tg-emoji> Примечание: бот фиксирует новые сообщения, полученные после подключения.</i>'
         ),
         "conn_disabled": (
-            "⚠️ <b>Бот отключён от профиля!</b>\n\n"
+            '<tg-emoji emoji-id="5341515693479186232">❗️</tg-emoji> <b>Бот отключён от профиля!</b>\n\n'
             "👤 Профиль: {user_name}\n"
             "Отслеживание приостановлено."
         ),
@@ -137,7 +137,7 @@ MESSAGES: Dict[str, Dict[str, str]] = {
 
 
         # Teaserlar (obunasi yo'q foydalanuvchilar uchun)
-        "teaser_deleted_title": "🔒 <b>У вас новое удалённое сообщение!</b>\n\n",
+        "teaser_deleted_title": '<tg-emoji emoji-id="6048463895901769909">🗝</tg-emoji> <b>У вас новое удалённое сообщение!</b>\n\n',
         "teaser_deleted_body": (
             "Кто-то только что удалил сообщение в ваших чатах.\n"
             "Оно надёжно сохранено в архиве.\n"
@@ -146,7 +146,7 @@ MESSAGES: Dict[str, Dict[str, str]] = {
             "👉 Нажмите кнопку ниже или введите команду /buy."
         ),
         "teaser_view_once": (
-            "🔒 <b>У вас новое одноразовое медиа!</b>\n\n"
+            '<tg-emoji emoji-id="6048463895901769909">🗝</tg-emoji> <b>У вас новое одноразовое медиа!</b>\n\n'
             "В ваших чатах перехвачено фото/видео с таймером и надёжно заархивировано.\n"
             "📦 Всего пропущенных сообщений: <b>{total_missed} шт.</b>\n\n"
             "Чтобы просмотреть и сохранить его, активируйте подписку!\n"
@@ -175,7 +175,7 @@ MESSAGES: Dict[str, Dict[str, str]] = {
             "• <b>1 Неделя</b> — 5 Stars\n"
             "• <b>1 Месяц</b> — 15 Stars <i>(Скидка 25%)</i>\n"
             "• <b>1 Год</b> — 180 Stars <i>(Самый выгодный)</i>\n\n"
-            "Оплата производится безопасно через официальные <b>Telegram Stars</b> ⭐"
+            'Оплата производится безопасно через официальные <b>Telegram Stars</b> <tg-emoji emoji-id="5388909270316114329">⭐️</tg-emoji>'
         ),
         "plan_week_name": "1 Неделя (7 дней)",
         "plan_week_desc": "Доступ к удалённым и одноразовым сообщениям на 7 дней",
@@ -186,7 +186,7 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         "invoice_title": "Подписка: {plan_name}",
         "payment_success": (
             "🎉 <b>Оплата прошла успешно!</b>\n\n"
-            "⭐️ Тариф: <b>{plan_name}</b>\n"
+            '<tg-emoji emoji-id="5388909270316114329">⭐️</tg-emoji> Тариф: <b>{plan_name}</b>\n'
             "⏳ Действует до: <code>{expires_at}</code>\n\n"
             "Спасибо за подписку! Все функции бота полностью активны."
         ),
@@ -206,7 +206,7 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         ),
         "btn_renew_sub": "⭐ Продлить подписку",
         "scheduler_cutoff": (
-            "⚠️ <b>С момента окончания подписки прошло более 30 дней!</b>\n\n"
+            '<tg-emoji emoji-id="5341515693479186232">❗️</tg-emoji> <b>С момента окончания подписки прошло более 30 дней!</b>\n\n'
             "Так как подписка не обновлялась в течение месяца, сохранение новых удалённых сообщений приостановлено.\n\n"
             "Чтобы возобновить работу сервиса и сохранение архива, активируйте подписку.\n\n"
             "👉 Для продления: /buy"
@@ -218,7 +218,7 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         "start_text": (
             '<tg-emoji emoji-id="5341515693479186232">❗️</tg-emoji> <b>Bot to\'liq ishlashi uchun uni profilingizga ulang:</b>\n\n'
             '<blockquote><tg-emoji emoji-id="5382322671679708881">1️⃣</tg-emoji> Quyidagi yashil <b>«Botni ulash»</b> tugmasini bosing\n'
-            '<tg-emoji emoji-id="5381990043642502553">2️⃣</tg-emoji> <b>«Telegram Business»</b> ➔ <b>«Chatlar avtomatizatsiyasi»</b> (Chat-botlar) bo\'limiga kiring\n'
+            '<tg-emoji emoji-id="5381990043642502553">2️⃣</tg-emoji> <b>«Chatlar avtomatizatsiyasi»</b> ➔ <b>«Chat-botlar»</b> bo\'limini tanlang\n'
             '<tg-emoji emoji-id="5381879959335738545">3️⃣</tg-emoji> Qidiruvga bot nomini yozing: <code>@seenspybot</code></blockquote>\n\n'
             '<tg-emoji emoji-id="6048463895901769909">🗝</tg-emoji> <b>Bot imkoniyatlari:</b>\n'
             '• <b>O\'chirilgan xabarlar:</b> Matn va medialar nusxasini saqlab yetkazadi\n'
@@ -229,7 +229,7 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         "status_title": "📊 <b>Bot Holati:</b> {status_icon}\n\n",
         "status_connections": "🔗 Ulanishlar: <b>{active_connections} ta profil</b>\n",
         "status_messages": "💬 Xotiradagi xabarlar: <b>{total_messages} ta</b>\n",
-        "status_subscription": "⭐ Obunangiz: <b>{sub_status}</b>\n\n",
+        "status_subscription": '<tg-emoji emoji-id="5388909270316114329">⭐️</tg-emoji> Obunangiz: <b>{sub_status}</b>\n\n',
         "status_footer": "Faqat <b>o'chirilgan</b> va <b>1 martalik</b> xabarlar ushlanadi.",
         
         # Sub status
@@ -243,9 +243,9 @@ MESSAGES: Dict[str, Dict[str, str]] = {
 
         "btn_plans": "⭐ Tariflar",
         "btn_stats": "📊 Statistika",
-        "btn_language": "🌐 Til / Язык",
+        "btn_language": "🌐 Til",
         "btn_back": "🔙 Orqaga",
-        "btn_referral": "🎁 Do'stlarni taklif qilish (+kunlar)",
+        "btn_referral": "🎁 Do'stlarni taklif qilish",
         "btn_privacy": "📄 Maxfiylik siyosati",
         "privacy_text": (
             "📄 <b>Maxfiylik siyosati (@seenspybot)</b>\n\n"
@@ -262,26 +262,26 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         "referral_body": (
             "Do'stlaringizni botga taklif qiling va botni o'z profiliga ulagan har bir do'stingiz uchun "
             "<b>+1 kun bepul obuna</b> oling!\n\n"
-            "📊 <b>Sizning statistikangiz:</b>\n"
+            '<tg-emoji emoji-id="5388909270316114329">⭐️</tg-emoji> <b>Sizning statistikangiz:</b>\n'
             "• Taklif qilingan do'stlar: <b>{invited} / {max_limit}</b>\n"
             "• Botni profiliga ulaganlar: <b>{connected} ta</b>\n"
             "• Olingan bonus kunlar: <b>+{reward_days} kun</b>\n"
             "• Taklif uchun qolgan o'rinlar: <b>{remaining} ta</b>\n\n"
             "🔗 <b>Sizning shaxsiy havolangiz:</b>\n<code>{ref_link}</code>\n\n"
-            "⚠️ <i>Bonus do'stingiz botni Telegram Business orqali o'z profiliga ulashi bilanoq avtomatik qo'shiladi!</i>"
+            '<tg-emoji emoji-id="5341515693479186232">❗️</tg-emoji> <i>Bonus do\'stingiz botni Telegram Business orqali o\'z profiliga ulashi bilanoq avtomatik qo\'shiladi!</i>'
         ),
-        "referral_disabled": "⚠️ <b>Referal tizimi vaqtincha administrator tomonidan to'xtatilgan.</b>",
+        "referral_disabled": '<tg-emoji emoji-id="5341515693479186232">❗️</tg-emoji> <b>Referal tizimi vaqtincha administrator tomonidan to\'xtatilgan.</b>',
         "referral_reward_notify": (
             "🎉 <b>Ajoyib xushxabar!</b>\n\n"
             "Siz taklif qilgan do'stingiz botni o'z profiliga muvaffaqiyatli uladi!\n"
-            "Sizga taqdim etildi: <b>+1 kun bepul obuna</b> 🎁\n"
+            'Sizga taqdim etildi: <b>+1 kun bepul obuna</b> <tg-emoji emoji-id="5193085063998224234">🎁</tg-emoji>\n'
             "Yangi amal qilish muddati: <code>{expires_at}</code>."
         ),
         "btn_share_ref": "📲 Do'stlarga ulashish",
         "share_text": "Salom! Telegram Business uchun bu botni sinab ko'r — o'chirilgan xabarlar va 1 martalik rasm/videolarni saqlab beradi:",
 
         # Tilni o'zgartirish
-        "choose_lang": '<tg-emoji emoji-id="5447410659077661506">🌐</tg-emoji> <b>Tilni tanlang / Выберите язык:</b>',
+        "choose_lang": '<tg-emoji emoji-id="5447410659077661506">🌐</tg-emoji> <b>Tilni tanlang:</b>',
         "lang_selected": "✅ <b>Til muvaffaqiyatli O'zbek tiliga o'zgartirildi!</b>",
 
         # Ulanish holati
@@ -297,10 +297,10 @@ MESSAGES: Dict[str, Dict[str, str]] = {
             "➖ <b>O'chirilgan xabarlar:</b> Suhbatdoshingiz biror xabarni o'chirsa, bot darhol sizga o'sha xabarning nusxasini (matn, rasm, video, audio) yetkazadi.\n"
             "➖ <b>O'zgartirilgan xabarlar:</b> Xabar tahrirlansa, eski va yangi matni sizga yuboriladi.\n"
             "➖ <b>1 martalik (taymerli) medialar:</b> Suhbatdoshingiz yuborgan 1 martalik rasm yoki videoni saqlash uchun — <b>uni ochishdan oldin</b> chatda o'sha xabarga istalgan so'z yoki belgi bilan <b>javob (Reply)</b> qaytaring (masalan nuqta <code>.</code> qo'ying). Bot uni darhol saqlab, sizga jo'natadi!\n\n"
-            "❗️ <i>Eslatma: Bot ulanishdan keyin kelgan yangi xabarlarni kuzatadi.</i>"
+            '<i><tg-emoji emoji-id="5341515693479186232">❗️</tg-emoji> Eslatma: Bot ulanishdan keyin kelgan yangi xabarlarni kuzatadi.</i>'
         ),
         "conn_disabled": (
-            "⚠️ <b>Bot profildan uzildi!</b>\n\n"
+            '<tg-emoji emoji-id="5341515693479186232">❗️</tg-emoji> <b>Bot profildan uzildi!</b>\n\n'
             "👤 Profil: {user_name}\n"
             "Kuzatuv to'xtatildi."
         ),
@@ -339,7 +339,7 @@ MESSAGES: Dict[str, Dict[str, str]] = {
 
 
         # Teaserlar
-        "teaser_deleted_title": "🔒 <b>Sizda yangi o'chirilgan xabar bor!</b>\n\n",
+        "teaser_deleted_title": '<tg-emoji emoji-id="6048463895901769909">🗝</tg-emoji> <b>Sizda yangi o\'chirilgan xabar bor!</b>\n\n',
         "teaser_deleted_body": (
             "Chatlaringizda kimdir xabarni o'chirib yubordi.\n"
             "U arxivda xavfsiz saqlanmoqda.\n"
@@ -348,7 +348,7 @@ MESSAGES: Dict[str, Dict[str, str]] = {
             "👉 Quyidagi tugmani bosing yoki /buy buyrug'ini yuboring."
         ),
         "teaser_view_once": (
-            "🔒 <b>Sizda yangi 1 martalik media bor!</b>\n\n"
+            '<tg-emoji emoji-id="6048463895901769909">🗝</tg-emoji> <b>Sizda yangi 1 martalik media bor!</b>\n\n'
             "Chatlaringizda yangi 1 martalik rasm/video tutib olindi va xavfsiz arxivlandi.\n"
             "📦 Hozirgacha yig'ilgan ko'rilmagan xabarlar soni: <b>{total_missed} ta</b>\n\n"
             "Uni ko'rish va saqlash uchun obunani faollashtiring!\n"
@@ -377,7 +377,7 @@ MESSAGES: Dict[str, Dict[str, str]] = {
             "• <b>1 Hafta</b> — 5 Stars\n"
             "• <b>1 Oy</b> — 15 Stars <i>(25% chegirma)</i>\n"
             "• <b>1 Yil</b> — 180 Stars <i>(Eng manfaatli)</i>\n\n"
-            "To'lov xavfsiz tarzda rasmiy <b>Telegram Stars</b> ⭐ orqali amalga oshiriladi."
+            'To\'lov xavfsiz tarzda rasmiy <b>Telegram Stars</b> <tg-emoji emoji-id="5388909270316114329">⭐️</tg-emoji> orqali amalga oshiriladi.'
         ),
         "plan_week_name": "1 Hafta (7 kun)",
         "plan_week_desc": "O'chirilgan va 1 martalik xabarlarni 7 kun davomida tutib olish xizmati",
@@ -388,7 +388,7 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         "invoice_title": "Obuna: {plan_name}",
         "payment_success": (
             "🎉 <b>To'lov muvaffaqiyatli qabul qilindi!</b>\n\n"
-            "⭐️ Tarif: <b>{plan_name}</b>\n"
+            '<tg-emoji emoji-id="5388909270316114329">⭐️</tg-emoji> Tarif: <b>{plan_name}</b>\n'
             "⏳ Amal qilish muddati: <code>{expires_at}</code> gacha\n\n"
             "Obuna uchun rahmat! Barcha xizmatlar to'liq faol."
         ),
@@ -408,7 +408,7 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         ),
         "btn_renew_sub": "⭐ Obunani yangilash",
         "scheduler_cutoff": (
-            "⚠️ <b>Obunangiz tugaganiga 30 kundan oshdi!</b>\n\n"
+            '<tg-emoji emoji-id="5341515693479186232">❗️</tg-emoji> <b>Obunangiz tugaganiga 30 kundan oshdi!</b>\n\n'
             "Siz 1 oy davomida obunani yangilamaganingiz sababli, yangi o'chirilgan xabarlarni zaxira qilish to'xtatildi.\n\n"
             "Xizmatni qayta tiklash va arxivni saqlashni davom ettirish uchun quyidagi tugma orqali obuna bo'ling.\n\n"
             "👉 Qayta yoqish uchun: /buy"
@@ -439,7 +439,7 @@ def get_main_keyboard(lang: str = "ru") -> InlineKeyboardMarkup:
             [
                 InlineKeyboardButton(
                     text=get_text("btn_connect", lang),
-                    url="tg://settings/business",
+                    url="tg://settings/edit",
                     style="success"
                 )
             ],
@@ -469,7 +469,7 @@ def get_main_keyboard(lang: str = "ru") -> InlineKeyboardMarkup:
 
 
 
-def get_language_keyboard() -> InlineKeyboardMarkup:
+def get_language_keyboard(lang: str = "ru") -> InlineKeyboardMarkup:
     """Til tanlash klaviaturasi."""
     return InlineKeyboardMarkup(
         inline_keyboard=[
@@ -478,7 +478,7 @@ def get_language_keyboard() -> InlineKeyboardMarkup:
                 InlineKeyboardButton(text="🇺🇿 O'zbekcha", callback_data="set_lang:uz")
             ],
             [
-                InlineKeyboardButton(text="🔙 Назад / Orqaga", callback_data="back_to_menu")
+                InlineKeyboardButton(text=get_text("btn_back", lang), callback_data="back_to_menu")
             ]
         ]
     )

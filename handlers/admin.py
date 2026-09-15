@@ -160,11 +160,11 @@ async def cb_admin_stats(call: types.CallbackQuery):
         "💬 <b>Xabarlar xotirasi:</b>\n"
         f"• Jami saqlangan: <b>{stats['total_msgs']} ta</b>\n"
         f"• Media fayllar: <b>{stats['total_media']} ta</b>\n\n"
-        "⭐️ <b>Obunalar taqsimoti:</b>\n"
-        f"• 🎁 Faol Free Trial (30 kun): <b>{stats['active_trials']} ta</b>\n"
+        '<tg-emoji emoji-id="5388909270316114329">⭐️</tg-emoji> <b>Obunalar taqsimoti:</b>\n'
+        f'• <tg-emoji emoji-id="5193085063998224234">🎁</tg-emoji> Faol Free Trial (30 kun): <b>{stats["active_trials"]} ta</b>\n'
         f"• 🟢 Faol to'lovli obunachilar: <b>{stats['active_paid']} ta</b>\n"
         f"• ⏳ Obuna muddati tugaganlar: <b>{stats['expired_count']} ta</b>\n\n"
-        f"💰 <b>Jami tushgan daromad:</b> ⭐ <b>{stats['total_stars']} Stars</b>\n\n"
+        f'💰 <b>Jami tushgan daromad:</b> <tg-emoji emoji-id="5388909270316114329">⭐️</tg-emoji> <b>{stats["total_stars"]} Stars</b>\n\n'
         "📦 <b>Arxiv kanali ko'rsatkichlari:</b>\n"
         f"• Jami arxivlangan: <b>{stats['total_archive']} ta</b>\n"
         f"• To'lov kutilayotgan (ochilmagan): <b>{stats['undelivered_archive']} ta</b>"

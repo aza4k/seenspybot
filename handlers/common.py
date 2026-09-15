@@ -93,12 +93,12 @@ async def cmd_language(event: types.Message | types.CallbackQuery):
 
     if isinstance(event, types.CallbackQuery):
         try:
-            await event.message.edit_text(text, reply_markup=get_language_keyboard(), parse_mode="HTML")
+            await event.message.edit_text(text, reply_markup=get_language_keyboard(lang), parse_mode="HTML")
         except Exception:
             pass
         await event.answer()
     else:
-        await event.answer(text, reply_markup=get_language_keyboard(), parse_mode="HTML")
+        await event.answer(text, reply_markup=get_language_keyboard(lang), parse_mode="HTML")
 
 
 @router.callback_query(F.data.startswith("set_lang:"))
