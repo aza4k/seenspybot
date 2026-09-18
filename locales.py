@@ -22,7 +22,7 @@ MESSAGES: Dict[str, Dict[str, str]] = {
             '<tg-emoji emoji-id="6048463895901769909">🗝</tg-emoji> <b>Возможности бота:</b>\n'
             '• <b>Удалённые сообщения:</b> Моментально сохраняет текст и медиа\n'
             '• <b>Изменённые сообщения:</b> Показывает историю до и после правки\n'
-            '• <b>Медиа сейвер:</b> Сохраняет фото/видео (в т.ч. с таймером) при ответе точкой <code>.</code>'
+            '• <b>1-разовые медиа:</b> Сохраняет фото/видео с таймером при ответе точкой <code>.</code> до открытия'
         ),
         "status_title": "📊 <b>Статус бота:</b> {status_icon}\n\n",
         "status_connections": "🔗 Подключений: <b>{active_connections} профилей</b>\n",
@@ -90,16 +90,18 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         "conn_success": (
             "🎉 <b>Бот успешно подключён к вашему Telegram!</b>\n\n"
             "👤 Профиль: {user_name}\n"
-            "🆔 ID: <code>{user_id}</code>\n\n"
+            "🆔 ID: <code>{user_id}</code>"
+            "{trial_text}\n\n"
             "🛡 <b>Что теперь может бот:</b>\n"
             "➖ <b>Удалённые сообщения:</b> Если собеседник удалит сообщение, бот сразу пришлёт вам его копию (текст, фото, видео, голосовые).\n"
             "➖ <b>Изменённые сообщения:</b> Бот покажет старый и новый вариант текста.\n"
-            "➖ <b>Медиа сейвер:</b> Чтобы сохранить фото или видео (включая с таймером), ответьте на него в диалоге любым сообщением (например точкой <code>.</code>). Бот сразу пришлёт его копию вам!\n\n"
+            "➖ <b>Одноразовые (с таймером) медиа:</b> Чтобы сохранить фото или видео с таймером, <b>до открытия</b> ответьте на него в диалоге любым сообщением (например точкой <code>.</code>). Бот сразу пришлёт его оригинал вам!\n\n"
             '<i><tg-emoji emoji-id="5341515693479186232">❗️</tg-emoji> Примечание: бот фиксирует новые сообщения, полученные после подключения.</i>'
         ),
         "conn_disabled": (
             '<tg-emoji emoji-id="5341515693479186232">❗️</tg-emoji> <b>Бот отключён от профиля!</b>\n\n'
             "👤 Профиль: {user_name}\n"
+            "🆔 ID: <code>{user_id}</code>\n\n"
             "Отслеживание приостановлено."
         ),
 
@@ -112,14 +114,14 @@ MESSAGES: Dict[str, Dict[str, str]] = {
             "✅ <b>Новый текст:</b>\n<blockquote>{new_text}</blockquote>"
         ),
 
-        # Media saver
+        # Odnorazovoe media (View-once)
         "msg_view_once": (
-            "📥 <b>Медиафайл сохранён! (Media Saver)</b>\n\n"
+            "👁 <b>Одноразовое (с таймером) медиа сохранено!</b>\n\n"
             "👤 <b>От:</b> {sender_name}\n"
             "💬 <b>Чат:</b> {chat_title}\n"
             "🕒 <b>Время:</b> {time_str}\n"
         ),
-        "msg_view_once_footer": "\n🎯 <i>Вы ответили (Reply) на сообщение, и бот сохранил медиа для вас!</i>",
+        "msg_view_once_footer": "\n🎯 <i>Вы ответили (Reply) на исчезающее медиа до его открытия, и бот сохранил его оригинал!</i>",
 
         # O'chirilgan xabar
         "msg_deleted_title": "🗑 <b>Удалённое сообщение</b>\n\n",
@@ -223,7 +225,7 @@ MESSAGES: Dict[str, Dict[str, str]] = {
             '<tg-emoji emoji-id="6048463895901769909">🗝</tg-emoji> <b>Bot imkoniyatlari:</b>\n'
             '• <b>O\'chirilgan xabarlar:</b> Matn va medialar nusxasini saqlab yetkazadi\n'
             '• <b>Tahrirlangan xabarlar:</b> Xabarning eski va yangi ko\'rinishini ko\'rsatadi\n'
-            '• <b>Media saqlagich:</b> Rasm/videolarga (shu jumladan taymerlilarga) nuqta <code>.</code> bilan javob berganda saqlaydi'
+            '• <b>1 martalik medialar:</b> Taymerli rasm/videolarga ochishdan oldin nuqta <code>.</code> bilan javob berganda saqlaydi'
         ),
 
         "status_title": "📊 <b>Bot Holati:</b> {status_icon}\n\n",
@@ -286,22 +288,24 @@ MESSAGES: Dict[str, Dict[str, str]] = {
 
         # Ulanish holati
         "conn_trial": (
-            "🎁 <b>Sizga 30 kunlik bepul sinov muddati taqdim etildi!</b>\n"
+            "\n\n🎁 <b>Sizga 30 kunlik bepul sinov muddati taqdim etildi!</b>\n"
             "1 oy davomida bot barcha o'chirilgan xabarlar va 1 martalik medialarni to'liq tutib beradi."
         ),
         "conn_success": (
-            "✅ <b>Bot profilingizga muvaffaqiyatli ulandi!</b>\n\n"
-            "👤 Profil: <b>{user_name}</b>"
+            "🎉 <b>Bot profilingizga muvaffaqiyatli ulandi!</b>\n\n"
+            "👤 Profil: <b>{user_name}</b>\n"
+            "🆔 ID: <code>{user_id}</code>"
             "{trial_text}\n\n"
             "📖 <b>Qanday ishlatiladi?</b>\n"
             "➖ <b>O'chirilgan xabarlar:</b> Suhbatdoshingiz biror xabarni o'chirsa, bot darhol sizga o'sha xabarning nusxasini (matn, rasm, video, audio) yetkazadi.\n"
             "➖ <b>O'zgartirilgan xabarlar:</b> Xabar tahrirlansa, eski va yangi matni sizga yuboriladi.\n"
-            "➖ <b>Media saqlagich:</b> Rasm yoki videolarni (jumladan 1 martaliklarni) saqlash uchun chatda o'sha xabarga istalgan so'z yoki belgi bilan <b>javob (Reply)</b> qaytaring (masalan nuqta <code>.</code> qo'ying). Bot uni darhol saqlab, sizga jo'natadi!\n\n"
+            "➖ <b>1 martalik (taymerli) medialar:</b> Suhbatdoshingiz yuborgan 1 martalik rasm yoki videoni saqlash uchun — <b>uni ochishdan oldin</b> chatda o'sha xabarga istalgan so'z yoki belgi bilan <b>javob (Reply)</b> qaytaring (masalan nuqta <code>.</code> qo'ying). Bot uning asl nusxasini darhol sizga saqlab jo'natadi!\n\n"
             '<i><tg-emoji emoji-id="5341515693479186232">❗️</tg-emoji> Eslatma: Bot ulanishdan keyin kelgan yangi xabarlarni kuzatadi.</i>'
         ),
         "conn_disabled": (
             '<tg-emoji emoji-id="5341515693479186232">❗️</tg-emoji> <b>Bot profildan uzildi!</b>\n\n'
             "👤 Profil: {user_name}\n"
+            "🆔 ID: <code>{user_id}</code>\n\n"
             "Kuzatuv to'xtatildi."
         ),
 
@@ -314,14 +318,14 @@ MESSAGES: Dict[str, Dict[str, str]] = {
             "✅ <b>Yangi xabar:</b>\n<blockquote>{new_text}</blockquote>"
         ),
 
-        # Media saqlagich
+        # 1 martalik media (View-once)
         "msg_view_once": (
-            "📥 <b>Media fayl saqlandi! (Media Saqlagich)</b>\n\n"
+            "👁 <b>1 martalik (taymerli) media saqlandi!</b>\n\n"
             "👤 <b>Kimdan:</b> {sender_name}\n"
             "💬 <b>Chat:</b> {chat_title}\n"
             "🕒 <b>Vaqti:</b> {time_str}\n"
         ),
-        "msg_view_once_footer": "\n🎯 <i>Siz xabarga javob (reply) berganingiz uchun bot ushbu mediani sizga saqlab berdi!</i>",
+        "msg_view_once_footer": "\n🎯 <i>Siz 1 martalik mediani ochishdan oldin unga javob (Reply) berdingiz va bot uning asl nusxasini saqlab oldi!</i>",
 
         # O'chirilgan xabar
         "msg_deleted_title": "🗑 <b>O'chirilgan xabar</b>\n\n",
@@ -422,11 +426,18 @@ def get_text(key: str, lang: Optional[str] = "ru", **kwargs: Any) -> str:
     current_lang = lang if lang in MESSAGES else DEFAULT_LANGUAGE
     template = MESSAGES[current_lang].get(key)
     if not template:
-        # Fallback to Russian
         template = MESSAGES[DEFAULT_LANGUAGE].get(key, key)
     if kwargs:
         try:
-            return template.format(**kwargs)
+            safe_kwargs = {k: ("" if v is None else str(v)) for k, v in kwargs.items()}
+            # Birinchi standart format() ga urinib ko'rish
+            return template.format(**safe_kwargs)
+        except KeyError:
+            # Agar template ichida kwargs da berilmagan kalit bo'lsa ham crash qilmasdan borlarini almashtirish
+            res = template
+            for k, v in kwargs.items():
+                res = res.replace(f"{{{k}}}", "" if v is None else str(v))
+            return res
         except Exception:
             return template
     return template

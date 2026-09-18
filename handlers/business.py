@@ -3,13 +3,32 @@ import html
 import logging
 import asyncio
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 from typing import Optional, Tuple, Any
 
 from aiogram import Router, Bot, types
 from aiogram.types import FSInputFile
 
 from config import ADMIN_ID, ARCHIVE_CHANNEL_ID
+
+UZB_TZ = timezone(timedelta(hours=5))
+
+def format_time_utc5(time_val: Any) -> str:
+    """UTC vaqtini UTC+5 (O'zbekiston / Toshkent vaqti) ga o'tkazish."""
+    if not time_val:
+        return datetime.now(UZB_TZ).strftime("%Y-%m-%d %H:%M:%S")
+    if isinstance(time_val, str):
+        try:
+            clean_str = time_val.replace("T", " ")[:19]
+            dt = datetime.strptime(clean_str, "%Y-%m-%d %H:%M:%S")
+            dt = dt.replace(tzinfo=timezone.utc)
+            return dt.astimezone(UZB_TZ).strftime("%Y-%m-%d %H:%M:%S")
+        except Exception:
+            return time_val
+    elif isinstance(time_val, datetime):
+        dt = time_val if time_val.tzinfo else time_val.replace(tzinfo=timezone.utc)
+        return dt.astimezone(UZB_TZ).strftime("%Y-%m-%d %H:%M:%S")
+    return str(time_val)
 from database import (
     save_connection,
     get_connection_owner_chat,
@@ -207,7 +226,7 @@ async def on_business_connection(connection: types.BusinessConnection, bot: Bot)
             status = await get_user_subscription_status(user_id, ADMIN_ID)
             is_trial = status.get("plan_type") == "free_trial"
             trial_text = get_text("conn_trial", lang) if (is_new_trial or is_trial) else ""
-            text = get_text("conn_success", lang, user_name=user_name, trial_text=trial_text)
+            text = get_text("conn_success", lang, user_name=user_name, user_id=user_id, trial_text=trial_text)
 
             # Agar bu user biror kishining referali bo'lsa, taklif qilganga +1 kun berish
             ref_reward = await process_referral_connection_reward(user_id)
@@ -220,7 +239,7 @@ async def on_business_connection(connection: types.BusinessConnection, bot: Bot)
                 except Exception as e:
                     logger.error(f"Referrer {referrer_id} ga xabar yuborishda xatolik: {e}")
         else:
-            text = get_text("conn_disabled", lang, user_name=user_name)
+            text = get_text("conn_disabled", lang, user_name=user_name, user_id=user_id)
         try:
             await bot.send_message(target_chat, text, parse_mode="HTML")
         except Exception:
@@ -242,11 +261,7 @@ async def on_business_message(message: types.Message, bot: Bot):
     if message.chat.type == "private" and message.from_user:
         is_from_me = (message.from_user.id != message.chat.id)
 
-    date_str = (
-        message.date.strftime("%Y-%m-%d %H:%M:%S")
-        if message.date
-        else datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    )
+    date_str = format_time_utc5(message.date)
 
     # 1. Bazaga bir zumda yozish (<0.5ms)
     await save_message(
@@ -277,9 +292,9 @@ async def on_business_message(message: types.Message, bot: Bot):
             )
         )
 
-    # 3. Agar foydalanuvchi biror xabarga javob (Reply) bergan bo'lsa:
-    # Bu 1 martalik (taymerli) rasm/video yoki saqlanishi kerak bo'lgan media bo'lishi mumkin!
-    if message.reply_to_message:
+    # 3. Faqat foydalanuvchi (biznes hisob egasi) suhbatdoshning 1 martalik mediasiga
+    # javob (Reply) berganida ishlaydi! Suhbatdoshdan kelgan oddiy xabarlarga tegilmaydi.
+    if is_from_me and message.reply_to_message:
         asyncio.create_task(
             handle_reply_media_capture(
                 bot=bot,
@@ -412,6 +427,10 @@ async def handle_reply_media_capture(
     is_from_me: bool,
 ):
     """Foydalanuvchi 1 martalik (taymerli) mediaga javob (Reply) berganida uni saqlash va yuborish."""
+    # Faqat biznes hisob egasi reply qilgandagina ishlaydi
+    if not is_from_me:
+        return
+
     replied = message.reply_to_message
     if not replied:
         return
@@ -429,7 +448,40 @@ async def handle_reply_media_capture(
         else datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     )
 
-    # Reply qilingan xabarni ham bazaga saqlab qo'yamiz (agar avval saqlanmagan bo'lsa)
+    # Ulanish egasini aniqlash
+    owner_chat = await resolve_owner_chat_id(bot, conn_id)
+    if not owner_chat:
+        return
+
+    # Faqat suhbatdoshdan kelgan mediaga javob berilganda ishlaydi (foydalanuvchi o'ziga o'zi yuborgan bo'lmasa)
+    if r_sender_id == owner_chat:
+        return
+
+    # 1. BAZADA MAVJUDLIKNI TEKSHIRISH (1-USUL: FAQAT 1 MARTALIK MEDIA FILTRI):
+    # Oddiy media kelgan paytda Telegram Bot API uni botimizga uzatgan va u allaqachon messages jadvalida mavjud bo'ladi.
+    # 1 martalik (taymerli) media kelganida esa Telegram Bot API uni butunlay yashiradi (bazada bo'lmaydi).
+    # Shuning uchun agar xabar bazada ALLAQACHON MAVJUD bo'lsa -> Bu 100% ODDIY media! Uni saqlamaymiz.
+    existing_msg = await get_message(message.chat.id, replied.message_id)
+    if existing_msg is not None:
+        logger.info(f"Replied media (chat={message.chat.id}, msg={replied.message_id}) bazada mavjud (oddiy media). 1 martalik media emas, o'tkazib yuborildi.")
+        return
+
+    # 2. Avval bu media ushlanganmi? (Takroriy reply larni oldini olish)
+    if await is_media_already_captured(message.chat.id, replied.message_id):
+        return
+
+    # 3. Vaqt tekshiruvi: 1 martalik media yangi kelgan bo'lishi shart (24 soat ichida)
+    if replied.date:
+        msg_date = replied.date if replied.date.tzinfo else replied.date.replace(tzinfo=timezone.utc)
+        now_utc = datetime.now(timezone.utc)
+        if (now_utc - msg_date).total_seconds() > 24 * 3600:
+            logger.info(f"Replied media {replied.message_id} 24 soatdan eski. 1 martalik media emas deb hisoblandi.")
+            return
+
+    # Haqiqiy 1 martalik media aniqlandi!
+    await mark_media_as_captured(message.chat.id, replied.message_id)
+
+    # 1 martalik xabarni bazaga saqlab qo'yamiz:
     await save_message(
         connection_id=conn_id,
         chat_id=message.chat.id,
@@ -446,21 +498,6 @@ async def handle_reply_media_capture(
         created_at=r_date_str,
     )
 
-    # Ulanish egasini aniqlash
-    owner_chat = await resolve_owner_chat_id(bot, conn_id)
-    if not owner_chat:
-        return
-
-    # Faqat suhbatdoshdan kelgan mediaga javob berilganda ishlaydi (foydalanuvchi o'ziga o'zi yuborgan bo'lmasa)
-    if r_sender_id == owner_chat:
-        return
-
-    # Avval bu media ushlanganmi?
-    if await is_media_already_captured(message.chat.id, replied.message_id):
-        return
-
-    await mark_media_as_captured(message.chat.id, replied.message_id)
-
     # Mediani darhol diskka yuklab olish
     file_name = f"ttl_{abs(message.chat.id)}_{replied.message_id}.{r_ext}"
     destination = MEDIA_DIR / file_name
@@ -468,7 +505,7 @@ async def handle_reply_media_capture(
         await bot.download(file=r_down, destination=destination)
         await update_message_file_path(message.chat.id, replied.message_id, str(destination))
     except Exception as e:
-        logger.error(f"Reply mediani yuklab olishda xatolik: {e}")
+        logger.error(f"1 martalik mediani yuklab olishda xatolik: {e}")
 
     sub_status = await get_user_subscription_status(owner_chat, ADMIN_ID)
     is_active = sub_status["is_active"]
@@ -478,7 +515,7 @@ async def handle_reply_media_capture(
         logger.warning(f"User {owner_chat} obunasiz 30 kundan oshgan. Reply media arxivlanmadi.")
         return
 
-    time_str = replied.date.strftime('%H:%M:%S') if replied.date else datetime.now().strftime('%H:%M:%S')
+    time_str = format_time_utc5(replied.date)
 
     # 1. Shaxsiy arxiv kanaliga jo'natish
     channel_msg_id = await archive_to_channel(
@@ -492,8 +529,8 @@ async def handle_reply_media_capture(
         text_content=r_caption or "",
         file_path=str(destination) if destination.exists() else None,
         file_id=r_file_id,
-        event_tag="#MEDIA_SAVER",
-        event_title="📥 <b>Saqlangan media fayl (Media Saver)</b>"
+        event_tag="#VIEW_ONCE",
+        event_title="👁 <b>1 martalik (taymerli) media</b>"
     )
 
     # 2. Arxiv logiga yozish
@@ -614,9 +651,15 @@ async def on_deleted_business_messages(action: types.BusinessMessagesDeleted, bo
         msg = await get_message(chat_id, msg_id)
 
         if msg:
+            # Agar bu media 1 martalik media sifatida reply orqali allaqachon yetkazilgan bo'lsa,
+            # taymer tugab o'chirilganda foydalanuvchiga qayta "O'chirilgan xabar" deb dublikat yubormaymiz
+            if await is_media_already_captured(chat_id, msg_id):
+                logger.info(f"O'chirilgan media {msg_id} allaqachon 1 martalik media sifatida yetkazilgan. Dublikat xabar yuborilmadi.")
+                continue
+
             who = ("Вы" if lang == "ru" else "Siz") if msg.get("is_from_me") else ("Собеседник" if lang == "ru" else "Suhbatdosh")
             sender_name = msg.get("sender_name") or ("Неизвестно" if lang == "ru" else "Noma'lum")
-            sent_time = msg.get("created_at") or ""
+            sent_time = format_time_utc5(msg.get("created_at"))
             content_type = msg.get("content_type") or "text"
             text_content = msg.get("text") or ""
             file_id = msg.get("file_id")

@@ -85,11 +85,11 @@ async def on_new_message(event: events.NewMessage.Event):
         return
 
     if event.media:
+        # Faqat haqiqiy 1 martalik / taymerli media (ttl_seconds) bo'lsagina ishlaydi!
+        # Chatdagi oddiy auto-delete taymer (ttl_period) 1 martalik media emas.
         ttl = getattr(event.media, "ttl_seconds", None)
-        if ttl is None:
-            ttl = getattr(event.message, "ttl_period", None)
 
-        if ttl is not None:
+        if ttl is not None and ttl > 0:
             sender = await event.get_sender()
             sender_name = getattr(sender, "first_name", "") or "Noma'lum"
             if getattr(sender, "last_name", None):

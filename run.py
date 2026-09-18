@@ -13,13 +13,13 @@ logger = logging.getLogger("Runner")
 
 
 async def start_all():
-    logger.info("🚀 Barcha tizimlar (Bot + TTL Saver + Scheduler) parallel ishga tushmoqda...")
+    logger.info("🚀 Tizimlar ishga tushmoqda...")
     try:
-        await asyncio.gather(
-            run_bot(),
-            run_ttl_saver(),
-            run_scheduler()
-        )
+        tasks = [run_bot(), run_scheduler()]
+        from pathlib import Path
+        if Path("user_session.session").exists():
+            tasks.append(run_ttl_saver())
+        await asyncio.gather(*tasks)
     except (KeyboardInterrupt, SystemExit):
         logger.info("Tizim to'xtatildi.")
 
