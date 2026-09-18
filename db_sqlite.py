@@ -892,3 +892,34 @@ async def get_db_info() -> Dict[str, Any]:
         "size_str": f"{size_mb:.2f} MB"
     }
 
+
+async def is_user_business_connected(user_id: int) -> bool:
+    """Foydalanuvchining faol ulangan biznes akkaunti bor-yo'qligini tekshirish."""
+    try:
+        db = await get_db()
+        async with db.execute(
+            "SELECT 1 FROM business_connections WHERE (user_id = ? OR user_chat_id = ?) AND is_enabled = 1 LIMIT 1",
+            (user_id, user_id)
+        ) as cur:
+            row = await cur.fetchone()
+            return bool(row)
+    except Exception as e:
+        logger.error(f"is_user_business_connected xatolik: {e}")
+        return False
+
+
+async def get_user_deleted_messages_count(user_id: int) -> int:
+    """Foydalanuvchi uchun ushlangan o'chirilgan xabarlar sonini olish."""
+    try:
+        db = await get_db()
+        async with db.execute(
+            "SELECT COUNT(*) FROM archive_logs WHERE user_id = ? AND event_type = 'deleted'",
+            (user_id,)
+        ) as cur:
+            row = await cur.fetchone()
+            return int(row[0] if row else 0)
+    except Exception as e:
+        logger.error(f"get_user_deleted_messages_count xatolik: {e}")
+        return 0
+
+

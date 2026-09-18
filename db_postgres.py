@@ -809,3 +809,32 @@ async def get_db_info() -> Dict[str, Any]:
             "engine": "PostgreSQL",
             "size_str": f"Ulanishda: {e}"
         }
+
+
+async def is_user_business_connected(user_id: int) -> bool:
+    """Foydalanuvchining faol ulangan biznes akkaunti bor-yo'qligini tekshirish."""
+    try:
+        pool = await get_pg_pool()
+        val = await pool.fetchval(
+            "SELECT 1 FROM business_connections WHERE (user_id = $1 OR user_chat_id = $1) AND is_enabled = 1 LIMIT 1",
+            user_id
+        )
+        return bool(val)
+    except Exception as e:
+        logger.error(f"is_user_business_connected xatolik: {e}")
+        return False
+
+
+async def get_user_deleted_messages_count(user_id: int) -> int:
+    """Foydalanuvchi uchun ushlangan o'chirilgan xabarlar sonini olish."""
+    try:
+        pool = await get_pg_pool()
+        val = await pool.fetchval(
+            "SELECT COUNT(*) FROM archive_logs WHERE user_id = $1 AND event_type = 'deleted'",
+            user_id
+        )
+        return int(val or 0)
+    except Exception as e:
+        logger.error(f"get_user_deleted_messages_count xatolik: {e}")
+        return 0
+

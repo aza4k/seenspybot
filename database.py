@@ -45,6 +45,8 @@ if IS_POSTGRES:
         admin_add_subscription_days,
         admin_revoke_subscription,
         get_db_info,
+        is_user_business_connected,
+        get_user_deleted_messages_count,
     )
     DB_ENGINE = "postgres"
 else:
@@ -89,6 +91,8 @@ else:
         admin_add_subscription_days,
         admin_revoke_subscription,
         get_db_info,
+        is_user_business_connected,
+        get_user_deleted_messages_count,
     )
     DB_ENGINE = "sqlite"
 
@@ -132,5 +136,7 @@ __all__ = [
     "admin_add_subscription_days",
     "admin_revoke_subscription",
     "get_db_info",
+    "is_user_business_connected",
+    "get_user_deleted_messages_count",
     "DB_ENGINE",
 ]

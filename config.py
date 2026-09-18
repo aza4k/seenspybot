@@ -11,6 +11,10 @@ ADMIN_ID = int(ADMIN_ID_RAW) if ADMIN_ID_RAW.isdigit() else None
 ARCHIVE_CHANNEL_RAW = os.getenv("ARCHIVE_CHANNEL_ID", "").strip()
 ARCHIVE_CHANNEL_ID = int(ARCHIVE_CHANNEL_RAW) if ARCHIVE_CHANNEL_RAW.lstrip("-").isdigit() else None
 
+# Qo'llanma video roliklari joylashgan kanal va xabar ID lari
+GUIDE_CHANNEL_ID = ARCHIVE_CHANNEL_ID if ARCHIVE_CHANNEL_ID else -1003612434821
+GUIDE_MESSAGE_IDS = [304, 305, 306]
+
 DB_PATH = os.getenv("DB_PATH", "spyware.db")
 
 # PostgreSQL URL (Railway, Supabase, Neon yoki mahalliy PostgreSQL uchun)

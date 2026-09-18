@@ -40,11 +40,40 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         "btn_connect": "🟢 Подключить бота",
 
         "btn_plans": "⭐ Тарифы",
+        "btn_manage_sub": "⭐️ Управление подпиской",
+        "btn_get_free_day": "🎁 +1 День бесплатно (Пригласить друзей)",
+        "btn_guide": "📖 Инструкция",
+        "btn_lang_short": "🌐 Язык",
         "btn_stats": "📊 Статус",
         "btn_language": "🌐 Язык",
         "btn_back": "🔙 Назад",
         "btn_referral": "🎁 Пригласить друзей",
         "btn_privacy": "📄 Политика конфиденциальности",
+
+        # Подключенный дашборд
+        "start_connected_text": (
+            "🟢 <b>SeenSPY — Система активно работает!</b>\n\n"
+            "👤 <b>Профиль:</b> {user_name}\n"
+            "🆔 <b>ID:</b> <code>{user_id}</code>\n"
+            "🔗 <b>Статус подключения:</b> 🟢 Активен\n"
+            "⭐️ <b>Подписка:</b> {sub_status}\n\n"
+            "📊 <b>Статистика:</b>\n"
+            " Удалённых: <b>{deleted_count} шт.</b>\n\n"
+            "💡 <b>Бот для вас:</b>\n"
+            "• 🗑 Сохраняет удалённые сообщения\n"
+            "• ✏️ Показывает историю изменённых сообщений\n"
+            "• 📸 Сохраняет одноразовые медиа\n"
+            "• 🔔 Уведомляет о важных событиях"
+        ),
+
+        # Qo'llanma matni
+        "guide_text": (
+            "📖 <b>Видео-инструкция по использованию SeenSPY</b>\n\n"
+            "В 3 видеороликах выше наглядно показаны все возможности бота:\n\n"
+            "1️⃣ <b>Удалённые сообщения:</b> Если собеседник удалит сообщение (текст, фото, видео, голосовые), бот мгновенно отправит вам его оригинал.\n"
+            "2️⃣ <b>Изменённые сообщения:</b> Если сообщение изменено, бот покажет старый и новый вариант.\n"
+            "3️⃣ <b>Одноразовые (с таймером) медиа:</b> Чтобы сохранить фото или видео с таймером — <b>до открытия</b> ответьте на него в диалоге любым сообщением (например точкой <code>.</code>). Бот сохранит и пришлёт его вам!"
+        ),
         "privacy_text": (
             "📄 <b>Политика конфиденциальности (@seenspybot)</b>\n\n"
             "Сервис работает в строгом соответствии с регламентом <b>Telegram Business API</b>:\n\n"
@@ -244,11 +273,40 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         "btn_connect": "🟢 Botni ulash",
 
         "btn_plans": "⭐ Tariflar",
+        "btn_manage_sub": "⭐️ Obunani boshqarish",
+        "btn_get_free_day": "🎁 +1 Kun Bepul olish (Do'stlarni chaqirish)",
+        "btn_guide": "📖 Qo'llanma",
+        "btn_lang_short": "🌐 Til",
         "btn_stats": "📊 Statistika",
         "btn_language": "🌐 Til",
         "btn_back": "🔙 Orqaga",
         "btn_referral": "🎁 Do'stlarni taklif qilish",
         "btn_privacy": "📄 Maxfiylik siyosati",
+
+        # Ulangan foydalanuvchining Asosiy Dashboard matni (/start)
+        "start_connected_text": (
+            "🟢 <b>SeenSPY — Tizim faol ishlamoqda!</b>\n\n"
+            "👤 <b>Profil:</b> {user_name}\n"
+            "🆔 <b>ID:</b> <code>{user_id}</code>\n"
+            "🔗 <b>Ulanish holati:</b> 🟢 Faol\n"
+            "⭐️ <b>Obuna:</b> {sub_status}\n\n"
+            "📊 <b>Statistika:</b>\n"
+            " O'chirilganlar: <b>{deleted_count} ta</b>\n\n"
+            "💡 <b>Bot siz uchun:</b>\n"
+            "• 🗑 O‘chirilgan xabarlarni saqlaydi\n"
+            "• ✏️ Tahrirlangan xabarlarning oldingi holatini ko‘rsatadi\n"
+            "• 📸 Bir martalik media fayllarni saqlab qoladi\n"
+            "• 🔔 Muhim o‘zgarishlar haqida xabar beradi"
+        ),
+
+        # Qo'llanma matni
+        "guide_text": (
+            "📖 <b>SeenSPY dan foydalanish bo'yicha video-qo'llanma</b>\n\n"
+            "Yuqoridagi 3 ta videorolikda botning barcha asosiy imkoniyatlari ko'rsatilgan:\n\n"
+            "1️⃣ <b>O'chirilgan xabarlar:</b> Suhbatdoshingiz biror xabarni (matn, rasm, video, audio) o'chirsa, bot darhol sizga o'sha xabarning asl nusxasini yetkazadi.\n"
+            "2️⃣ <b>Tahrirlangan xabarlar:</b> Xabar o'zgartirilsa, eski va yangi ko'rinishi taqqoslab ko'rsatiladi.\n"
+            "3️⃣ <b>1 martalik (taymerli) medialar:</b> Suhbatdoshingiz yuborgan 1 martalik rasm yoki videoni saqlash uchun — <b>uni ochishdan oldin</b> chatda o'sha xabarga istalgan so'z yoki belgi bilan <b>javob (Reply)</b> qaytaring (masalan nuqta <code>.</code> qo'ying). Bot uni darhol saqlab, sizga yuboradi!"
+        ),
         "privacy_text": (
             "📄 <b>Maxfiylik siyosati (@seenspybot)</b>\n\n"
             "Xizmat rasmiy <b>Telegram Business API</b> standartlari asosida ishlaydi:\n\n"
@@ -444,7 +502,7 @@ def get_text(key: str, lang: Optional[str] = "ru", **kwargs: Any) -> str:
 
 
 def get_main_keyboard(lang: str = "ru") -> InlineKeyboardMarkup:
-    """Asosiy menyu klaviaturasi (Tanlangan tilda)."""
+    """Asosiy menyu klaviaturasi (Hali ulanmagan yangi foydalanuvchilar uchun)."""
     return InlineKeyboardMarkup(
         inline_keyboard=[
             [
@@ -476,6 +534,36 @@ def get_main_keyboard(lang: str = "ru") -> InlineKeyboardMarkup:
             ]
         ]
     )
+
+
+def get_connected_keyboard(lang: str = "ru", is_admin: bool = False) -> InlineKeyboardMarkup:
+    """Akkaunti ulangan foydalanuvchilar uchun qulay shaxsiy klaviatura."""
+    keyboard = [
+        [
+            InlineKeyboardButton(
+                text=get_text("btn_manage_sub", lang),
+                callback_data="show_plans"
+            )
+        ],
+        [
+            InlineKeyboardButton(
+                text=get_text("btn_get_free_day", lang),
+                callback_data="show_referral"
+            )
+        ],
+        [
+            InlineKeyboardButton(
+                text=get_text("btn_guide", lang),
+                callback_data="show_guide"
+            ),
+            InlineKeyboardButton(
+                text=get_text("btn_lang_short", lang),
+                callback_data="choose_lang"
+            )
+        ]
+    ]
+    return InlineKeyboardMarkup(inline_keyboard=keyboard)
+
 
 
 

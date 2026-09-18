@@ -1,4 +1,7 @@
 import urllib.parse
+import html
+import logging
+from datetime import datetime
 from aiogram import Router, types, Bot, F
 from aiogram.filters import Command
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
@@ -12,20 +15,80 @@ from database import (
     register_referral,
     get_user_referral_stats,
     is_referral_enabled,
+    is_user_business_connected,
+    get_user_deleted_messages_count,
+    get_user_subscription_status,
 )
-from config import ADMIN_ID, PRIVACY_POLICY_URL
+from config import ADMIN_ID, PRIVACY_POLICY_URL, GUIDE_CHANNEL_ID, GUIDE_MESSAGE_IDS
 from locales import (
     get_text,
     get_main_keyboard,
+    get_connected_keyboard,
     get_language_keyboard,
 )
 
-
+logger = logging.getLogger(__name__)
 router = Router(name="common_router")
+
+
+async def get_start_payload(user_id: int, user_name: str, lang: str) -> tuple[str, InlineKeyboardMarkup]:
+    """Foydalanuvchi ulangan yoki ulanmaganiga qarab mos start matni va klaviaturasini tayyorlash."""
+    is_connected = await is_user_business_connected(user_id)
+
+    if is_connected:
+        sub_info = await get_user_subscription_status(user_id, ADMIN_ID)
+        is_active = sub_info.get("is_active", False)
+        plan_type = sub_info.get("plan_type", "none")
+        expires_at_str = sub_info.get("expires_at")
+
+        if user_id == ADMIN_ID:
+            sub_status_text = "👑 " + ("Безлимитный (Админ)" if lang == "ru" else "Cheksiz (Admin)")
+        elif is_active and expires_at_str:
+            try:
+                exp_dt = datetime.strptime(expires_at_str, "%Y-%m-%d %H:%M:%S")
+                days_left = max(0, (exp_dt - datetime.now()).days)
+            except Exception:
+                days_left = 30
+
+            if plan_type == "free_trial":
+                sub_status_text = (
+                    f"🎁 30 дней free ({days_left} дн. осталось)"
+                    if lang == "ru"
+                    else f"🎁 30 kunlik free({days_left} kun qoldi)"
+                )
+            else:
+                sub_status_text = (
+                    f"🟢 Активна ({days_left} дн. осталось)"
+                    if lang == "ru"
+                    else f"🟢 Faol ({days_left} kun qoldi)"
+                )
+        else:
+            sub_status_text = "🔴 " + ("Подписка истекла" if lang == "ru" else "Obuna tugagan")
+
+        deleted_count = await get_user_deleted_messages_count(user_id)
+
+        text = get_text(
+            "start_connected_text",
+            lang,
+            user_name=user_name,
+            user_id=user_id,
+            sub_status=sub_status_text,
+            deleted_count=deleted_count
+        )
+        kb = get_connected_keyboard(lang=lang, is_admin=(user_id == ADMIN_ID))
+        return text, kb
+
+    # Ulanmagan foydalanuvchilar uchun
+    text = get_text("start_text", lang)
+    kb = get_main_keyboard(lang)
+    return text, kb
 
 
 @router.message(Command("start"))
 async def cmd_start(message: types.Message):
+    user_id = message.from_user.id
+    user_name = html.escape(message.from_user.full_name or message.from_user.first_name or "Foydalanuvchi")
+
     # Referal parametrini tekshirish (masalan: /start ref_123456)
     if message.text:
         parts = message.text.split()
@@ -33,17 +96,17 @@ async def cmd_start(message: types.Message):
             ref_str = parts[1].replace("ref_", "")
             if ref_str.isdigit():
                 referrer_id = int(ref_str)
-                await register_referral(referrer_id=referrer_id, referred_user_id=message.from_user.id)
+                await register_referral(referrer_id=referrer_id, referred_user_id=user_id)
 
-    # Yangi foydalanuvchiga 7 kunlik Free Trial berish
-    await ensure_free_trial(message.from_user.id)
-    lang = await get_user_language(message.from_user.id)
+    # Yangi foydalanuvchiga 30 kunlik Free Trial berish
+    await ensure_free_trial(user_id)
+    lang = await get_user_language(user_id)
 
-    text = get_text("start_text", lang)
+    text, kb = await get_start_payload(user_id=user_id, user_name=user_name, lang=lang)
 
     await message.answer(
         text,
-        reply_markup=get_main_keyboard(lang),
+        reply_markup=kb,
         parse_mode="HTML"
     )
 
@@ -104,35 +167,86 @@ async def cmd_language(event: types.Message | types.CallbackQuery):
 @router.callback_query(F.data.startswith("set_lang:"))
 async def cb_set_language(call: types.CallbackQuery):
     """Foydalanuvchi tilini o'zgartirish."""
+    user_id = call.from_user.id
     new_lang = call.data.split(":")[1]
     if new_lang not in ["ru", "uz"]:
         new_lang = "ru"
 
-    await set_user_language(call.from_user.id, new_lang)
+    await set_user_language(user_id, new_lang)
     confirm_text = get_text("lang_selected", new_lang)
+    user_name = html.escape(call.from_user.full_name or call.from_user.first_name or "Foydalanuvchi")
+    text, kb = await get_start_payload(user_id=user_id, user_name=user_name, lang=new_lang)
 
     try:
         await call.message.edit_text(
-            confirm_text,
-            reply_markup=get_main_keyboard(new_lang),
+            text,
+            reply_markup=kb,
             parse_mode="HTML"
         )
     except Exception:
-        pass
-    await call.answer()
+        try:
+            await call.message.answer(text, reply_markup=kb, parse_mode="HTML")
+        except Exception:
+            pass
+    await call.answer(confirm_text)
 
 
 @router.callback_query(F.data == "back_to_menu")
 async def cb_back_to_menu(call: types.CallbackQuery):
     """Bosh menyuga qaytish."""
-    lang = await get_user_language(call.from_user.id)
-    text = get_text("start_text", lang)
+    user_id = call.from_user.id
+    lang = await get_user_language(user_id)
+    user_name = html.escape(call.from_user.full_name or call.from_user.first_name or "Foydalanuvchi")
+    text, kb = await get_start_payload(user_id=user_id, user_name=user_name, lang=lang)
 
     try:
-        await call.message.edit_text(text, reply_markup=get_main_keyboard(lang), parse_mode="HTML")
+        await call.message.edit_text(text, reply_markup=kb, parse_mode="HTML")
     except Exception:
-        pass
+        try:
+            await call.message.answer(text, reply_markup=kb, parse_mode="HTML")
+        except Exception:
+            pass
     await call.answer()
+
+
+@router.message(Command("guide"))
+@router.message(Command("help"))
+@router.callback_query(F.data == "show_guide")
+async def cb_show_guide(event: types.Message | types.CallbackQuery, bot: Bot):
+    """Qo'llanma videolari va tushuntirish matnini ko'rsatish."""
+    user_id = event.from_user.id
+    lang = await get_user_language(user_id)
+
+    kb = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text=get_text("btn_back", lang), callback_data="back_to_menu")]
+        ]
+    )
+
+    if isinstance(event, types.CallbackQuery):
+        await event.answer()
+        try:
+            await event.message.delete()
+        except Exception:
+            pass
+
+    # Videolarni kanaldan nusxalab yuborish
+    try:
+        await bot.copy_messages(
+            chat_id=user_id,
+            from_chat_id=GUIDE_CHANNEL_ID,
+            message_ids=GUIDE_MESSAGE_IDS
+        )
+    except Exception as e:
+        logger.error(f"Qo'llanma videolarini nusxalashda xatolik: {e}")
+
+    # Qo'llanma tavsif matni va [Orqaga] tugmasi
+    await bot.send_message(
+        chat_id=user_id,
+        text=get_text("guide_text", lang),
+        reply_markup=kb,
+        parse_mode="HTML"
+    )
 
 
 
