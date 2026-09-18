@@ -9,7 +9,6 @@ from database import (
     get_stats,
     is_subscription_active,
     get_subscription_info,
-    ensure_free_trial,
     get_user_language,
     set_user_language,
     register_referral,
@@ -45,11 +44,22 @@ async def get_start_payload(user_id: int, user_name: str, lang: str) -> tuple[st
         if user_id == ADMIN_ID:
             sub_status_text = "👑 " + ("Безлимитный (Админ)" if lang == "ru" else "Cheksiz (Admin)")
         elif is_active and expires_at_str:
-            try:
-                exp_dt = datetime.strptime(expires_at_str, "%Y-%m-%d %H:%M:%S")
-                days_left = max(0, (exp_dt - datetime.now()).days)
-            except Exception:
-                days_left = 30
+            days_left = 0
+            exp_dt = None
+            if isinstance(expires_at_str, str):
+                try:
+                    clean = expires_at_str.replace("T", " ")[:19]
+                    exp_dt = datetime.strptime(clean, "%Y-%m-%d %H:%M:%S")
+                except Exception:
+                    pass
+            elif isinstance(expires_at_str, datetime):
+                exp_dt = expires_at_str.replace(tzinfo=None)
+
+            if exp_dt:
+                diff_sec = (exp_dt - datetime.now()).total_seconds()
+                if diff_sec > 0:
+                    import math
+                    days_left = max(1, math.ceil(diff_sec / 86400))
 
             if plan_type == "free_trial":
                 sub_status_text = (
@@ -98,9 +108,6 @@ async def cmd_start(message: types.Message):
             if ref_str.isdigit():
                 referrer_id = int(ref_str)
                 await register_referral(referrer_id=referrer_id, referred_user_id=user_id)
-
-    # Yangi foydalanuvchiga 30 kunlik Free Trial berish
-    await ensure_free_trial(user_id)
 
     # Agar yangi foydalanuvchi bo'lsa va hali til tanlamagan bo'lsa, dastlab til tanlatamiz
     if not await is_user_language_set(user_id):

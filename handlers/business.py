@@ -231,17 +231,18 @@ async def on_business_connection(connection: types.BusinessConnection, bot: Bot)
         is_enabled=connection.is_enabled,
     )
 
-    # Yangi foydalanuvchi ulanishi bilanoq 7 kunlik Free Trial berish
-    is_new_trial = await ensure_free_trial(user_id)
+    is_new_trial = False
+    if connection.is_enabled:
+        # Faqat akkauntini birinchi marta ulaganda 30 kunlik Free Trial beriladi
+        is_new_trial = await ensure_free_trial(user_id)
 
     target_chat = user_chat_id or ADMIN_ID
     if target_chat:
         lang = await get_user_language(target_chat)
         user_name = html.escape(format_sender_name(connection.user))
         if connection.is_enabled:
-            status = await get_user_subscription_status(user_id, ADMIN_ID)
-            is_trial = status.get("plan_type") == "free_trial"
-            trial_text = get_text("conn_trial", lang) if (is_new_trial or is_trial) else ""
+            # Faqat birinchi marta trial berilganida 30 kunlik sinov matnini ko'rsatamiz
+            trial_text = get_text("conn_trial", lang) if is_new_trial else ""
             text = get_text("conn_success", lang, user_name=user_name, user_id=user_id, trial_text=trial_text)
 
             # Agar bu user biror kishining referali bo'lsa, taklif qilganga +1 kun berish

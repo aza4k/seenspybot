@@ -322,13 +322,17 @@ async def mark_media_as_captured(chat_id: int, message_id: int) -> None:
 
 
 async def ensure_free_trial(user_id: int) -> bool:
-    """Yangi foydalanuvchiga 30 kunlik (1 oy) Free Trial (bepul sinov) berish."""
+    """
+    Yangi foydalanuvchi birinchi marta biznes akkauntini ulaganda 30 kunlik Free Trial berish.
+    Agar avval sinov muddati berilgan yoki obuna yozuvi mavjud bo'lsa, qaytadan berilmaydi!
+    """
     pool = await get_pg_pool()
     row = await pool.fetchrow(
         "SELECT user_id, is_trial_used FROM subscriptions WHERE user_id = $1",
         user_id
     )
     if row:
+        # Avval ro'yxatdan o'tgan yoki trial ishlatgan
         return False
 
     trial_expiry = datetime.now() + timedelta(days=30)
@@ -361,54 +365,65 @@ async def get_user_subscription_status(user_id: int, admin_id: Optional[int] = N
     )
 
     if not row:
-        await ensure_free_trial(user_id)
-        trial_expiry = datetime.now() + timedelta(days=30)
-        expiry_str = trial_expiry.strftime("%Y-%m-%d %H:%M:%S")
+        return {
+            "is_active": False,
+            "is_expired": False,
+            "days_since_expiry": 0,
+            "plan_type": "none",
+            "expires_at": None,
+            "is_trial_used": False
+        }
+
+    expires_at_val = row["expires_at"]
+    if not expires_at_val:
+        return {
+            "is_active": False,
+            "is_expired": True,
+            "days_since_expiry": 999,
+            "plan_type": row["plan_type"] or "none",
+            "expires_at": None,
+            "is_trial_used": bool(row["is_trial_used"])
+        }
+
+    exp_date = None
+    if isinstance(expires_at_val, str):
+        try:
+            clean = expires_at_val.replace("T", " ")[:19]
+            exp_date = datetime.strptime(clean, "%Y-%m-%d %H:%M:%S")
+        except Exception:
+            pass
+    elif isinstance(expires_at_val, datetime):
+        exp_date = expires_at_val.replace(tzinfo=None)
+
+    if not exp_date:
+        return {
+            "is_active": False,
+            "is_expired": True,
+            "days_since_expiry": 999,
+            "plan_type": row["plan_type"] or "none",
+            "expires_at": str(expires_at_val),
+            "is_trial_used": bool(row["is_trial_used"])
+        }
+
+    now = datetime.now()
+    if now < exp_date:
         return {
             "is_active": True,
             "is_expired": False,
             "days_since_expiry": 0,
-            "plan_type": "free_trial",
-            "expires_at": expiry_str
-        }
-
-    expires_at_str = row["expires_at"]
-    if not expires_at_str:
-        return {
-            "is_active": False,
-            "is_expired": True,
-            "days_since_expiry": 999,
-            "plan_type": "none",
-            "expires_at": None
-        }
-
-    try:
-        exp_date = datetime.strptime(expires_at_str, "%Y-%m-%d %H:%M:%S")
-        now = datetime.now()
-        if now < exp_date:
-            return {
-                "is_active": True,
-                "is_expired": False,
-                "days_since_expiry": 0,
-                "plan_type": row["plan_type"],
-                "expires_at": expires_at_str
-            }
-        else:
-            days_expired = (now - exp_date).days
-            return {
-                "is_active": False,
-                "is_expired": True,
-                "days_since_expiry": days_expired,
-                "plan_type": row["plan_type"],
-                "expires_at": expires_at_str
-            }
-    except Exception:
-        return {
-            "is_active": False,
-            "is_expired": True,
-            "days_since_expiry": 999,
             "plan_type": row["plan_type"],
-            "expires_at": expires_at_str
+            "expires_at": exp_date.strftime("%Y-%m-%d %H:%M:%S"),
+            "is_trial_used": bool(row["is_trial_used"])
+        }
+    else:
+        days_expired = (now - exp_date).days
+        return {
+            "is_active": False,
+            "is_expired": True,
+            "days_since_expiry": days_expired,
+            "plan_type": row["plan_type"],
+            "expires_at": exp_date.strftime("%Y-%m-%d %H:%M:%S"),
+            "is_trial_used": bool(row["is_trial_used"])
         }
 
 
@@ -877,10 +892,10 @@ async def is_user_business_connected(user_id: int) -> bool:
     try:
         pool = await get_pg_pool()
         val = await pool.fetchval(
-            "SELECT 1 FROM business_connections WHERE (user_id = $1 OR user_chat_id = $1) AND is_enabled = 1 LIMIT 1",
+            "SELECT is_enabled FROM business_connections WHERE (user_id = $1 OR user_chat_id = $1) ORDER BY updated_at DESC LIMIT 1",
             user_id
         )
-        return bool(val)
+        return bool(val and val == 1)
     except Exception as e:
         logger.error(f"is_user_business_connected xatolik: {e}")
         return False

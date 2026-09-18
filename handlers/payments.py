@@ -80,12 +80,19 @@ async def get_plans_text(user_id: int, lang: str) -> str:
         remaining_str = "—"
         if expires_at_str:
             try:
-                exp_date = datetime.strptime(expires_at_str, "%Y-%m-%d %H:%M:%S")
-                now = datetime.now()
-                diff = exp_date - now
-                days = diff.days
-                hours = int(diff.seconds / 3600)
-                remaining_str = format_remaining_time(days, hours, lang)
+                exp_date = None
+                if isinstance(expires_at_str, str):
+                    clean = expires_at_str.replace("T", " ")[:19]
+                    exp_date = datetime.strptime(clean, "%Y-%m-%d %H:%M:%S")
+                elif isinstance(expires_at_str, datetime):
+                    exp_date = expires_at_str.replace(tzinfo=None)
+                if exp_date:
+                    now = datetime.now()
+                    diff = exp_date - now
+                    if diff.total_seconds() > 0:
+                        days = diff.days
+                        hours = int(diff.seconds / 3600)
+                        remaining_str = format_remaining_time(days, hours, lang)
             except Exception:
                 remaining_str = "—"
 
