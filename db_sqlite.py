@@ -2,7 +2,7 @@ import aiosqlite
 import logging
 from datetime import datetime, timedelta
 from typing import Optional, Dict, Any, List
-from config import DB_PATH
+from config import DB_PATH, MAX_REFERRALS
 
 logger = logging.getLogger(__name__)
 
@@ -203,10 +203,10 @@ async def register_referral(referrer_id: int, referred_user_id: int) -> bool:
         if await cur.fetchone():
             return False
 
-    # Taklif qiluvchining amaldagi takliflar soni 7 taga yetganmi?
+    # Taklif qiluvchining amaldagi takliflar soni MAX_REFERRALS taga yetganmi?
     async with db.execute("SELECT COUNT(*) FROM referrals WHERE referrer_id = ?", (referrer_id,)) as cur:
         count = (await cur.fetchone())[0]
-        if count >= 7:
+        if count >= MAX_REFERRALS:
             return False
 
     await db.execute("""
@@ -239,13 +239,13 @@ async def process_referral_connection_reward(referred_user_id: int) -> Optional[
     if reward_granted:
         return None  # Mukofot avval berilgan
 
-    # Taklif qiluvchining olgan mukofotlari soni 7 tadan kamligini tekshirish
+    # Taklif qiluvchining olgan mukofotlari soni MAX_REFERRALS tadan kamligini tekshirish
     async with db.execute("""
         SELECT COUNT(*) FROM referrals 
         WHERE referrer_id = ? AND reward_granted = 1
     """, (referrer_id,)) as cur:
         rewards_count = (await cur.fetchone())[0]
-        if rewards_count >= 7:
+        if rewards_count >= MAX_REFERRALS:
             return None
 
     # +1 kun qo'shish
@@ -274,7 +274,7 @@ async def get_user_referral_stats(user_id: int) -> Dict[str, Any]:
     async with db.execute("SELECT COUNT(*) FROM referrals WHERE referrer_id = ? AND reward_granted = 1", (user_id,)) as cur:
         total_connected = (await cur.fetchone())[0]
 
-    max_limit = 7
+    max_limit = MAX_REFERRALS
     remaining_slots = max(0, max_limit - total_invited)
 
     return {
@@ -284,6 +284,18 @@ async def get_user_referral_stats(user_id: int) -> Dict[str, Any]:
         "remaining_slots": remaining_slots,
         "reward_days": total_connected,
     }
+
+
+async def is_user_language_set(user_id: int) -> bool:
+    """Foydalanuvchi avval til tanlaganmi yo'qmi tekshirish."""
+    try:
+        db = await get_db()
+        async with db.execute("SELECT 1 FROM user_settings WHERE user_id = ?", (user_id,)) as cur:
+            row = await cur.fetchone()
+            return bool(row)
+    except Exception as e:
+        logger.error(f"is_user_language_set xatolik: {e}")
+        return False
 
 
 async def get_user_language(user_id: int) -> str:

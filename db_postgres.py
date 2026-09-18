@@ -2,7 +2,7 @@ import asyncpg
 import logging
 from datetime import datetime, timedelta
 from typing import Optional, Dict, Any, List
-from config import DATABASE_URL
+from config import DATABASE_URL, MAX_REFERRALS
 
 logger = logging.getLogger(__name__)
 
@@ -200,9 +200,9 @@ async def register_referral(referrer_id: int, referred_user_id: int) -> bool:
     if exists:
         return False
 
-    # Taklif qiluvchining amaldagi takliflar soni 7 taga yetganmi?
+    # Taklif qiluvchining amaldagi takliflar soni MAX_REFERRALS taga yetganmi?
     count = await pool.fetchval("SELECT COUNT(*) FROM referrals WHERE referrer_id = $1", referrer_id)
-    if count and count >= 7:
+    if count and count >= MAX_REFERRALS:
         return False
 
     await pool.execute("""
@@ -238,7 +238,7 @@ async def process_referral_connection_reward(referred_user_id: int) -> Optional[
         SELECT COUNT(*) FROM referrals 
         WHERE referrer_id = $1 AND reward_granted = 1
     """, referrer_id)
-    if rewards_count and rewards_count >= 7:
+    if rewards_count and rewards_count >= MAX_REFERRALS:
         return None
 
     new_exp = await admin_add_subscription_days(referrer_id, 1)
@@ -259,7 +259,7 @@ async def get_user_referral_stats(user_id: int) -> Dict[str, Any]:
     total_invited = await pool.fetchval("SELECT COUNT(*) FROM referrals WHERE referrer_id = $1", user_id) or 0
     total_connected = await pool.fetchval("SELECT COUNT(*) FROM referrals WHERE referrer_id = $1 AND reward_granted = 1", user_id) or 0
 
-    max_limit = 7
+    max_limit = MAX_REFERRALS
     remaining_slots = max(0, max_limit - total_invited)
 
     return {
@@ -269,6 +269,17 @@ async def get_user_referral_stats(user_id: int) -> Dict[str, Any]:
         "remaining_slots": remaining_slots,
         "reward_days": total_connected,
     }
+
+
+async def is_user_language_set(user_id: int) -> bool:
+    """Foydalanuvchi avval til tanlaganmi yo'qmi tekshirish."""
+    try:
+        pool = await get_pg_pool()
+        val = await pool.fetchval("SELECT 1 FROM user_settings WHERE user_id = $1", user_id)
+        return bool(val)
+    except Exception as e:
+        logger.error(f"is_user_language_set xatolik: {e}")
+        return False
 
 
 async def get_user_language(user_id: int) -> str:

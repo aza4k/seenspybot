@@ -18,6 +18,7 @@ from database import (
     is_user_business_connected,
     get_user_deleted_messages_count,
     get_user_subscription_status,
+    is_user_language_set,
 )
 from config import ADMIN_ID, PRIVACY_POLICY_URL, GUIDE_CHANNEL_ID, GUIDE_MESSAGE_IDS
 from locales import (
@@ -52,9 +53,9 @@ async def get_start_payload(user_id: int, user_name: str, lang: str) -> tuple[st
 
             if plan_type == "free_trial":
                 sub_status_text = (
-                    f"🎁 30 дней free ({days_left} дн. осталось)"
+                    f'<tg-emoji emoji-id="5193085063998224234">🎁</tg-emoji> 30 дней free ({days_left} дн. осталось)'
                     if lang == "ru"
-                    else f"🎁 30 kunlik free({days_left} kun qoldi)"
+                    else f'<tg-emoji emoji-id="5193085063998224234">🎁</tg-emoji> 30 kunlik free({days_left} kun qoldi)'
                 )
             else:
                 sub_status_text = (
@@ -100,8 +101,20 @@ async def cmd_start(message: types.Message):
 
     # Yangi foydalanuvchiga 30 kunlik Free Trial berish
     await ensure_free_trial(user_id)
-    lang = await get_user_language(user_id)
 
+    # Agar yangi foydalanuvchi bo'lsa va hali til tanlamagan bo'lsa, dastlab til tanlatamiz
+    if not await is_user_language_set(user_id):
+        welcome_lang_text = (
+            '<tg-emoji emoji-id="5447410659077661506">🌐</tg-emoji> <b>Iltimos, tilni tanlang / Пожалуйста, выберите язык:</b>'
+        )
+        await message.answer(
+            welcome_lang_text,
+            reply_markup=get_language_keyboard(lang="ru", is_first_time=True),
+            parse_mode="HTML"
+        )
+        return
+
+    lang = await get_user_language(user_id)
     text, kb = await get_start_payload(user_id=user_id, user_name=user_name, lang=lang)
 
     await message.answer(

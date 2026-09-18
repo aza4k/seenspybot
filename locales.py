@@ -41,7 +41,8 @@ MESSAGES: Dict[str, Dict[str, str]] = {
 
         "btn_plans": "⭐ Тарифы",
         "btn_manage_sub": "⭐️ Управление подпиской",
-        "btn_get_free_day": "🎁 +1 День бесплатно (Пригласить друзей)",
+        "btn_get_free_day": "🎁 +1 День бесплатно",
+        "btn_buy_som": "💳 Купить в сумах (UZS)",
         "btn_guide": "📖 Инструкция",
         "btn_lang_short": "🌐 Язык",
         "btn_stats": "📊 Статус",
@@ -56,23 +57,23 @@ MESSAGES: Dict[str, Dict[str, str]] = {
             "👤 <b>Профиль:</b> {user_name}\n"
             "🆔 <b>ID:</b> <code>{user_id}</code>\n"
             "🔗 <b>Статус подключения:</b> 🟢 Активен\n"
-            "⭐️ <b>Подписка:</b> {sub_status}\n\n"
+            '<tg-emoji emoji-id="5388909270316114329">⭐️</tg-emoji> <b>Подписка:</b> {sub_status}\n\n'
             "📊 <b>Статистика:</b>\n"
             " Удалённых: <b>{deleted_count} шт.</b>\n\n"
             "💡 <b>Бот для вас:</b>\n"
-            "• 🗑 Сохраняет удалённые сообщения\n"
+            "<blockquote>• 🗑 Сохраняет удалённые сообщения\n"
             "• ✏️ Показывает историю изменённых сообщений\n"
             "• 📸 Сохраняет одноразовые медиа\n"
-            "• 🔔 Уведомляет о важных событиях"
+            "• 🔔 Уведомляет о важных событиях</blockquote>"
         ),
 
         # Qo'llanma matni
         "guide_text": (
             "📖 <b>Видео-инструкция по использованию SeenSPY</b>\n\n"
             "В 3 видеороликах выше наглядно показаны все возможности бота:\n\n"
-            "1️⃣ <b>Удалённые сообщения:</b> Если собеседник удалит сообщение (текст, фото, видео, голосовые), бот мгновенно отправит вам его оригинал.\n"
-            "2️⃣ <b>Изменённые сообщения:</b> Если сообщение изменено, бот покажет старый и новый вариант.\n"
-            "3️⃣ <b>Одноразовые (с таймером) медиа:</b> Чтобы сохранить фото или видео с таймером — <b>до открытия</b> ответьте на него в диалоге любым сообщением (например точкой <code>.</code>). Бот сохранит и пришлёт его вам!"
+            '<tg-emoji emoji-id="5382322671679708881">1️⃣</tg-emoji> <b>Удалённые сообщения:</b> Если собеседник удалит сообщение (текст, фото, видео, голосовые), бот мгновенно отправит вам его оригинал.\n'
+            '<tg-emoji emoji-id="5381990043642502553">2️⃣</tg-emoji> <b>Изменённые сообщения:</b> Если сообщение изменено, бот покажет старый и новый вариант.\n'
+            '<tg-emoji emoji-id="5381879959335738545">3️⃣</tg-emoji> <b>Одноразовые (с таймером) медиа:</b> Чтобы сохранить фото или видео с таймером — <b>до открытия</b> ответьте на него в диалоге любым сообщением (например точкой <code>.</code>). Бот сохранит и пришлёт его вам!'
         ),
         "privacy_text": (
             "📄 <b>Политика конфиденциальности (@seenspybot)</b>\n\n"
@@ -274,7 +275,8 @@ MESSAGES: Dict[str, Dict[str, str]] = {
 
         "btn_plans": "⭐ Tariflar",
         "btn_manage_sub": "⭐️ Obunani boshqarish",
-        "btn_get_free_day": "🎁 +1 Kun Bepul olish (Do'stlarni chaqirish)",
+        "btn_get_free_day": "🎁 +1 Kun bepul",
+        "btn_buy_som": "💳 So'm orqali sotib olish",
         "btn_guide": "📖 Qo'llanma",
         "btn_lang_short": "🌐 Til",
         "btn_stats": "📊 Statistika",
@@ -289,23 +291,23 @@ MESSAGES: Dict[str, Dict[str, str]] = {
             "👤 <b>Profil:</b> {user_name}\n"
             "🆔 <b>ID:</b> <code>{user_id}</code>\n"
             "🔗 <b>Ulanish holati:</b> 🟢 Faol\n"
-            "⭐️ <b>Obuna:</b> {sub_status}\n\n"
+            '<tg-emoji emoji-id="5388909270316114329">⭐️</tg-emoji> <b>Obuna:</b> {sub_status}\n\n'
             "📊 <b>Statistika:</b>\n"
             " O'chirilganlar: <b>{deleted_count} ta</b>\n\n"
             "💡 <b>Bot siz uchun:</b>\n"
-            "• 🗑 O‘chirilgan xabarlarni saqlaydi\n"
+            "<blockquote>• 🗑 O‘chirilgan xabarlarni saqlaydi\n"
             "• ✏️ Tahrirlangan xabarlarning oldingi holatini ko‘rsatadi\n"
             "• 📸 Bir martalik media fayllarni saqlab qoladi\n"
-            "• 🔔 Muhim o‘zgarishlar haqida xabar beradi"
+            "• 🔔 Muhim o‘zgarishlar haqida xabar beradi</blockquote>"
         ),
 
         # Qo'llanma matni
         "guide_text": (
             "📖 <b>SeenSPY dan foydalanish bo'yicha video-qo'llanma</b>\n\n"
             "Yuqoridagi 3 ta videorolikda botning barcha asosiy imkoniyatlari ko'rsatilgan:\n\n"
-            "1️⃣ <b>O'chirilgan xabarlar:</b> Suhbatdoshingiz biror xabarni (matn, rasm, video, audio) o'chirsa, bot darhol sizga o'sha xabarning asl nusxasini yetkazadi.\n"
-            "2️⃣ <b>Tahrirlangan xabarlar:</b> Xabar o'zgartirilsa, eski va yangi ko'rinishi taqqoslab ko'rsatiladi.\n"
-            "3️⃣ <b>1 martalik (taymerli) medialar:</b> Suhbatdoshingiz yuborgan 1 martalik rasm yoki videoni saqlash uchun — <b>uni ochishdan oldin</b> chatda o'sha xabarga istalgan so'z yoki belgi bilan <b>javob (Reply)</b> qaytaring (masalan nuqta <code>.</code> qo'ying). Bot uni darhol saqlab, sizga yuboradi!"
+            '<tg-emoji emoji-id="5382322671679708881">1️⃣</tg-emoji> <b>O\'chirilgan xabarlar:</b> Suhbatdoshingiz biror xabarni (matn, rasm, video, audio) o\'chirsa, bot darhol sizga o\'sha xabarning asl nusxasini yetkazadi.\n'
+            '<tg-emoji emoji-id="5381990043642502553">2️⃣</tg-emoji> <b>Tahrirlangan xabarlar:</b> Xabar o\'zgartirilsa, eski va yangi ko\'rinishi taqqoslab ko\'rsatiladi.\n'
+            '<tg-emoji emoji-id="5381879959335738545">3️⃣</tg-emoji> <b>1 martalik (taymerli) medialar:</b> Suhbatdoshingiz yuborgan 1 martalik rasm yoki videoni saqlash uchun — <b>uni ochishdan oldin</b> chatda o\'sha xabarga istalgan so\'z yoki belgi bilan <b>javob (Reply)</b> qaytaring (masalan nuqta <code>.</code> qo\'ying). Bot uni darhol saqlab, sizga yuboradi!'
         ),
         "privacy_text": (
             "📄 <b>Maxfiylik siyosati (@seenspybot)</b>\n\n"
@@ -568,19 +570,19 @@ def get_connected_keyboard(lang: str = "ru", is_admin: bool = False) -> InlineKe
 
 
 
-def get_language_keyboard(lang: str = "ru") -> InlineKeyboardMarkup:
+def get_language_keyboard(lang: str = "ru", is_first_time: bool = False) -> InlineKeyboardMarkup:
     """Til tanlash klaviaturasi."""
-    return InlineKeyboardMarkup(
-        inline_keyboard=[
-            [
-                InlineKeyboardButton(text="🇷🇺 Русский", callback_data="set_lang:ru"),
-                InlineKeyboardButton(text="🇺🇿 O'zbekcha", callback_data="set_lang:uz")
-            ],
-            [
-                InlineKeyboardButton(text=get_text("btn_back", lang), callback_data="back_to_menu")
-            ]
+    buttons = [
+        [
+            InlineKeyboardButton(text="🇷🇺 Русский", callback_data="set_lang:ru"),
+            InlineKeyboardButton(text="🇺🇿 O'zbekcha", callback_data="set_lang:uz")
         ]
-    )
+    ]
+    if not is_first_time:
+        buttons.append([
+            InlineKeyboardButton(text=get_text("btn_back", lang), callback_data="back_to_menu")
+        ])
+    return InlineKeyboardMarkup(inline_keyboard=buttons)
 
 
 def get_plans_keyboard(lang: str = "ru") -> InlineKeyboardMarkup:
@@ -598,11 +600,14 @@ def get_plans_keyboard(lang: str = "ru") -> InlineKeyboardMarkup:
         m_text = f"⭐ 1 Месяц — {m_stars} Stars (-25%)"
         y_text = f"⭐ 1 Год — {y_stars} Stars (Выгодно)"
 
+    som_text = get_text("btn_buy_som", lang)
+
     return InlineKeyboardMarkup(
         inline_keyboard=[
             [InlineKeyboardButton(text=w_text, callback_data="buy:week")],
             [InlineKeyboardButton(text=m_text, callback_data="buy:month")],
             [InlineKeyboardButton(text=y_text, callback_data="buy:year")],
+            [InlineKeyboardButton(text=som_text, url="https://t.me/m/lEyBVNZ3MmYy")],
             [InlineKeyboardButton(text=get_text("btn_back", lang), callback_data="back_to_menu")]
         ]
     )

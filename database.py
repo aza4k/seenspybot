@@ -47,6 +47,7 @@ if IS_POSTGRES:
         get_db_info,
         is_user_business_connected,
         get_user_deleted_messages_count,
+        is_user_language_set,
     )
     DB_ENGINE = "postgres"
 else:
@@ -93,6 +94,7 @@ else:
         get_db_info,
         is_user_business_connected,
         get_user_deleted_messages_count,
+        is_user_language_set,
     )
     DB_ENGINE = "sqlite"
 
@@ -107,6 +109,7 @@ __all__ = [
     "get_user_referral_stats",
     "get_user_language",
     "set_user_language",
+    "is_user_language_set",
     "is_media_already_captured",
     "mark_media_as_captured",
     "ensure_free_trial",
