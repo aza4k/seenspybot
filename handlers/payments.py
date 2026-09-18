@@ -9,6 +9,7 @@ from aiogram.types import (
     LabeledPrice,
     PreCheckoutQuery,
 )
+from aiogram.exceptions import TelegramForbiddenError, TelegramBadRequest
 from database import (
     is_subscription_active,
     add_subscription,
@@ -240,6 +241,12 @@ async def _replay_missed_archive_messages(bot: Bot, user_id: int, undelivered_lo
             )
             delivered_count += 1
             await asyncio.sleep(0.35)  # Telegram FloodLimit himoyasi
+        except TelegramForbiddenError:
+            logger.warning(f"Foydalanuvchi {user_id} botni bloklagan. Xabarlarni qayta yuborish to'xtatildi.")
+            break
+        except TelegramBadRequest as e:
+            logger.warning(f"Kanaldan xabarni nusxalashda xatolik (channel_msg_id={log.get('channel_msg_id')}): {e}")
+            continue
         except Exception as e:
             logger.error(f"Xabarni tiklashda xatolik (channel_msg_id={log.get('channel_msg_id')}): {e}")
 

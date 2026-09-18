@@ -738,6 +738,8 @@ async def on_deleted_business_messages(action: types.BusinessMessagesDeleted, bo
     if not owner_chat_id:
         return
 
+    lang = await get_user_language(owner_chat_id)
+
     # Obuna tekshiruvi (Admin uchun doimiy ochiq)
     sub_status = await get_user_subscription_status(owner_chat_id, ADMIN_ID)
     is_active = sub_status["is_active"]
@@ -750,15 +752,10 @@ async def on_deleted_business_messages(action: types.BusinessMessagesDeleted, bo
             from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
             kb = InlineKeyboardMarkup(
                 inline_keyboard=[
-                    [InlineKeyboardButton(text="⭐ Obunani faollashtirish", callback_data="show_plans")]
+                    [InlineKeyboardButton(text=get_text("btn_renew_sub", lang), callback_data="show_plans")]
                 ]
             )
-            msg = (
-                "⚠️ <b>Obunangiz tugaganiga 30 kundan oshdi!</b>\n\n"
-                "Xabarlarni zaxira qilish to'xtatildi. Botdan qayta to'liq foydalanish va arxivni saqlash uchun "
-                "obunani faollashtiring.\n\n"
-                "👉 Qayta yoqish uchun: /buy"
-            )
+            msg = get_text("scheduler_cutoff", lang)
             await bot.send_message(owner_chat_id, msg, reply_markup=kb, parse_mode="HTML")
         except Exception:
             pass
@@ -766,8 +763,6 @@ async def on_deleted_business_messages(action: types.BusinessMessagesDeleted, bo
 
     chat_title = format_chat_title(action.chat)
     saved_any_count = 0
-
-    lang = await get_user_language(owner_chat_id)
 
     for msg_id in action.message_ids:
         msg = await get_message(chat_id, msg_id)

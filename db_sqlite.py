@@ -203,6 +203,17 @@ async def register_referral(referrer_id: int, referred_user_id: int) -> bool:
         if await cur.fetchone():
             return False
 
+    # Foydalanuvchi allaqachon botning mavjud foydalanuvchisi emasligini tekshirish
+    async with db.execute("""
+        SELECT 1 FROM subscriptions WHERE user_id = ?
+        UNION
+        SELECT 1 FROM business_connections WHERE user_id = ? OR user_chat_id = ?
+        UNION
+        SELECT 1 FROM user_settings WHERE user_id = ?
+    """, (referred_user_id, referred_user_id, referred_user_id, referred_user_id)) as cur:
+        if await cur.fetchone():
+            return False
+
     # Taklif qiluvchining amaldagi takliflar soni MAX_REFERRALS taga yetganmi?
     async with db.execute("SELECT COUNT(*) FROM referrals WHERE referrer_id = ?", (referrer_id,)) as cur:
         count = (await cur.fetchone())[0]
@@ -577,7 +588,8 @@ async def add_subscription(user_id: int, days: int, plan_type: str, stars_paid: 
         row = await cursor.fetchone()
         if row and row[0]:
             try:
-                exp = datetime.strptime(row[0], "%Y-%m-%d %H:%M:%S")
+                clean = str(row[0]).replace("T", " ")[:19]
+                exp = datetime.strptime(clean, "%Y-%m-%d %H:%M:%S")
                 if exp > datetime.now():
                     current_expiry = exp
             except Exception:
@@ -917,7 +929,8 @@ async def admin_add_subscription_days(user_id: int, days: int) -> str:
     now = datetime.now()
     if row and row["expires_at"]:
         try:
-            current_exp = datetime.strptime(row["expires_at"], "%Y-%m-%d %H:%M:%S")
+            clean_str = str(row["expires_at"]).replace("T", " ")[:19]
+            current_exp = datetime.strptime(clean_str, "%Y-%m-%d %H:%M:%S")
             start_date = max(now, current_exp)
         except Exception:
             start_date = now
@@ -932,7 +945,11 @@ async def admin_add_subscription_days(user_id: int, days: int) -> str:
         VALUES (?, ?, 'admin_grant', 0, 1, 0, 0, CURRENT_TIMESTAMP)
         ON CONFLICT(user_id) DO UPDATE SET
             expires_at = excluded.expires_at,
-            plan_type = 'admin_grant',
+            plan_type = CASE 
+                WHEN subscriptions.plan_type IS NOT NULL AND subscriptions.plan_type NOT IN ('', 'none', 'revoked') 
+                THEN subscriptions.plan_type 
+                ELSE 'admin_grant' 
+            END,
             is_expired_notified = 0,
             is_cutoff_notified = 0,
             updated_at = CURRENT_TIMESTAMP

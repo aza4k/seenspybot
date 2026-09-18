@@ -2,6 +2,7 @@ import asyncio
 import logging
 from aiogram import Bot
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.exceptions import TelegramForbiddenError, TelegramBadRequest
 from database import (
     get_unnotified_expired_users,
     mark_expired_notified,
@@ -43,8 +44,14 @@ async def run_scheduler(bot: Bot = None):
                         await bot.send_message(user_id, msg, reply_markup=kb, parse_mode="HTML")
                         await mark_expired_notified(user_id)
                         logger.info(f"🔔 User {user_id} ga obuna tugagani haqida ogohlantirish yuborildi.")
+                    except TelegramForbiddenError:
+                        logger.warning(f"User {user_id} botni bloklagan. Expired bildirishnoma belgilandi.")
+                        await mark_expired_notified(user_id)
+                    except TelegramBadRequest as e:
+                        logger.warning(f"User {user_id} ga xabar yuborib bo'lmadi ({e}). Expired bildirishnoma belgilandi.")
+                        await mark_expired_notified(user_id)
                     except Exception as e:
-                        logger.error(f"User {user_id} ga bildirishnoma yuborishda xatolik: {e}")
+                        logger.error(f"User {user_id} ga bildirishnoma yuborishda kutilmagan xatolik: {e}")
 
                 # 2. Obunasi tugaganiga 30 kundan oshgan foydalanuvchilarni tekshirish (Cutoff)
                 cutoff_users = await get_unnotified_cutoff_users()
@@ -61,8 +68,14 @@ async def run_scheduler(bot: Bot = None):
                         await bot.send_message(user_id, cutoff_msg, reply_markup=kb, parse_mode="HTML")
                         await mark_cutoff_notified(user_id)
                         logger.info(f"🚫 User {user_id} ga 30 kunlik to'xtatish haqida ogohlantirish yuborildi.")
+                    except TelegramForbiddenError:
+                        logger.warning(f"User {user_id} botni bloklagan. Cutoff bildirishnoma belgilandi.")
+                        await mark_cutoff_notified(user_id)
+                    except TelegramBadRequest as e:
+                        logger.warning(f"User {user_id} ga cutoff yuborib bo'lmadi ({e}). Cutoff bildirishnoma belgilandi.")
+                        await mark_cutoff_notified(user_id)
                     except Exception as e:
-                        logger.error(f"User {user_id} ga cutoff bildirishnoma yuborishda xatolik: {e}")
+                        logger.error(f"User {user_id} ga cutoff bildirishnoma yuborishda kutilmagan xatolik: {e}")
 
             except Exception as e:
                 logger.error(f"Scheduler siklida xatolik: {e}")
