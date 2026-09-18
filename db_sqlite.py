@@ -817,6 +817,58 @@ async def get_all_broadcast_users() -> List[int]:
         return [r[0] for r in rows if r[0]]
 
 
+async def get_broadcast_users_by_segment(segment: str) -> List[int]:
+    """Segment bo'yicha xabar tarqatish uchun user_id larni olish."""
+    db = await get_db()
+    now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    if segment == "connected":
+        async with db.execute("""
+            SELECT DISTINCT COALESCE(user_chat_id, user_id) 
+            FROM business_connections 
+            WHERE is_enabled = 1 AND COALESCE(user_chat_id, user_id) IS NOT NULL
+        """) as cur:
+            rows = await cur.fetchall()
+            return [r[0] for r in rows if r[0]]
+
+    elif segment == "unconnected":
+        all_users = await get_all_broadcast_users()
+        async with db.execute("""
+            SELECT DISTINCT COALESCE(user_chat_id, user_id) 
+            FROM business_connections 
+            WHERE is_enabled = 1 AND COALESCE(user_chat_id, user_id) IS NOT NULL
+        """) as cur:
+            rows = await cur.fetchall()
+            connected_ids = set(r[0] for r in rows if r[0])
+            return [uid for uid in all_users if uid not in connected_ids]
+
+    elif segment == "active_sub":
+        async with db.execute("SELECT DISTINCT user_id FROM subscriptions WHERE expires_at > ?", (now_str,)) as cur:
+            rows = await cur.fetchall()
+            return [r[0] for r in rows if r[0]]
+
+    elif segment == "expired_sub":
+        async with db.execute("SELECT DISTINCT user_id FROM subscriptions WHERE expires_at <= ?", (now_str,)) as cur:
+            rows = await cur.fetchall()
+            return [r[0] for r in rows if r[0]]
+
+    elif segment == "lang_uz":
+        async with db.execute("SELECT DISTINCT user_id FROM user_settings WHERE language = 'uz'") as cur:
+            rows = await cur.fetchall()
+            return [r[0] for r in rows if r[0]]
+
+    elif segment == "lang_ru":
+        all_users = await get_all_broadcast_users()
+        async with db.execute("SELECT DISTINCT user_id FROM user_settings WHERE language = 'uz'") as cur:
+            rows = await cur.fetchall()
+            uz_ids = set(r[0] for r in rows if r[0])
+            return [uid for uid in all_users if uid not in uz_ids]
+
+    else:
+        # Default: barchaga
+        return await get_all_broadcast_users()
+
+
 async def get_user_full_profile(user_id: int) -> Dict[str, Any]:
     """Bitta foydalanuvchining to'liq profil ma'lumotlarini olish."""
     db = await get_db()

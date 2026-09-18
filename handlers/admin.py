@@ -20,6 +20,7 @@ from config import ADMIN_ID, DB_PATH
 from database import (
     get_admin_detailed_stats,
     get_all_broadcast_users,
+    get_broadcast_users_by_segment,
     get_user_full_profile,
     admin_add_subscription_days,
     admin_revoke_subscription,
@@ -39,6 +40,7 @@ MEDIA_DIR = Path("media_cache")
 
 # FSM Holatlari
 class BroadcastStates(StatesGroup):
+    waiting_for_segment = State()
     waiting_for_message = State()
     confirm_send = State()
 
@@ -186,24 +188,102 @@ async def cb_admin_stats(call: types.CallbackQuery):
 # -------------------------------------------------------------
 # 2. XABAR TARQATISH (BROADCAST / RASSILKA)
 # -------------------------------------------------------------
+BROADCAST_SEGMENTS = {
+    "all": "👥 Barchaga (Barcha foydalanuvchilar)",
+    "connected": "🟢 Faqat ulanganlar (Biznes hisob faol)",
+    "unconnected": "⚪️ Hali ulanmaganlar (Ulashga undash)",
+    "active_sub": "⭐️ Faqat obunasi faollar",
+    "expired_sub": "🔴 Faqat obunasi tugaganlar (Chegirmalar uchun)",
+    "lang_uz": "🇺🇿 Faqat O'zbek tilidagilar",
+    "lang_ru": "🇷🇺 Faqat Rus tilidagilar",
+}
+
+
+def get_broadcast_segments_keyboard() -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text="👥 Barchaga (Barcha foydalanuvchilar)", callback_data="broadcast:seg:all")],
+            [InlineKeyboardButton(text="🟢 Faqat ulanganlarga (Biznes faol)", callback_data="broadcast:seg:connected")],
+            [InlineKeyboardButton(text="⚪️ Hali ulanmaganlarga (Ulashga undash)", callback_data="broadcast:seg:unconnected")],
+            [InlineKeyboardButton(text="⭐️ Faqat obunasi faollarga", callback_data="broadcast:seg:active_sub")],
+            [InlineKeyboardButton(text="🔴 Faqat obunasi tugaganlarga (Chegirma)", callback_data="broadcast:seg:expired_sub")],
+            [
+                InlineKeyboardButton(text="🇺🇿 O'zbek tili", callback_data="broadcast:seg:lang_uz"),
+                InlineKeyboardButton(text="🇷🇺 Rus tili", callback_data="broadcast:seg:lang_ru"),
+            ],
+            [InlineKeyboardButton(text="🔙 Bekor qilish", callback_data="broadcast:cancel")]
+        ]
+    )
+
+
 @router.callback_query(F.data == "admin:broadcast")
-async def cb_admin_broadcast_start(call: types.CallbackQuery, state: FSMContext):
+@router.message(Command("broadcast"))
+async def cb_admin_broadcast_start(event: types.Message | types.CallbackQuery, state: FSMContext):
+    user_id = event.from_user.id
+    if not is_admin(user_id):
+        return
+
+    await state.set_state(BroadcastStates.waiting_for_segment)
+    text = (
+        "📢 <b>Segmentlangan Xabar Tarqatish (Targeted Broadcast)</b>\n\n"
+        "Qaysi auditoriyaga xabar yubormoqchisiz? Qabul qiluvchilar segmentini tanlang:"
+    )
+    kb = get_broadcast_segments_keyboard()
+    if isinstance(event, types.CallbackQuery):
+        try:
+            await event.message.edit_text(text, reply_markup=kb, parse_mode="HTML")
+        except Exception:
+            await event.message.answer(text, reply_markup=kb, parse_mode="HTML")
+        await event.answer()
+    else:
+        await event.answer(text, reply_markup=kb, parse_mode="HTML")
+
+
+@router.callback_query(BroadcastStates.waiting_for_segment, F.data.startswith("broadcast:seg:"))
+async def cb_broadcast_segment_chosen(call: types.CallbackQuery, state: FSMContext):
     if not is_admin(call.from_user.id):
         return
 
+    segment = call.data.replace("broadcast:seg:", "")
+    segment_title = BROADCAST_SEGMENTS.get(segment, "Barchaga")
+
+    users = await get_broadcast_users_by_segment(segment)
+    count = len(users)
+
+    await state.update_data(broadcast_segment=segment, broadcast_segment_title=segment_title)
     await state.set_state(BroadcastStates.waiting_for_message)
+
     text = (
-        "📢 <b>Xabar Tarqatish (Rassilka) Bo'limi</b>\n\n"
-        "Barcha bot foydalanuvchilariga yubormoqchi bo'lgan xabaringizni yuboring.\n"
-        "<i>(Matn, rasm, video, fayl, post yoki tugmali xabar yuborishingiz mumkin)</i>\n\n"
+        f"🎯 <b>Tanlangan auditoriya:</b> {segment_title}\n"
+        f"👥 <b>Qabul qiluvchilar soni:</b> <b>{count} ta foydalanuvchi</b>\n\n"
+        "Ushbu auditoriyaga yubormoqchi bo'lgan xabaringizni yuboring:\n"
+        "<i>(Matn, rasm, video, fayl, post yoki ovozli xabar)</i>\n\n"
         "Bekor qilish uchun /cancel buyrug'ini yuboring."
     )
     kb = InlineKeyboardMarkup(
         inline_keyboard=[
+            [InlineKeyboardButton(text="🔄 Boshqa segment tanlash", callback_data="broadcast:change_segment")],
             [InlineKeyboardButton(text="🚫 Bekor qilish", callback_data="broadcast:cancel")]
         ]
     )
-    await call.message.answer(text, reply_markup=kb, parse_mode="HTML")
+    await call.message.edit_text(text, reply_markup=kb, parse_mode="HTML")
+    await call.answer()
+
+
+@router.callback_query(F.data == "broadcast:change_segment")
+async def cb_broadcast_change_segment(call: types.CallbackQuery, state: FSMContext):
+    if not is_admin(call.from_user.id):
+        return
+    await state.set_state(BroadcastStates.waiting_for_segment)
+    text = (
+        "📢 <b>Segmentlangan Xabar Tarqatish (Targeted Broadcast)</b>\n\n"
+        "Qaysi auditoriyaga xabar yubormoqchisiz? Qabul qiluvchilar segmentini tanlang:"
+    )
+    kb = get_broadcast_segments_keyboard()
+    try:
+        await call.message.edit_text(text, reply_markup=kb, parse_mode="HTML")
+    except Exception:
+        await call.message.answer(text, reply_markup=kb, parse_mode="HTML")
     await call.answer()
 
 
@@ -226,21 +306,27 @@ async def process_broadcast_message(message: types.Message, state: FSMContext):
     if not is_admin(message.from_user.id):
         return
 
+    data = await state.get_data()
+    segment = data.get("broadcast_segment", "all")
+    segment_title = data.get("broadcast_segment_title", BROADCAST_SEGMENTS.get(segment, "Barchaga"))
+
     # Xabar ID sini saqlash
     await state.update_data(broadcast_chat_id=message.chat.id, broadcast_msg_id=message.message_id)
     await state.set_state(BroadcastStates.confirm_send)
 
-    users = await get_all_broadcast_users()
+    users = await get_broadcast_users_by_segment(segment)
     total_users = len(users)
 
     text = (
-        "👁 <b>Yuqoridagi xabar ko'rinishi barchaga yuboriladi.</b>\n\n"
-        f"👥 Qabul qiluvchilar soni: <b>{total_users} ta foydalanuvchi</b>\n\n"
+        "👁 <b>Yuqoridagi xabar ko'rinishi ushbu auditoriyaga yuboriladi:</b>\n\n"
+        f"🎯 <b>Segment:</b> {segment_title}\n"
+        f"👥 <b>Qabul qiluvchilar soni:</b> <b>{total_users} ta foydalanuvchi</b>\n\n"
         "Rassilkani boshlashni tasdiqlaysizmi?"
     )
     kb = InlineKeyboardMarkup(
         inline_keyboard=[
             [InlineKeyboardButton(text="🚀 Ha, yuborilsin!", callback_data="broadcast:confirm")],
+            [InlineKeyboardButton(text="🔄 Boshqa segment", callback_data="broadcast:change_segment")],
             [InlineKeyboardButton(text="🚫 Bekor qilish", callback_data="broadcast:cancel")],
         ]
     )
@@ -255,10 +341,21 @@ async def cb_broadcast_confirm(call: types.CallbackQuery, state: FSMContext, bot
     data = await state.get_data()
     from_chat_id = data.get("broadcast_chat_id")
     msg_id = data.get("broadcast_msg_id")
+    segment = data.get("broadcast_segment", "all")
+    segment_title = data.get("broadcast_segment_title", BROADCAST_SEGMENTS.get(segment, "Barchaga"))
     await state.clear()
 
-    users = await get_all_broadcast_users()
+    users = await get_broadcast_users_by_segment(segment)
     total = len(users)
+
+    if total == 0:
+        await call.message.answer(
+            f"⚠️ <b>{segment_title} segmentida hech qanday foydalanuvchi topilmadi!</b>",
+            reply_markup=get_admin_main_keyboard(),
+            parse_mode="HTML"
+        )
+        await call.answer()
+        return
 
     progress_msg = await call.message.answer(f"⏳ <b>Xabar tarqatilmoqda...</b> (0 / {total})", parse_mode="HTML")
     await call.answer()
@@ -299,13 +396,15 @@ async def cb_broadcast_confirm(call: types.CallbackQuery, state: FSMContext, bot
 
     report_text = (
         "✅ <b>Xabar tarqatish muvaffaqiyatli yakunlandi!</b>\n\n"
+        f"🎯 <b>Segment:</b> {segment_title}\n"
         f"📊 <b>Natijalar:</b>\n"
-        f"• Jami: <b>{total} ta</b>\n"
+        f"• Jami auditoriya: <b>{total} ta</b>\n"
         f"• Yetkazildi: <b>{success_count} ta</b>\n"
         f"• Bloklaganlar: <b>{blocked_count} ta</b>\n"
         f"• Boshqa xatoliklar: <b>{error_count} ta</b>"
     )
     await progress_msg.edit_text(report_text, reply_markup=get_admin_main_keyboard(), parse_mode="HTML")
+
 
 
 # -------------------------------------------------------------
