@@ -115,7 +115,10 @@ async def on_new_message(event: events.NewMessage.Event):
                 return
 
             ttl_display = "1 marta ko'rish" if ttl > 100000 else f"{ttl} soniya"
-            time_str = event.date.strftime('%H:%M:%S')
+            from datetime import timezone, timedelta
+            uzb_tz = timezone(timedelta(hours=5))
+            dt = event.date if event.date.tzinfo else event.date.replace(tzinfo=timezone.utc)
+            time_str = dt.astimezone(uzb_tz).strftime('%H:%M:%S')
 
             # 1. Shaxsiy arxiv kanaliga jo'natish
             channel_msg_id = None

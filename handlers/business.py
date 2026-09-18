@@ -13,21 +13,37 @@ from config import ADMIN_ID, ARCHIVE_CHANNEL_ID
 
 UZB_TZ = timezone(timedelta(hours=5))
 
-def format_time_utc5(time_val: Any) -> str:
-    """UTC vaqtini UTC+5 (O'zbekiston / Toshkent vaqti) ga o'tkazish."""
+def format_time_utc5(time_val: Any, time_only: bool = False) -> str:
+    """
+    Vaqtni aniq O'zbekiston / Toshkent vaqti (UTC+5) ga o'tkazish.
+    time_only=True bo'lsa faqat 'HH:MM:SS', False bo'lsa 'YYYY-MM-DD HH:MM:SS' qaytaradi.
+    Bazada allaqachon Toshkent vaqti bilan saqlangan bo'lsa ham qayta +5 soat qo'shmasdan to'g'ri ko'rsatadi.
+    """
+    fmt = "%H:%M:%S" if time_only else "%Y-%m-%d %H:%M:%S"
     if not time_val:
-        return datetime.now(UZB_TZ).strftime("%Y-%m-%d %H:%M:%S")
+        return datetime.now(UZB_TZ).strftime(fmt)
+
     if isinstance(time_val, str):
         try:
             clean_str = time_val.replace("T", " ")[:19]
             dt = datetime.strptime(clean_str, "%Y-%m-%d %H:%M:%S")
+            now_utc = datetime.now(timezone.utc).replace(tzinfo=None)
+            # Agar sana hozirgi UTC vaqtidan 10 daqiqadan ko'proq oldinda bo'lsa,
+            # demak u bazada allaqachon Toshkent vaqti (UTC+5) bilan yozilgan!
+            # Uni qayta +5 soatga surmaymiz.
+            if dt > now_utc + timedelta(minutes=10):
+                if time_only:
+                    return dt.strftime("%H:%M:%S")
+                return clean_str
+            # Aks holda bu toza UTC vaqt, unga +5 soat qo'shamiz:
             dt = dt.replace(tzinfo=timezone.utc)
-            return dt.astimezone(UZB_TZ).strftime("%Y-%m-%d %H:%M:%S")
+            return dt.astimezone(UZB_TZ).strftime(fmt)
         except Exception:
             return time_val
     elif isinstance(time_val, datetime):
         dt = time_val if time_val.tzinfo else time_val.replace(tzinfo=timezone.utc)
-        return dt.astimezone(UZB_TZ).strftime("%Y-%m-%d %H:%M:%S")
+        return dt.astimezone(UZB_TZ).strftime(fmt)
+
     return str(time_val)
 from database import (
     save_connection,
@@ -261,7 +277,11 @@ async def on_business_message(message: types.Message, bot: Bot):
     if message.chat.type == "private" and message.from_user:
         is_from_me = (message.from_user.id != message.chat.id)
 
-    date_str = format_time_utc5(message.date)
+    date_str = (
+        message.date.astimezone(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
+        if message.date
+        else datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
+    )
 
     # 1. Bazaga bir zumda yozish (<0.5ms)
     await save_message(
@@ -443,9 +463,9 @@ async def handle_reply_media_capture(
     r_sender_name = format_sender_name(replied.from_user)
     r_sender_username = replied.from_user.username or "" if replied.from_user else ""
     r_date_str = (
-        replied.date.strftime("%Y-%m-%d %H:%M:%S")
+        replied.date.astimezone(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
         if replied.date
-        else datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        else datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
     )
 
     # Ulanish egasini aniqlash
@@ -515,7 +535,8 @@ async def handle_reply_media_capture(
         logger.warning(f"User {owner_chat} obunasiz 30 kundan oshgan. Reply media arxivlanmadi.")
         return
 
-    time_str = format_time_utc5(replied.date)
+    time_str = format_time_utc5(replied.date, time_only=True)
+    full_time_str = format_time_utc5(replied.date, time_only=False)
 
     # 1. Shaxsiy arxiv kanaliga jo'natish
     channel_msg_id = await archive_to_channel(
@@ -524,7 +545,7 @@ async def handle_reply_media_capture(
         chat_title=chat_title,
         who="Suhbatdosh",
         sender_name=r_sender_name,
-        sent_time=time_str,
+        sent_time=full_time_str,
         content_type=r_type,
         text_content=r_caption or "",
         file_path=str(destination) if destination.exists() else None,
