@@ -14,7 +14,7 @@ from aiogram.types import (
     InlineKeyboardButton,
     FSInputFile,
 )
-from aiogram.exceptions import TelegramForbiddenError, TelegramBadRequest
+from aiogram.exceptions import TelegramForbiddenError, TelegramBadRequest, TelegramRetryAfter
 
 from config import ADMIN_ID, DB_PATH
 from database import (
@@ -372,6 +372,19 @@ async def cb_broadcast_confirm(call: types.CallbackQuery, state: FSMContext, bot
                 message_id=msg_id
             )
             success_count += 1
+        except TelegramRetryAfter as e:
+            logger.warning(f"Rassilka FloodWait: {e.retry_after}s kutish (uid={uid})")
+            await asyncio.sleep(e.retry_after + 1)
+            try:
+                await bot.copy_message(
+                    chat_id=uid,
+                    from_chat_id=from_chat_id,
+                    message_id=msg_id
+                )
+                success_count += 1
+            except Exception as retry_err:
+                error_count += 1
+                logger.error(f"Takroriy yuborishda xatolik (uid={uid}): {retry_err}")
         except TelegramForbiddenError:
             blocked_count += 1
         except TelegramBadRequest as e:

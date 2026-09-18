@@ -184,6 +184,14 @@ MESSAGES: Dict[str, Dict[str, str]] = {
             "Чтобы просмотреть и сохранить его, активируйте подписку!\n"
             "👉 Нажмите кнопку ниже или введите команду /buy."
         ),
+        "teaser_edited_title": '<tg-emoji emoji-id="6048463895901769909">🗝</tg-emoji> <b>Кто-то изменил сообщение!</b>\n\n',
+        "teaser_edited_body": (
+            "Собеседник только что отредактировал сообщение в переписке.\n"
+            "История изменений надёжно сохранена в архиве.\n"
+            "📦 Всего пропущенных событий: <b>{total_missed} шт.</b>\n\n"
+            "Чтобы увидеть исходный текст до редактирования, активируйте подписку!\n"
+            "👉 Нажмите кнопку ниже или введите команду /buy."
+        ),
         "btn_unlock": "🔓 Посмотреть сообщения ({total_missed} шт.)",
 
         # Tariflar va to'lovlar
@@ -417,6 +425,14 @@ MESSAGES: Dict[str, Dict[str, str]] = {
             "📦 Hozirgacha yig'ilgan ko'rilmagan xabarlar soni: <b>{total_missed} ta</b>\n\n"
             "Uni ko'rish va saqlash uchun obunani faollashtiring!\n"
             "👉 Quyidagi tugmani bosing yoki /buy buyrug'ini yuboring."
+        ),
+        "teaser_edited_title": '<tg-emoji emoji-id="6048463895901769909">🗝</tg-emoji> <b>Kimdir xabarni tahrirladi!</b>\n\n',
+        "teaser_edited_body": (
+            "Suhbatdoshingiz yozishmada xabarni o'zgartirdi.\n"
+            "Xabarning o'zgartirilishidan oldingi asl matni arxivda saqlandi.\n"
+            "📦 Jami o'tkazib yuborilganlar: <b>{total_missed} ta</b>\n\n"
+            "Xabarning tahrirdan oldingi asl holatini ko'rish uchun obunani faollashtiring!\n"
+            "👉 Pastdagi tugmani bosing yoki /buy buyrug'idan foydalaning."
         ),
         "btn_unlock": "🔓 Xabarlarni ko'rish ({total_missed} ta)",
 

@@ -72,24 +72,75 @@ MEDIA_DIR.mkdir(exist_ok=True)
 
 
 async def resolve_owner_chat_id(bot: Bot, connection_id: Optional[str]) -> Optional[int]:
-    """Ulanish egasining chat_id sini bazadan, Telegram API orqali yoki config dan aniqlash."""
+    """Ulanish egasining chat_id sini bazadan yoki Telegram API orqali aniqlash."""
+    if not connection_id:
+        return None
+
     owner_chat = await get_connection_owner_chat(connection_id)
     if owner_chat:
         return owner_chat
 
-    if connection_id:
-        try:
-            conn = await bot.get_business_connection(connection_id)
-            if conn:
-                await save_connection(conn.id, conn.user.id, conn.user_chat_id, conn.is_enabled)
-                return conn.user_chat_id
-        except Exception as e:
-            logger.error(f"Telegram API dan ulanishni olishda xatolik: {e}")
-
-    if ADMIN_ID:
-        return ADMIN_ID
+    try:
+        conn = await bot.get_business_connection(connection_id)
+        if conn:
+            await save_connection(conn.id, conn.user.id, conn.user_chat_id, conn.is_enabled)
+            return conn.user_chat_id
+    except Exception as e:
+        logger.error(f"Telegram API dan ulanishni olishda xatolik: {e}")
 
     return None
+
+
+def safe_build_text_message(
+    header_info: str,
+    text_content: str,
+    promo_footer: str,
+    msg_label: str = "Xabar",
+    max_len: int = 4000
+) -> str:
+    """
+    4096 belgidan oshib ketmasligi uchun xabar matnini xavfsiz qirqish va HTML teglarini to'liq yopish.
+    """
+    prefix = f"{header_info}💬 <b>{msg_label}:</b>\n<blockquote>"
+    suffix = f"</blockquote>{promo_footer}"
+    base_len = len(prefix) + len(suffix)
+    available = max(50, max_len - base_len - 3)
+
+    if len(text_content) > available:
+        text_content = text_content[:available] + "..."
+
+    return f"{prefix}{html.escape(text_content)}{suffix}"
+
+
+def safe_build_caption(
+    header_info: str,
+    text_content: Optional[str],
+    promo_footer: str,
+    title_label: str = "Sarlavha",
+    extra_footer: str = "",
+    max_len: int = 1024
+) -> str:
+    """
+    Telegram media caption (1024 belgi) limitiga moslab xavfsiz tuzish.
+    HTML teglari hech qachon o'rtasidan kesilmaydi.
+    """
+    if not text_content:
+        res = f"{header_info}{extra_footer}{promo_footer}"
+        return res[:max_len]
+
+    prefix = f"{header_info}💬 <b>{title_label}:</b>\n<blockquote>"
+    suffix = f"</blockquote>\n{extra_footer}{promo_footer}"
+    base_len = len(prefix) + len(suffix)
+
+    if base_len >= max_len - 20:
+        res = f"{header_info}{extra_footer}{promo_footer}"
+        return res[:max_len]
+
+    available = max(10, max_len - base_len - 3)
+    if len(text_content) > available:
+        text_content = text_content[:available] + "..."
+
+    return f"{prefix}{html.escape(text_content)}{suffix}"
 
 
 def format_sender_name(user: Optional[types.User]) -> str:
@@ -336,32 +387,88 @@ async def on_edited_business_message(message: types.Message, bot: Bot):
     old_msg = await get_message(message.chat.id, message.message_id)
     await update_message_text(message.chat.id, message.message_id, new_text)
 
-    if old_msg and old_msg.get("text") and new_text and old_msg.get("text") != new_text:
-        owner_chat_id = await resolve_owner_chat_id(bot, conn_id)
-        if owner_chat_id:
-            sub_status = await get_user_subscription_status(owner_chat_id, ADMIN_ID)
-            if sub_status["is_active"]:
-                lang = await get_user_language(owner_chat_id)
-                who = ("Вы" if lang == "ru" else "Siz") if old_msg.get("is_from_me") else ("Собеседник" if lang == "ru" else "Suhbatdosh")
-                sender_name = old_msg.get("sender_name") or format_sender_name(message.from_user)
-                chat_title = format_chat_title(message.chat)
+    old_text = (old_msg.get("text") or "").strip() if old_msg else ""
+    clean_new_text = (new_text or "").strip()
 
-                edit_text = (
-                    get_text(
-                        "msg_edited",
-                        lang,
-                        who=who,
-                        sender_name=html.escape(sender_name),
-                        chat_title=html.escape(chat_title),
-                        old_text=html.escape(old_msg.get("text")),
-                        new_text=html.escape(new_text)
-                    )
-                    + get_text("promo_footer", lang)
+    if old_msg and old_text and clean_new_text and old_text != clean_new_text:
+        owner_chat_id = await resolve_owner_chat_id(bot, conn_id)
+        if not owner_chat_id:
+            return
+
+        sub_status = await get_user_subscription_status(owner_chat_id, ADMIN_ID)
+        is_active = sub_status["is_active"]
+        lang = await get_user_language(owner_chat_id)
+        who = ("Вы" if lang == "ru" else "Siz") if old_msg.get("is_from_me") else ("Собеседник" if lang == "ru" else "Suhbatdosh")
+        sender_name = old_msg.get("sender_name") or format_sender_name(message.from_user)
+        chat_title = format_chat_title(message.chat)
+        sent_time = format_time_utc5(message.date)
+
+        # 1. Shaxsiy arxiv kanaliga jo'natish
+        archive_content = f"Oldingi holati:\n{old_text}\n\nYangi holati:\n{clean_new_text}"
+        channel_msg_id = await archive_to_channel(
+            bot=bot,
+            owner_chat_id=owner_chat_id,
+            chat_title=chat_title,
+            who=who,
+            sender_name=sender_name,
+            sent_time=sent_time,
+            content_type="text",
+            text_content=archive_content,
+            file_path=None,
+            file_id=None,
+            event_tag="#EDITED",
+            event_title="✏️ <b>Tahrirlangan xabar</b>"
+        )
+
+        if channel_msg_id:
+            await save_archive_log(
+                user_id=owner_chat_id,
+                chat_id=message.chat.id,
+                channel_msg_id=channel_msg_id,
+                event_type="edited",
+                is_delivered=is_active
+            )
+
+        # 2. Obunasi bo'lsa xabarni yuborish
+        if is_active:
+            # 4000 belgiga moslab xavfsiz qisqartirish
+            max_item = 1800
+            t_old = old_text[:max_item] + "..." if len(old_text) > max_item else old_text
+            t_new = clean_new_text[:max_item] + "..." if len(clean_new_text) > max_item else clean_new_text
+
+            edit_text = (
+                get_text(
+                    "msg_edited",
+                    lang,
+                    who=who,
+                    sender_name=html.escape(sender_name),
+                    chat_title=html.escape(chat_title),
+                    old_text=html.escape(t_old),
+                    new_text=html.escape(t_new)
                 )
-                try:
-                    await bot.send_message(owner_chat_id, edit_text, parse_mode="HTML")
-                except Exception as e:
-                    logger.error(f"Tahrirlangan xabarni yuborishda xatolik: {e}")
+                + get_text("promo_footer", lang)
+            )
+            try:
+                await bot.send_message(owner_chat_id, edit_text, parse_mode="HTML")
+            except Exception as e:
+                logger.error(f"Tahrirlangan xabarni yuborishda xatolik: {e}")
+        else:
+            # Obunasi bo'lmagan foydalanuvchiga Teaser
+            total_missed = await count_undelivered_messages(owner_chat_id)
+            from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+            kb = InlineKeyboardMarkup(
+                inline_keyboard=[
+                    [InlineKeyboardButton(text=get_text("btn_unlock", lang, total_missed=total_missed), callback_data="show_plans")]
+                ]
+            )
+            teaser_msg = (
+                get_text("teaser_edited_title", lang) +
+                get_text("teaser_edited_body", lang, total_missed=total_missed)
+            )
+            try:
+                await bot.send_message(owner_chat_id, teaser_msg, reply_markup=kb, parse_mode="HTML")
+            except Exception as e:
+                logger.error(f"Edited teaser yuborishda xatolik: {e}")
 
 
 
@@ -394,15 +501,24 @@ async def archive_to_channel(
 
     try:
         if content_type == "text":
-            body = f"{header}💬 <b>Xabar:</b>\n<blockquote>{html.escape(text_content)}</blockquote>"
+            body = safe_build_text_message(
+                header_info=header,
+                text_content=text_content,
+                promo_footer="",
+                msg_label="Xabar",
+                max_len=4000
+            )
             sent_msg = await bot.send_message(ARCHIVE_CHANNEL_ID, body, parse_mode="HTML")
             return sent_msg.message_id
         else:
-            caption = header
-            if text_content:
-                caption += f"💬 <b>Sarlavha:</b>\n<blockquote>{html.escape(text_content)}</blockquote>"
-            if len(caption) > 1024:
-                caption = caption[:1020] + "..."
+            caption = safe_build_caption(
+                header_info=header,
+                text_content=text_content,
+                promo_footer="",
+                title_label="Sarlavha",
+                extra_footer="",
+                max_len=1024
+            )
 
             file_to_send: Any = None
             if file_path and os.path.exists(file_path):
@@ -569,38 +685,22 @@ async def handle_reply_media_capture(
 
     # 3. Foydalanuvchiga yetkazish yoki Teaser yuborish
     if is_active:
-        user_caption = get_text(
+        caption_label = "Подпись" if lang == "ru" else "Izoh"
+        header_text = get_text(
             "msg_view_once",
             lang,
             sender_name=html.escape(r_sender_name),
             chat_title=html.escape(chat_title),
             time_str=time_str
         )
-        if r_caption:
-            caption_label = "Подпись" if lang == "ru" else "Izoh"
-            user_caption += f"📝 <b>{caption_label}:</b>\n<blockquote>{html.escape(r_caption)}</blockquote>\n"
-        promo_footer = get_text("promo_footer", lang)
-        user_caption += get_text("msg_view_once_footer", lang) + promo_footer
-
-        if len(user_caption) > 1024:
-            # Sarlavha 1024 belgidan oshmasligini ta'minlash
-            overflow = len(user_caption) - 1020
-            if r_caption and len(r_caption) > overflow:
-                short_caption = r_caption[:-overflow] + "..."
-                user_caption = (
-                    get_text(
-                        "msg_view_once",
-                        lang,
-                        sender_name=html.escape(r_sender_name),
-                        chat_title=html.escape(chat_title),
-                        time_str=time_str
-                    )
-                    + f"📝 <b>{caption_label}:</b>\n<blockquote>{html.escape(short_caption)}</blockquote>\n"
-                    + get_text("msg_view_once_footer", lang)
-                    + promo_footer
-                )
-            else:
-                user_caption = user_caption[:1020] + "..."
+        user_caption = safe_build_caption(
+            header_info=header_text,
+            text_content=r_caption,
+            promo_footer=get_text("promo_footer", lang),
+            title_label=caption_label,
+            extra_footer=get_text("msg_view_once_footer", lang),
+            max_len=1024
+        )
 
         await send_saved_media(
             bot=bot,
@@ -725,26 +825,24 @@ async def on_deleted_business_messages(action: types.BusinessMessagesDeleted, bo
                     promo_footer = get_text("promo_footer", lang)
                     if content_type == "text":
                         msg_label = "Сообщение" if lang == "ru" else "Xabar"
-                        body = f"{header_info}💬 <b>{msg_label}:</b>\n<blockquote>{html.escape(text_content)}</blockquote>{promo_footer}"
+                        body = safe_build_text_message(
+                            header_info=header_info,
+                            text_content=text_content,
+                            promo_footer=promo_footer,
+                            msg_label=msg_label,
+                            max_len=4000
+                        )
                         await bot.send_message(owner_chat_id, body, parse_mode="HTML")
                     else:
-                        caption = header_info
-                        if text_content:
-                            title_label = "Подпись" if lang == "ru" else "Sarlavha"
-                            caption += f"💬 <b>{title_label}:</b>\n<blockquote>{html.escape(text_content)}</blockquote>\n"
-                        caption += promo_footer
-
-                        if len(caption) > 1024:
-                            overflow = len(caption) - 1020
-                            if text_content and len(text_content) > overflow:
-                                short_text = text_content[:-overflow] + "..."
-                                caption = (
-                                    header_info
-                                    + f"💬 <b>{title_label}:</b>\n<blockquote>{html.escape(short_text)}</blockquote>\n"
-                                    + promo_footer
-                                )
-                            else:
-                                caption = caption[:1020] + "..."
+                        title_label = "Подпись" if lang == "ru" else "Sarlavha"
+                        caption = safe_build_caption(
+                            header_info=header_info,
+                            text_content=text_content,
+                            promo_footer=promo_footer,
+                            title_label=title_label,
+                            extra_footer="",
+                            max_len=1024
+                        )
 
                         await send_saved_media(
                             bot=bot,

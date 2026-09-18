@@ -205,7 +205,7 @@ async def on_successful_payment(message: types.Message, bot: Bot):
     )
     await message.answer(congrat_text, parse_mode="HTML")
 
-    # To'lovgacha yig'ilib qolgan ochilmagan arxiv xabarlarini tiklab berish
+    # To'lovgacha yig'ilib qolgan ochilmagan arxiv xabarlarini orqa fonda tiklab berish
     user_id = message.from_user.id
     undelivered_logs = await get_undelivered_archive_logs(user_id)
 
@@ -215,24 +215,45 @@ async def on_successful_payment(message: types.Message, bot: Bot):
             get_text("payment_replay_header", lang, count=total),
             parse_mode="HTML"
         )
+        asyncio.create_task(
+            _replay_missed_archive_messages(bot, user_id, undelivered_logs, lang)
+        )
 
-        delivered_count = 0
-        for log in undelivered_logs:
-            try:
-                channel_msg_id = log["channel_msg_id"]
-                await bot.copy_message(
-                    chat_id=user_id,
-                    from_chat_id=ARCHIVE_CHANNEL_ID,
-                    message_id=channel_msg_id
-                )
-                delivered_count += 1
-                await asyncio.sleep(0.35)  # Telegram FloodLimit himoyasi
-            except Exception as e:
-                logger.error(f"Xabarni tiklashda xatolik (channel_msg_id={log.get('channel_msg_id')}): {e}")
 
-        await mark_archive_logs_delivered(user_id)
+async def _replay_missed_archive_messages(bot: Bot, user_id: int, undelivered_logs: list, lang: str):
+    """Obunasiz paytda o'tkazib yuborilgan xabarlarni orqa fonda asinxron yetkazish."""
+    if not undelivered_logs or not ARCHIVE_CHANNEL_ID:
+        return
+
+    MAX_REPLAY = 30
+    total = len(undelivered_logs)
+    logs_to_replay = undelivered_logs[-MAX_REPLAY:]
+
+    delivered_count = 0
+    for log in logs_to_replay:
+        try:
+            channel_msg_id = log["channel_msg_id"]
+            await bot.copy_message(
+                chat_id=user_id,
+                from_chat_id=ARCHIVE_CHANNEL_ID,
+                message_id=channel_msg_id
+            )
+            delivered_count += 1
+            await asyncio.sleep(0.35)  # Telegram FloodLimit himoyasi
+        except Exception as e:
+            logger.error(f"Xabarni tiklashda xatolik (channel_msg_id={log.get('channel_msg_id')}): {e}")
+
+    await mark_archive_logs_delivered(user_id)
+    if delivered_count > 0:
         if lang == "ru":
-            done_text = f"✅ <b>Все {delivered_count} сохранённых сообщений успешно доставлены!</b>"
+            done_text = f"✅ <b>{delivered_count} сохранённых сообщений успешно доставлены!</b>"
+            if total > MAX_REPLAY:
+                done_text += f"\n<i>(Показаны последние {MAX_REPLAY} из {total} сообщений)</i>"
         else:
-            done_text = f"✅ <b>Barcha to'plangan {delivered_count} ta xabarlar muvaffaqiyatli yetkazildi!</b>"
-        await message.answer(done_text, parse_mode="HTML")
+            done_text = f"✅ <b>{delivered_count} ta saqlangan xabarlar muvaffaqiyatli yetkazildi!</b>"
+            if total > MAX_REPLAY:
+                done_text += f"\n<i>(Jami {total} tadan eng so'nggi {MAX_REPLAY} tasi ko'rsatildi)</i>"
+        try:
+            await bot.send_message(user_id, done_text, parse_mode="HTML")
+        except Exception:
+            pass

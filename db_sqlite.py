@@ -638,18 +638,12 @@ async def save_connection(connection_id: str, user_id: int, user_chat_id: int, i
 
 async def get_connection_owner_chat(connection_id: Optional[str] = None) -> Optional[int]:
     """Ulanish egasining Telegram chat_id sini tezkor olish."""
+    if not connection_id:
+        return None
     db = await get_db()
-    if connection_id:
-        async with db.execute(
-            "SELECT user_chat_id FROM business_connections WHERE connection_id = ?",
-            (connection_id,)
-        ) as cursor:
-            row = await cursor.fetchone()
-            if row:
-                return row[0]
-    
     async with db.execute(
-        "SELECT user_chat_id FROM business_connections WHERE is_enabled = 1 ORDER BY updated_at DESC LIMIT 1"
+        "SELECT user_chat_id FROM business_connections WHERE connection_id = ?",
+        (connection_id,)
     ) as cursor:
         row = await cursor.fetchone()
         return row[0] if row else None

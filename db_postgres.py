@@ -585,19 +585,13 @@ async def save_connection(connection_id: str, user_id: int, user_chat_id: int, i
 
 async def get_connection_owner_chat(connection_id: Optional[str] = None) -> Optional[int]:
     """Ulanish egasining Telegram chat_id sini tezkor olish."""
+    if not connection_id:
+        return None
     pool = await get_pg_pool()
-    if connection_id:
-        val = await pool.fetchval(
-            "SELECT user_chat_id FROM business_connections WHERE connection_id = $1",
-            connection_id
-        )
-        if val is not None:
-            return val
-
-    val = await pool.fetchval(
-        "SELECT user_chat_id FROM business_connections WHERE is_enabled = 1 ORDER BY updated_at DESC LIMIT 1"
+    return await pool.fetchval(
+        "SELECT user_chat_id FROM business_connections WHERE connection_id = $1",
+        connection_id
     )
-    return val
 
 
 async def save_message(
