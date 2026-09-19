@@ -42,6 +42,34 @@ async def main():
     # Routerlarni ulash
     dp.include_routers(admin_router, common_router, business_router, payments_router)
 
+    # Bot buyruqlari menyusini o'rnatish (/start va /buy)
+    try:
+        from aiogram.types import BotCommand, BotCommandScopeDefault
+        await bot.set_my_commands(
+            [
+                BotCommand(command="start", description="Bosh menyu / Главное меню"),
+                BotCommand(command="buy", description="Tariflar / Тарифы"),
+            ],
+            scope=BotCommandScopeDefault()
+        )
+        await bot.set_my_commands(
+            [
+                BotCommand(command="start", description="Bosh menyu"),
+                BotCommand(command="buy", description="Tariflar"),
+            ],
+            language_code="uz"
+        )
+        await bot.set_my_commands(
+            [
+                BotCommand(command="start", description="Главное меню"),
+                BotCommand(command="buy", description="Тарифы"),
+            ],
+            language_code="ru"
+        )
+        logger.info("Bot buyruqlari muvaffaqiyatli o'rnatildi (/start, /buy).")
+    except Exception as e:
+        logger.warning(f"Bot buyruqlarini o'rnatishda xatolik: {e}")
+
     # Botni ishga tushirish (Business update'larni qamrab olgan holda)
     allowed_updates = dp.resolve_used_update_types()
     logger.info(f"Bot ishga tushmoqda. Qabul qilinadigan hodisalar: {allowed_updates}")

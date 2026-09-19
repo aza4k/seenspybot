@@ -113,26 +113,14 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         "lang_selected": "✅ <b>Язык успешно изменён на Русский!</b>",
 
         # Ulanish holati
-        "conn_trial": (
-            '\n\n<tg-emoji emoji-id="5193085063998224234">🎁</tg-emoji> <b>Вам активирован бесплатный доступ Free Trial!</b>\n'
-            "В этот период бот сохраняет абсолютно все удалённые и одноразовые медиа."
-        ),
+        "conn_trial": "\n\n🎁 <b>Free Trial активирован!</b>",
         "conn_success": (
-            "🎉 <b>Бот успешно подключён к вашему Telegram!</b>\n\n"
-            "👤 Профиль: {user_name}\n"
-            "🆔 ID: <code>{user_id}</code>"
-            "{trial_text}\n\n"
-            "🛡 <b>Что теперь может бот:</b>\n"
-            "➖ <b>Удалённые сообщения:</b> Если собеседник удалит сообщение, бот сразу пришлёт вам его копию (текст, фото, видео, голосовые).\n"
-            "➖ <b>Изменённые сообщения:</b> Бот покажет старый и новый вариант текста.\n"
-            "➖ <b>Одноразовые (с таймером) медиа:</b> Чтобы сохранить фото или видео с таймером, <b>до открытия</b> ответьте на него в диалоге любым сообщением (например точкой <code>.</code>). Бот сразу пришлёт его оригинал вам!\n\n"
-            '<i><tg-emoji emoji-id="5341515693479186232">❗️</tg-emoji> Примечание: бот фиксирует новые сообщения, полученные после подключения.</i>'
+            "🟢 <b>Бот подключён к профилю!</b>\n\n"
+            "Теперь удалённые и одноразовые сообщения приходят сюда.{trial_text}"
         ),
         "conn_disabled": (
-            '<tg-emoji emoji-id="5341515693479186232">❗️</tg-emoji> <b>Бот отключён от профиля!</b>\n\n'
-            "👤 Профиль: {user_name}\n"
-            "🆔 ID: <code>{user_id}</code>\n\n"
-            "Отслеживание приостановлено."
+            "🔴 <b>Бот отключён от профиля!</b>\n\n"
+            "Чтобы подключить снова: /start"
         ),
 
         # Tahrirlangan xabar
@@ -146,12 +134,12 @@ MESSAGES: Dict[str, Dict[str, str]] = {
 
         # Odnorazovoe media (View-once)
         "msg_view_once": (
-            "👁 <b>Одноразовое (с таймером) медиа сохранено!</b>\n\n"
+            "👁 <b>Одноразовое медиа сохранено!</b>\n\n"
             "👤 <b>От:</b> {sender_name}\n"
             "💬 <b>Чат:</b> {chat_title}\n"
             "🕒 <b>Время:</b> {time_str}\n"
         ),
-        "msg_view_once_footer": "\n🎯 <i>Вы ответили (Reply) на исчезающее медиа до его открытия, и бот сохранил его оригинал!</i>",
+        "msg_view_once_footer": "",
 
         # O'chirilgan xabar
         "msg_deleted_title": "🗑 <b>Удалённое сообщение</b>\n\n",
@@ -161,36 +149,27 @@ MESSAGES: Dict[str, Dict[str, str]] = {
             "🕒 <b>Отправлено:</b> {sent_time}\n"
             "🗑 <b>Удалено:</b> {delete_time}\n\n"
         ),
-        "promo_footer": (
-            "\n\n➖➖➖➖➖➖➖➖➖➖\n"
-            "🕵️‍♂️ <b>Сохранено через @seenspybot</b>\n"
-            "👉 <i>Узнай, что удаляют в твоих чатах!</i>"
-        ),
+        "promo_footer": "",
 
 
         # Teaserlar (obunasi yo'q foydalanuvchilar uchun)
-        "teaser_deleted_title": '<tg-emoji emoji-id="6048463895901769909">🗝</tg-emoji> <b>У вас новое удалённое сообщение!</b>\n\n',
+        "teaser_deleted_title": "🗝 <b>Новое удалённое сообщение!</b>\n\n",
         "teaser_deleted_body": (
-            "Кто-то только что удалил сообщение в ваших чатах.\n"
-            "Оно надёжно сохранено в архиве.\n"
-            "📦 Всего пропущенных сообщений: <b>{total_missed} шт.</b>\n\n"
-            "Чтобы увидеть их, активируйте подписку!\n"
-            "👉 Нажмите кнопку ниже или введите команду /buy."
+            "Сообщение удалено и сохранено в архиве.\n"
+            "📦 Пропущено сообщений: <b>{total_missed} шт.</b>\n\n"
+            "Чтобы увидеть, введите /buy."
         ),
         "teaser_view_once": (
-            '<tg-emoji emoji-id="6048463895901769909">🗝</tg-emoji> <b>У вас новый сохранённый медиафайл!</b>\n\n'
-            "В ваших чатах перехвачен медиафайл (фото/видео) и надёжно заархивирован.\n"
-            "📦 Всего пропущенных сообщений: <b>{total_missed} шт.</b>\n\n"
-            "Чтобы просмотреть и сохранить его, активируйте подписку!\n"
-            "👉 Нажмите кнопку ниже или введите команду /buy."
+            "🗝 <b>Новое одноразовое медиа!</b>\n\n"
+            "Медиафайл сохранён в архиве.\n"
+            "📦 Пропущено сообщений: <b>{total_missed} шт.</b>\n\n"
+            "Чтобы увидеть, введите /buy."
         ),
-        "teaser_edited_title": '<tg-emoji emoji-id="6048463895901769909">🗝</tg-emoji> <b>Кто-то изменил сообщение!</b>\n\n',
+        "teaser_edited_title": "🗝 <b>Сообщение изменено!</b>\n\n",
         "teaser_edited_body": (
-            "Собеседник только что отредактировал сообщение в переписке.\n"
-            "История изменений надёжно сохранена в архиве.\n"
-            "📦 Всего пропущенных событий: <b>{total_missed} шт.</b>\n\n"
-            "Чтобы увидеть исходный текст до редактирования, активируйте подписку!\n"
-            "👉 Нажмите кнопку ниже или введите команду /buy."
+            "Сообщение отредактировано, оригинал сохранён в архиве.\n"
+            "📦 Пропущено событий: <b>{total_missed} шт.</b>\n\n"
+            "Чтобы увидеть, введите /buy."
         ),
         "btn_unlock": "🔓 Посмотреть сообщения ({total_missed} шт.)",
 
@@ -240,18 +219,16 @@ MESSAGES: Dict[str, Dict[str, str]] = {
 
         # Scheduler xabarnomalari
         "scheduler_expired": (
-            "⏳ <b>Срок вашей подписки истёк!</b>\n\n"
-            "Ваша подписка завершена (Время окончания: <code>{exp_date}</code>).\n\n"
-            "Чтобы продолжать видеть удалённые и одноразовые сообщения, продлите подписку.\n\n"
-            "📦 <i>Не переживайте, все новые удалённые сообщения надёжно сохраняются в архиве и будут доставлены вам сразу после оплаты!</i>\n\n"
-            "👉 Нажмите кнопку ниже или используйте команду /buy."
+            "⏳ <b>Срок подписки истёк!</b>\n\n"
+            "Чтобы продолжить просмотр удалённых сообщений, продлите подписку.\n"
+            "Новые сообщения сохраняются в архиве.\n\n"
+            "👉 Продлить: /buy"
         ),
         "btn_renew_sub": "⭐ Продлить подписку",
         "scheduler_cutoff": (
-            '<tg-emoji emoji-id="5341515693479186232">❗️</tg-emoji> <b>С момента окончания подписки прошло более 30 дней!</b>\n\n'
-            "Так как подписка не обновлялась в течение месяца, сохранение новых удалённых сообщений приостановлено.\n\n"
-            "Чтобы возобновить работу сервиса и сохранение архива, активируйте подписку.\n\n"
-            "👉 Для продления: /buy"
+            "❗️ <b>С момента окончания подписки прошло 30 дней.</b>\n\n"
+            "Сохранение сообщений приостановлено.\n"
+            "Чтобы включить снова: /buy"
         ),
     },
     "uz": {
@@ -357,26 +334,14 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         "lang_selected": "✅ <b>Til muvaffaqiyatli O'zbek tiliga o'zgartirildi!</b>",
 
         # Ulanish holati
-        "conn_trial": (
-            '\n\n<tg-emoji emoji-id="5193085063998224234">🎁</tg-emoji> <b>Sizga bepul Free Trial taqdim etildi!</b>\n'
-            "Ushbu davrda bot barcha o'chirilgan xabarlar va 1 martalik medialarni to'liq tutib beradi."
-        ),
+        "conn_trial": "\n\n🎁 <b>Free Trial faollashtirildi!</b>",
         "conn_success": (
-            "🎉 <b>Bot profilingizga muvaffaqiyatli ulandi!</b>\n\n"
-            "👤 Profil: <b>{user_name}</b>\n"
-            "🆔 ID: <code>{user_id}</code>"
-            "{trial_text}\n\n"
-            "📖 <b>Qanday ishlatiladi?</b>\n"
-            "➖ <b>O'chirilgan xabarlar:</b> Suhbatdoshingiz biror xabarni o'chirsa, bot darhol sizga o'sha xabarning nusxasini (matn, rasm, video, audio) yetkazadi.\n"
-            "➖ <b>O'zgartirilgan xabarlar:</b> Xabar tahrirlansa, eski va yangi matni sizga yuboriladi.\n"
-            "➖ <b>1 martalik (taymerli) medialar:</b> Suhbatdoshingiz yuborgan 1 martalik rasm yoki videoni saqlash uchun — <b>uni ochishdan oldin</b> chatda o'sha xabarga istalgan so'z yoki belgi bilan <b>javob (Reply)</b> qaytaring (masalan nuqta <code>.</code> qo'ying). Bot uning asl nusxasini darhol sizga saqlab jo'natadi!\n\n"
-            '<i><tg-emoji emoji-id="5341515693479186232">❗️</tg-emoji> Eslatma: Bot ulanishdan keyin kelgan yangi xabarlarni kuzatadi.</i>'
+            "🟢 <b>Bot profilingizga ulandi!</b>\n\n"
+            "Endi o'chirilgan va 1 martalik xabarlar shu yerga keladi.{trial_text}"
         ),
         "conn_disabled": (
-            '<tg-emoji emoji-id="5341515693479186232">❗️</tg-emoji> <b>Bot profildan uzildi!</b>\n\n'
-            "👤 Profil: {user_name}\n"
-            "🆔 ID: <code>{user_id}</code>\n\n"
-            "Kuzatuv to'xtatildi."
+            "🔴 <b>Bot profilingizdan uzildi!</b>\n\n"
+            "Qayta ulash uchun: /start"
         ),
 
         # Tahrirlangan xabar
@@ -390,12 +355,12 @@ MESSAGES: Dict[str, Dict[str, str]] = {
 
         # 1 martalik media (View-once)
         "msg_view_once": (
-            "👁 <b>1 martalik (taymerli) media saqlandi!</b>\n\n"
+            "👁 <b>1 martalik media saqlandi!</b>\n\n"
             "👤 <b>Kimdan:</b> {sender_name}\n"
             "💬 <b>Chat:</b> {chat_title}\n"
             "🕒 <b>Vaqti:</b> {time_str}\n"
         ),
-        "msg_view_once_footer": "\n🎯 <i>Siz 1 martalik mediani ochishdan oldin unga javob (Reply) berdingiz va bot uning asl nusxasini saqlab oldi!</i>",
+        "msg_view_once_footer": "",
 
         # O'chirilgan xabar
         "msg_deleted_title": "🗑 <b>O'chirilgan xabar</b>\n\n",
@@ -405,36 +370,27 @@ MESSAGES: Dict[str, Dict[str, str]] = {
             "🕒 <b>Yuborilgan:</b> {sent_time}\n"
             "🗑 <b>O'chirilgan:</b> {delete_time}\n\n"
         ),
-        "promo_footer": (
-            "\n\n➖➖➖➖➖➖➖➖➖➖\n"
-            "🕵️‍♂️ <b>@seenspybot orqali saqlab olindi</b>\n"
-            "👉 <i>Profilingizdagi o'chirilgan xabarlarni ko'ring!</i>"
-        ),
+        "promo_footer": "",
 
 
         # Teaserlar
-        "teaser_deleted_title": '<tg-emoji emoji-id="6048463895901769909">🗝</tg-emoji> <b>Sizda yangi o\'chirilgan xabar bor!</b>\n\n',
+        "teaser_deleted_title": "🗝 <b>Yangi o'chirilgan xabar!</b>\n\n",
         "teaser_deleted_body": (
-            "Chatlaringizda kimdir xabarni o'chirib yubordi.\n"
-            "U arxivda xavfsiz saqlanmoqda.\n"
-            "📦 Hozirgacha yig'ilgan ko'rilmagan xabarlar soni: <b>{total_missed} ta</b>\n\n"
-            "Ularni ko'rish uchun obunani faollashtiring!\n"
-            "👉 Quyidagi tugmani bosing yoki /buy buyrug'ini yuboring."
+            "Chatda xabar o'chirildi va arxivlandi.\n"
+            "📦 Arxivdagi xabarlar: <b>{total_missed} ta</b>\n\n"
+            "Ko'rish uchun /buy buyrug'ini bosing."
         ),
         "teaser_view_once": (
-            '<tg-emoji emoji-id="6048463895901769909">🗝</tg-emoji> <b>Sizda yangi saqlangan media bor!</b>\n\n'
-            "Chatlaringizda yangi media fayl (rasm/video) tutib olindi va xavfsiz arxivlandi.\n"
-            "📦 Hozirgacha yig'ilgan ko'rilmagan xabarlar soni: <b>{total_missed} ta</b>\n\n"
-            "Uni ko'rish va saqlash uchun obunani faollashtiring!\n"
-            "👉 Quyidagi tugmani bosing yoki /buy buyrug'ini yuboring."
+            "🗝 <b>Yangi 1 martalik media!</b>\n\n"
+            "Bir martalik media fayl arxivlandi.\n"
+            "📦 Arxivdagi xabarlar: <b>{total_missed} ta</b>\n\n"
+            "Ko'rish uchun /buy buyrug'ini bosing."
         ),
-        "teaser_edited_title": '<tg-emoji emoji-id="6048463895901769909">🗝</tg-emoji> <b>Kimdir xabarni tahrirladi!</b>\n\n',
+        "teaser_edited_title": "🗝 <b>Xabar tahrirlandi!</b>\n\n",
         "teaser_edited_body": (
-            "Suhbatdoshingiz yozishmada xabarni o'zgartirdi.\n"
-            "Xabarning o'zgartirilishidan oldingi asl matni arxivda saqlandi.\n"
-            "📦 Jami o'tkazib yuborilganlar: <b>{total_missed} ta</b>\n\n"
-            "Xabarning tahrirdan oldingi asl holatini ko'rish uchun obunani faollashtiring!\n"
-            "👉 Pastdagi tugmani bosing yoki /buy buyrug'idan foydalaning."
+            "Chatda xabar o'zgartirildi va eski varianti saqlandi.\n"
+            "📦 Arxivdagi xabarlar: <b>{total_missed} ta</b>\n\n"
+            "Ko'rish uchun /buy buyrug'ini bosing."
         ),
         "btn_unlock": "🔓 Xabarlarni ko'rish ({total_missed} ta)",
 
@@ -485,17 +441,15 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         # Scheduler
         "scheduler_expired": (
             "⏳ <b>Obunangiz muddati tugadi!</b>\n\n"
-            "Sizning obuna muddatingiz yakunlandi (Tugash vaqti: <code>{exp_date}</code>).\n\n"
-            "Endi chatlaringizdagi o'chirilgan xabarlar va 1 martalik medialarni to'liq ko'rish uchun obunani yangilashingiz lozim.\n\n"
-            "📦 <i>Xavotir olmang, yangi kelgan barcha o'chirilgan xabarlar xavfsiz arxivlanib turadi va to'lov qilishingiz bilan barchasi botingizga to'liq yetkaziladi!</i>\n\n"
-            "👉 Yangilash uchun quyidagi tugmani bosing yoki /buy buyrug'ini yuboring."
+            "O'chirilgan xabarlarni ko'rishni davom ettirish uchun obunani yangilang.\n"
+            "Yangi xabarlar arxivda saqlanib turadi.\n\n"
+            "👉 Yangilash uchun: /buy"
         ),
         "btn_renew_sub": "⭐ Obunani yangilash",
         "scheduler_cutoff": (
-            '<tg-emoji emoji-id="5341515693479186232">❗️</tg-emoji> <b>Obunangiz tugaganiga 30 kundan oshdi!</b>\n\n'
-            "Siz 1 oy davomida obunani yangilamaganingiz sababli, yangi o'chirilgan xabarlarni zaxira qilish to'xtatildi.\n\n"
-            "Xizmatni qayta tiklash va arxivni saqlashni davom ettirish uchun quyidagi tugma orqali obuna bo'ling.\n\n"
-            "👉 Qayta yoqish uchun: /buy"
+            "❗️ <b>Obunangiz tugaganiga 30 kundan oshdi.</b>\n\n"
+            "Xabarlarni saqlash to'xtatildi.\n"
+            "Qayta yoqish uchun: /buy"
         ),
     }
 }
@@ -607,18 +561,18 @@ def get_language_keyboard(lang: str = "ru", is_first_time: bool = False) -> Inli
 
 def get_plans_keyboard(lang: str = "ru") -> InlineKeyboardMarkup:
     """Tariflar tanlash klaviaturasi (Tanlangan tilda)."""
-    w_stars = 35
-    m_stars = 89
-    y_stars = 420
+    w_stars = 25
+    m_stars = 59
+    y_stars = 290
 
     if lang == "uz":
-        w_text = f"Hafta • {w_stars} ⭐️"
-        m_text = f"🔥 Oy (28 kun) • {m_stars} ⭐️"
-        y_text = f"Yil • {y_stars} ⭐️"
+        w_text = f"Hafta — {w_stars} ⭐️"
+        m_text = f"🔥 Oy — {m_stars} ⭐️"
+        y_text = f"Yil — {y_stars} ⭐️"
     else:
-        w_text = f"Неделя • {w_stars} ⭐️"
-        m_text = f"🔥 Месяц (28 дней) • {m_stars} ⭐️"
-        y_text = f"Год • {y_stars} ⭐️"
+        w_text = f"Неделя — {w_stars} ⭐️"
+        m_text = f"🔥 Месяц — {m_stars} ⭐️"
+        y_text = f"Год — {y_stars} ⭐️"
 
     som_text = get_text("btn_buy_som", lang)
 
