@@ -31,7 +31,7 @@ PLANS = {
         "stars": 6,
     },
     "month": {
-        "days": 30,
+        "days": 28,
         "stars": 20,
     },
     "year": {
