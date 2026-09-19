@@ -28,15 +28,15 @@ router = Router(name="payments_router")
 PLANS = {
     "week": {
         "days": 7,
-        "stars": 5,
+        "stars": 6,
     },
     "month": {
         "days": 30,
-        "stars": 25,
+        "stars": 20,
     },
     "year": {
         "days": 365,
-        "stars": 220,
+        "stars": 200,
     },
 }
 
