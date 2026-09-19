@@ -18,6 +18,9 @@ GUIDE_MESSAGE_IDS = [304, 305, 306]
 # Referal taklif qilishning maksimal chegarasi
 MAX_REFERRALS = 10
 
+# Yangi ulanganlar uchun bepul sinov muddati (kunlarda)
+TRIAL_DAYS = 14
+
 DB_PATH = os.getenv("DB_PATH", "spyware.db")
 
 # PostgreSQL URL (Railway, Supabase, Neon yoki mahalliy PostgreSQL uchun)

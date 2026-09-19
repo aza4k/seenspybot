@@ -33,7 +33,7 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         # Sub status
         "sub_admin": "👑 Безлимитный Админ",
         "sub_active": "🟢 Активна ({plan_name}, до <code>{expires_at}</code>)",
-        "sub_trial_name": "Бесплатный тест (30 дней)",
+        "sub_trial_name": "Free Trial",
         "sub_inactive": "⚪️ Не активна",
 
         # Tugmalar
@@ -114,8 +114,8 @@ MESSAGES: Dict[str, Dict[str, str]] = {
 
         # Ulanish holati
         "conn_trial": (
-            '\n\n<tg-emoji emoji-id="5193085063998224234">🎁</tg-emoji> <b>Вам активирован БЕСПЛАТНЫЙ ТЕСТ НА 30 ДНЕЙ (1 МЕСЯЦ)!</b>\n'
-            "В течение месяца бот сохраняет абсолютно все удалённые и одноразовые медиа."
+            '\n\n<tg-emoji emoji-id="5193085063998224234">🎁</tg-emoji> <b>Вам активирован бесплатный доступ Free Trial!</b>\n'
+            "В этот период бот сохраняет абсолютно все удалённые и одноразовые медиа."
         ),
         "conn_success": (
             "🎉 <b>Бот успешно подключён к вашему Telegram!</b>\n\n"
@@ -213,8 +213,8 @@ MESSAGES: Dict[str, Dict[str, str]] = {
             '<tg-emoji emoji-id="5388909270316114329">⭐️</tg-emoji> <b>Тарифные планы</b>\n\n'
             "Выберите период для подключения или продления доступа:\n\n"
             "• <b>1 Неделя</b> — 5 Stars\n"
-            "• <b>1 Месяц</b> — 15 Stars <i>(Скидка 25%)</i>\n"
-            "• <b>1 Год</b> — 180 Stars <i>(Самый выгодный)</i>\n\n"
+            "• <b>1 Месяц</b> — 25 Stars <i>(Скидка)</i>\n"
+            "• <b>1 Год</b> — 220 Stars <i>(Самый выгодный)</i>\n\n"
             'Оплата производится безопасно через официальные <b>Telegram Stars</b> <tg-emoji emoji-id="5388909270316114329">⭐️</tg-emoji>'
         ),
         "plan_week_name": "1 Неделя (7 дней)",
@@ -275,7 +275,7 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         # Sub status
         "sub_admin": "👑 Cheksiz Admin",
         "sub_active": "🟢 Faol ({plan_name}, <code>{expires_at}</code> gacha)",
-        "sub_trial_name": "Free Trial (30 kun)",
+        "sub_trial_name": "Free Trial",
         "sub_inactive": "⚪️ Faol emas",
 
         # Tugmalar
@@ -356,8 +356,8 @@ MESSAGES: Dict[str, Dict[str, str]] = {
 
         # Ulanish holati
         "conn_trial": (
-            "\n\n🎁 <b>Sizga 30 kunlik bepul sinov muddati taqdim etildi!</b>\n"
-            "1 oy davomida bot barcha o'chirilgan xabarlar va 1 martalik medialarni to'liq tutib beradi."
+            '\n\n<tg-emoji emoji-id="5193085063998224234">🎁</tg-emoji> <b>Sizga bepul Free Trial taqdim etildi!</b>\n'
+            "Ushbu davrda bot barcha o'chirilgan xabarlar va 1 martalik medialarni to'liq tutib beradi."
         ),
         "conn_success": (
             "🎉 <b>Bot profilingizga muvaffaqiyatli ulandi!</b>\n\n"
@@ -455,8 +455,8 @@ MESSAGES: Dict[str, Dict[str, str]] = {
             '<tg-emoji emoji-id="5388909270316114329">⭐️</tg-emoji> <b>Obuna tariflari</b>\n\n'
             "Ulanish yoki muddatni uzaytirish uchun tarifni tanlang:\n\n"
             "• <b>1 Hafta</b> — 5 Stars\n"
-            "• <b>1 Oy</b> — 15 Stars <i>(25% chegirma)</i>\n"
-            "• <b>1 Yil</b> — 180 Stars <i>(Eng manfaatli)</i>\n\n"
+            "• <b>1 Oy</b> — 25 Stars <i>(Chegirma)</i>\n"
+            "• <b>1 Yil</b> — 220 Stars <i>(Eng manfaatli)</i>\n\n"
             'To\'lov xavfsiz tarzda rasmiy <b>Telegram Stars</b> <tg-emoji emoji-id="5388909270316114329">⭐️</tg-emoji> orqali amalga oshiriladi.'
         ),
         "plan_week_name": "1 Hafta (7 kun)",
@@ -604,16 +604,16 @@ def get_language_keyboard(lang: str = "ru", is_first_time: bool = False) -> Inli
 def get_plans_keyboard(lang: str = "ru") -> InlineKeyboardMarkup:
     """Tariflar tanlash klaviaturasi (Tanlangan tilda)."""
     w_stars = 5
-    m_stars = 15
-    y_stars = 180
+    m_stars = 25
+    y_stars = 220
 
     if lang == "uz":
         w_text = f"⭐ 1 Hafta — {w_stars} Stars"
-        m_text = f"⭐ 1 Oy — {m_stars} Stars (25% chegirma)"
+        m_text = f"⭐ 1 Oy — {m_stars} Stars"
         y_text = f"⭐ 1 Yil — {y_stars} Stars (Eng manfaatli)"
     else:
         w_text = f"⭐ 1 Неделя — {w_stars} Stars"
-        m_text = f"⭐ 1 Месяц — {m_stars} Stars (-25%)"
+        m_text = f"⭐ 1 Месяц — {m_stars} Stars"
         y_text = f"⭐ 1 Год — {y_stars} Stars (Выгодно)"
 
     som_text = get_text("btn_buy_som", lang)

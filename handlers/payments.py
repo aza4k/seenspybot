@@ -32,11 +32,11 @@ PLANS = {
     },
     "month": {
         "days": 30,
-        "stars": 15,
+        "stars": 25,
     },
     "year": {
         "days": 365,
-        "stars": 180,
+        "stars": 220,
     },
 }
 

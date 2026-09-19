@@ -2,7 +2,7 @@ import aiosqlite
 import logging
 from datetime import datetime, timedelta
 from typing import Optional, Dict, Any, List
-from config import DB_PATH, MAX_REFERRALS
+from config import DB_PATH, MAX_REFERRALS, TRIAL_DAYS
 
 logger = logging.getLogger(__name__)
 
@@ -360,7 +360,7 @@ async def mark_media_as_captured(chat_id: int, message_id: int) -> None:
 
 async def ensure_free_trial(user_id: int) -> bool:
     """
-    Yangi foydalanuvchi birinchi marta biznes akkauntini ulaganda 30 kunlik Free Trial berish.
+    Yangi foydalanuvchi birinchi marta biznes akkauntini ulaganda Free Trial berish (TRIAL_DAYS kun).
     Agar avval sinov muddati berilgan yoki obuna yozuvi mavjud bo'lsa, qaytadan berilmaydi!
     """
     db = await get_db()
@@ -373,7 +373,7 @@ async def ensure_free_trial(user_id: int) -> bool:
             return False  # Avval ro'yxatdan o'tgan yoki trial ishlatgan
             
     from datetime import datetime, timedelta
-    trial_expiry = datetime.now() + timedelta(days=30)
+    trial_expiry = datetime.now() + timedelta(days=TRIAL_DAYS)
     expiry_str = trial_expiry.strftime("%Y-%m-%d %H:%M:%S")
     
     await db.execute("""
@@ -382,7 +382,7 @@ async def ensure_free_trial(user_id: int) -> bool:
         ON CONFLICT(user_id) DO NOTHING
     """, (user_id, expiry_str))
     await db.commit()
-    logger.info(f"🎁 Yangi user {user_id} ga 30 kunlik Free Trial berildi: {expiry_str}")
+    logger.info(f"🎁 Yangi user {user_id} ga Free Trial ({TRIAL_DAYS} kun) berildi: {expiry_str}")
     return True
 
 

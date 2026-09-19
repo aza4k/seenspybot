@@ -63,9 +63,9 @@ async def get_start_payload(user_id: int, user_name: str, lang: str) -> tuple[st
 
             if plan_type == "free_trial":
                 sub_status_text = (
-                    f'<tg-emoji emoji-id="5193085063998224234">🎁</tg-emoji> 30 дней free ({days_left} дн. осталось)'
+                    f'<tg-emoji emoji-id="5193085063998224234">🎁</tg-emoji> Free Trial ({days_left} дн. осталось)'
                     if lang == "ru"
-                    else f'<tg-emoji emoji-id="5193085063998224234">🎁</tg-emoji> 30 kunlik free({days_left} kun qoldi)'
+                    else f'<tg-emoji emoji-id="5193085063998224234">🎁</tg-emoji> Free Trial ({days_left} kun qoldi)'
                 )
             else:
                 sub_status_text = (
