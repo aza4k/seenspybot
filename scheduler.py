@@ -36,7 +36,7 @@ async def run_scheduler(bot: Bot = None):
                     lang = await get_user_language(user_id)
                     kb = InlineKeyboardMarkup(
                         inline_keyboard=[
-                            [InlineKeyboardButton(text=get_text("btn_renew_sub", lang), callback_data="show_plans")]
+                            [InlineKeyboardButton(text=get_text("btn_renew_sub", lang), callback_data="show_plans", icon_custom_emoji_id="5839049953497844833")]
                         ]
                     )
                     msg = get_text("scheduler_expired", lang, exp_date=exp_date)
@@ -60,7 +60,7 @@ async def run_scheduler(bot: Bot = None):
                     lang = await get_user_language(user_id)
                     kb = InlineKeyboardMarkup(
                         inline_keyboard=[
-                            [InlineKeyboardButton(text=get_text("btn_renew_sub", lang), callback_data="show_plans")]
+                            [InlineKeyboardButton(text=get_text("btn_renew_sub", lang), callback_data="show_plans", icon_custom_emoji_id="5839049953497844833")]
                         ]
                     )
                     cutoff_msg = get_text("scheduler_cutoff", lang)

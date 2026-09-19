@@ -25,9 +25,9 @@ MESSAGES: Dict[str, Dict[str, str]] = {
             '• <b>1-разовые медиа:</b> Сохраняет фото/видео с таймером при ответе точкой <code>.</code> до открытия'
         ),
         "status_title": "📊 <b>Статус бота:</b> {status_icon}\n\n",
-        "status_connections": "🔗 Подключений: <b>{active_connections} профилей</b>\n",
-        "status_messages": "💬 Сообщений в памяти: <b>{total_messages}</b>\n",
-        "status_subscription": '<tg-emoji emoji-id="5388909270316114329">⭐️</tg-emoji> Ваша подписка: <b>{sub_status}</b>\n\n',
+        "status_connections": '<tg-emoji emoji-id="5271604874419647061">🔗</tg-emoji> Подключений: <b>{active_connections} профилей</b>\n',
+        "status_messages": '<tg-emoji emoji-id="5798697374247291954">#⃣</tg-emoji> Сообщений в памяти: <b>{total_messages}</b>\n',
+        "status_subscription": '<tg-emoji emoji-id="5839049953497844833">⭐️</tg-emoji> Ваша подписка: <b>{sub_status}</b>\n\n',
         "status_footer": "Бот отслеживает <b>удалённые</b> и <b>одноразовые</b> медиа.",
         
         # Sub status
@@ -42,7 +42,7 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         "btn_plans": "⭐ Тарифы",
         "btn_manage_sub": "⭐️ Управление подпиской",
         "btn_get_free_day": "🎁 +1 День бесплатно",
-        "btn_buy_som": "💳 Купить в сумах (UZS)",
+        "btn_buy_som": "💳 Оплата в сумах (Humo / Uzcard)",
         "btn_guide": "📖 Инструкция",
         "btn_lang_short": "🌐 Язык",
         "btn_stats": "📊 Статус",
@@ -56,8 +56,8 @@ MESSAGES: Dict[str, Dict[str, str]] = {
             "🟢 <b>SeenSPY — Система активно работает!</b>\n\n"
             "👤 <b>Профиль:</b> {user_name}\n"
             "🆔 <b>ID:</b> <code>{user_id}</code>\n"
-            "🔗 <b>Статус подключения:</b> 🟢 Активен\n"
-            '<tg-emoji emoji-id="5388909270316114329">⭐️</tg-emoji> <b>Подписка:</b> {sub_status}\n\n'
+            '<tg-emoji emoji-id="5271604874419647061">🔗</tg-emoji> <b>Статус подключения:</b> 🟢 Активен\n'
+            '<tg-emoji emoji-id="5839049953497844833">⭐️</tg-emoji> <b>Подписка:</b> {sub_status}\n\n'
             "📊 <b>Статистика:</b>\n"
             " Удалённых: <b>{deleted_count} шт.</b>\n\n"
             "💡 <b>Бот для вас:</b>\n"
@@ -69,14 +69,14 @@ MESSAGES: Dict[str, Dict[str, str]] = {
 
         # Qo'llanma matni
         "guide_text": (
-            "📖 <b>Видео-инструкция по использованию SeenSPY</b>\n\n"
+            '<tg-emoji emoji-id="5837003105228558796">📝</tg-emoji> <b>Видео-инструкция по использованию SeenSPY</b>\n\n'
             "В 3 видеороликах выше наглядно показаны все возможности бота:\n\n"
             '<tg-emoji emoji-id="5382322671679708881">1️⃣</tg-emoji> <b>Удалённые сообщения:</b> Если собеседник удалит сообщение (текст, фото, видео, голосовые), бот мгновенно отправит вам его оригинал.\n'
             '<tg-emoji emoji-id="5381990043642502553">2️⃣</tg-emoji> <b>Изменённые сообщения:</b> Если сообщение изменено, бот покажет старый и новый вариант.\n'
             '<tg-emoji emoji-id="5381879959335738545">3️⃣</tg-emoji> <b>Одноразовые (с таймером) медиа:</b> Чтобы сохранить фото или видео с таймером — <b>до открытия</b> ответьте на него в диалоге любым сообщением (например точкой <code>.</code>). Бот сохранит и пришлёт его вам!'
         ),
         "privacy_text": (
-            "📄 <b>Политика конфиденциальности (@seenspybot)</b>\n\n"
+            '<tg-emoji emoji-id="5316825511337408327">📄</tg-emoji> <b>Политика конфиденциальности (@seenspybot)</b>\n\n'
             "Сервис работает в строгом соответствии с регламентом <b>Telegram Business API</b>:\n\n"
             "• <b>Персональный доступ:</b> Все сохранённые копии удалённых сообщений доставляются исключительно вам.\n"
             "• <b>Временный кэш:</b> Данные буферизируются до 7 дней.\n"
@@ -86,11 +86,11 @@ MESSAGES: Dict[str, Dict[str, str]] = {
 
 
         # Referral
-        "referral_title": '<tg-emoji emoji-id="5193085063998224234">🎁</tg-emoji> <b>Реферальная программа</b>\n\n',
+        "referral_title": '<tg-emoji emoji-id="5913600088856334619">🎁</tg-emoji> <b>Реферальная программа</b>\n\n',
         "referral_body": (
             "Приглашайте друзей в бота и получайте <b>+1 день полной подписки</b> за каждого друга, "
             "который подключит бота к своему профилю!\n\n"
-            '<tg-emoji emoji-id="5388909270316114329">⭐️</tg-emoji> <b>Ваша статистика:</b>\n'
+            '<tg-emoji emoji-id="5839049953497844833">⭐️</tg-emoji> <b>Ваша статистика:</b>\n'
             "• Приглашено друзей: <b>{invited} / {max_limit}</b>\n"
             "• Подключили бота: <b>{connected} человек</b>\n"
             "• Получено бонусных дней: <b>+{reward_days} дней</b>\n"
@@ -102,18 +102,18 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         "referral_reward_notify": (
             "🎉 <b>Отличная новость!</b>\n\n"
             "Приглашённый вами друг подключил бота к своему профилю!\n"
-            'Вам начислено: <b>+1 день подписки</b> <tg-emoji emoji-id="5193085063998224234">🎁</tg-emoji>\n'
+            'Вам начислено: <b>+1 день подписки</b> <tg-emoji emoji-id="5913600088856334619">🎁</tg-emoji>\n'
             "Новый срок действия: <code>{expires_at}</code>."
         ),
         "btn_share_ref": "📲 Поделиться с друзьями",
         "share_text": "Привет! Попробуй этого бота для Telegram Business — он сохраняет удалённые сообщения и одноразовые фото/видео:",
 
         # Язык
-        "choose_lang": '<tg-emoji emoji-id="5447410659077661506">🌐</tg-emoji> <b>Выберите язык:</b>',
+        "choose_lang": '<tg-emoji emoji-id="5188381825701021648">🌐</tg-emoji> <b>Выберите язык:</b>',
         "lang_selected": "✅ <b>Язык успешно изменён на Русский!</b>",
 
         # Ulanish holati
-        "conn_trial": "\n\n🎁 <b>Free Trial активирован!</b>",
+        "conn_trial": '\n\n<tg-emoji emoji-id="5913600088856334619">🎁</tg-emoji> <b>Free Trial активирован!</b>',
         "conn_success": (
             "🟢 <b>Бот подключён к профилю!</b>\n\n"
             "Теперь удалённые и одноразовые сообщения приходят сюда.{trial_text}"
@@ -195,7 +195,8 @@ MESSAGES: Dict[str, Dict[str, str]] = {
             "• Авто-сохранение в личный архив\n"
             "• Доступ к /stats и истории</blockquote>\n\n"
             "<b>Выберите тариф:</b>\n\n"
-            '<tg-emoji emoji-id="5193085063998224234">🎁</tg-emoji> <b>Пригласите друга → +1 день бесплатно:</b>\n'
+            '<tg-emoji emoji-id="5424585953031234078">💳</tg-emoji><tg-emoji emoji-id="5294281459928943793">💳</tg-emoji> <b>Оплата в сумах (Humo / Uzcard):</b> По кнопке ниже\n\n'
+            '<tg-emoji emoji-id="5913600088856334619">🎁</tg-emoji> <b>Пригласите друга → +1 день бесплатно:</b>\n'
             "{ref_link}"
         ),
         "plan_week_name": "1 Неделя (7 дней)",
@@ -207,7 +208,7 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         "invoice_title": "Подписка: {plan_name}",
         "payment_success": (
             "🎉 <b>Оплата прошла успешно!</b>\n\n"
-            '<tg-emoji emoji-id="5388909270316114329">⭐️</tg-emoji> Тариф: <b>{plan_name}</b>\n'
+            '<tg-emoji emoji-id="5839049953497844833">⭐️</tg-emoji> Тариф: <b>{plan_name}</b>\n'
             "⏳ Действует до: <code>{expires_at}</code>\n\n"
             "Спасибо за подписку! Все функции бота полностью активны."
         ),
@@ -246,9 +247,9 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         ),
 
         "status_title": "📊 <b>Bot Holati:</b> {status_icon}\n\n",
-        "status_connections": "🔗 Ulanishlar: <b>{active_connections} ta profil</b>\n",
-        "status_messages": "💬 Xotiradagi xabarlar: <b>{total_messages} ta</b>\n",
-        "status_subscription": '<tg-emoji emoji-id="5388909270316114329">⭐️</tg-emoji> Obunangiz: <b>{sub_status}</b>\n\n',
+        "status_connections": '<tg-emoji emoji-id="5271604874419647061">🔗</tg-emoji> Ulanishlar: <b>{active_connections} ta profil</b>\n',
+        "status_messages": '<tg-emoji emoji-id="5798697374247291954">#⃣</tg-emoji> Xotiradagi xabarlar: <b>{total_messages} ta</b>\n',
+        "status_subscription": '<tg-emoji emoji-id="5839049953497844833">⭐️</tg-emoji> Obunangiz: <b>{sub_status}</b>\n\n',
         "status_footer": "Faqat <b>o'chirilgan</b> va <b>1 martalik</b> xabarlar ushlanadi.",
         
         # Sub status
@@ -263,7 +264,7 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         "btn_plans": "⭐ Tariflar",
         "btn_manage_sub": "⭐️ Obunani boshqarish",
         "btn_get_free_day": "🎁 +1 Kun bepul",
-        "btn_buy_som": "💳 So'm orqali sotib olish",
+        "btn_buy_som": "💳 So'mda to'lash (Humo / Uzcard)",
         "btn_guide": "📖 Qo'llanma",
         "btn_lang_short": "🌐 Til",
         "btn_stats": "📊 Statistika",
@@ -277,8 +278,8 @@ MESSAGES: Dict[str, Dict[str, str]] = {
             "🟢 <b>SeenSPY — Tizim faol ishlamoqda!</b>\n\n"
             "👤 <b>Profil:</b> {user_name}\n"
             "🆔 <b>ID:</b> <code>{user_id}</code>\n"
-            "🔗 <b>Ulanish holati:</b> 🟢 Faol\n"
-            '<tg-emoji emoji-id="5388909270316114329">⭐️</tg-emoji> <b>Obuna:</b> {sub_status}\n\n'
+            '<tg-emoji emoji-id="5271604874419647061">🔗</tg-emoji> <b>Ulanish holati:</b> 🟢 Faol\n'
+            '<tg-emoji emoji-id="5839049953497844833">⭐️</tg-emoji> <b>Obuna:</b> {sub_status}\n\n'
             "📊 <b>Statistika:</b>\n"
             " O'chirilganlar: <b>{deleted_count} ta</b>\n\n"
             "💡 <b>Bot siz uchun:</b>\n"
@@ -290,14 +291,14 @@ MESSAGES: Dict[str, Dict[str, str]] = {
 
         # Qo'llanma matni
         "guide_text": (
-            "📖 <b>SeenSPY dan foydalanish bo'yicha video-qo'llanma</b>\n\n"
+            '<tg-emoji emoji-id="5837003105228558796">📝</tg-emoji> <b>SeenSPY dan foydalanish bo\'yicha video-qo\'llanma</b>\n\n'
             "Yuqoridagi 3 ta videorolikda botning barcha asosiy imkoniyatlari ko'rsatilgan:\n\n"
             '<tg-emoji emoji-id="5382322671679708881">1️⃣</tg-emoji> <b>O\'chirilgan xabarlar:</b> Suhbatdoshingiz biror xabarni (matn, rasm, video, audio) o\'chirsa, bot darhol sizga o\'sha xabarning asl nusxasini yetkazadi.\n'
             '<tg-emoji emoji-id="5381990043642502553">2️⃣</tg-emoji> <b>Tahrirlangan xabarlar:</b> Xabar o\'zgartirilsa, eski va yangi ko\'rinishi taqqoslab ko\'rsatiladi.\n'
             '<tg-emoji emoji-id="5381879959335738545">3️⃣</tg-emoji> <b>1 martalik (taymerli) medialar:</b> Suhbatdoshingiz yuborgan 1 martalik rasm yoki videoni saqlash uchun — <b>uni ochishdan oldin</b> chatda o\'sha xabarga istalgan so\'z yoki belgi bilan <b>javob (Reply)</b> qaytaring (masalan nuqta <code>.</code> qo\'ying). Bot uni darhol saqlab, sizga yuboradi!'
         ),
         "privacy_text": (
-            "📄 <b>Maxfiylik siyosati (@seenspybot)</b>\n\n"
+            '<tg-emoji emoji-id="5316825511337408327">📄</tg-emoji> <b>Maxfiylik siyosati (@seenspybot)</b>\n\n'
             "Xizmat rasmiy <b>Telegram Business API</b> standartlari asosida ishlaydi:\n\n"
             "• <b>Shaxsiy foydalanish:</b> O'chirilgan xabarlarning barcha nusxalari faqat sizning shaxsiy botingizga yetkaziladi.\n"
             "• <b>Vaqtinchalik kesh:</b> Ma'lumotlar xotirada ko'pi bilan 7 kun (1 hafta) saqlanadi.\n"
@@ -307,11 +308,11 @@ MESSAGES: Dict[str, Dict[str, str]] = {
 
 
         # Referral
-        "referral_title": '<tg-emoji emoji-id="5193085063998224234">🎁</tg-emoji> <b>Referal dastur</b>\n\n',
+        "referral_title": '<tg-emoji emoji-id="5913600088856334619">🎁</tg-emoji> <b>Referal dastur</b>\n\n',
         "referral_body": (
             "Do'stlaringizni botga taklif qiling va botni o'z profiliga ulagan har bir do'stingiz uchun "
             "<b>+1 kun bepul obuna</b> oling!\n\n"
-            '<tg-emoji emoji-id="5388909270316114329">⭐️</tg-emoji> <b>Sizning statistikangiz:</b>\n'
+            '<tg-emoji emoji-id="5839049953497844833">⭐️</tg-emoji> <b>Sizning statistikangiz:</b>\n'
             "• Taklif qilingan do'stlar: <b>{invited} / {max_limit}</b>\n"
             "• Botni profiliga ulaganlar: <b>{connected} ta</b>\n"
             "• Olingan bonus kunlar: <b>+{reward_days} kun</b>\n"
@@ -323,18 +324,18 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         "referral_reward_notify": (
             "🎉 <b>Ajoyib xushxabar!</b>\n\n"
             "Siz taklif qilgan do'stingiz botni o'z profiliga muvaffaqiyatli uladi!\n"
-            'Sizga taqdim etildi: <b>+1 kun bepul obuna</b> <tg-emoji emoji-id="5193085063998224234">🎁</tg-emoji>\n'
+            'Sizga taqdim etildi: <b>+1 kun bepul obuna</b> <tg-emoji emoji-id="5913600088856334619">🎁</tg-emoji>\n'
             "Yangi amal qilish muddati: <code>{expires_at}</code>."
         ),
         "btn_share_ref": "📲 Do'stlarga ulashish",
         "share_text": "Salom! Telegram Business uchun bu botni sinab ko'r — o'chirilgan xabarlar va 1 martalik rasm/videolarni saqlab beradi:",
 
         # Tilni o'zgartirish
-        "choose_lang": '<tg-emoji emoji-id="5447410659077661506">🌐</tg-emoji> <b>Tilni tanlang:</b>',
+        "choose_lang": '<tg-emoji emoji-id="5188381825701021648">🌐</tg-emoji> <b>Tilni tanlang:</b>',
         "lang_selected": "✅ <b>Til muvaffaqiyatli O'zbek tiliga o'zgartirildi!</b>",
 
         # Ulanish holati
-        "conn_trial": "\n\n🎁 <b>Free Trial faollashtirildi!</b>",
+        "conn_trial": '\n\n<tg-emoji emoji-id="5913600088856334619">🎁</tg-emoji> <b>Free Trial faollashtirildi!</b>',
         "conn_success": (
             "🟢 <b>Bot profilingizga ulandi!</b>\n\n"
             "Endi o'chirilgan va 1 martalik xabarlar shu yerga keladi.{trial_text}"
@@ -416,7 +417,8 @@ MESSAGES: Dict[str, Dict[str, str]] = {
             "• Shaxsiy arxivga avtomatik saqlash\n"
             "• /stats va yozishmalar tarixiga kirish</blockquote>\n\n"
             "<b>Tarifni tanlang:</b>\n\n"
-            '<tg-emoji emoji-id="5193085063998224234">🎁</tg-emoji> <b>Do\'stingizni taklif qiling → +1 kun bepul:</b>\n'
+            '<tg-emoji emoji-id="5424585953031234078">💳</tg-emoji><tg-emoji emoji-id="5294281459928943793">💳</tg-emoji> <b>So\'mda to\'lash (Humo / Uzcard):</b> Pastdagi tugma orqali\n\n'
+            '<tg-emoji emoji-id="5913600088856334619">🎁</tg-emoji> <b>Do\'stingizni taklif qiling → +1 kun bepul:</b>\n'
             "{ref_link}"
         ),
         "plan_week_name": "1 Hafta (7 kun)",
@@ -428,7 +430,7 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         "invoice_title": "Obuna: {plan_name}",
         "payment_success": (
             "🎉 <b>To'lov muvaffaqiyatli qabul qilindi!</b>\n\n"
-            '<tg-emoji emoji-id="5388909270316114329">⭐️</tg-emoji> Tarif: <b>{plan_name}</b>\n'
+            '<tg-emoji emoji-id="5839049953497844833">⭐️</tg-emoji> Tarif: <b>{plan_name}</b>\n'
             "⏳ Amal qilish muddati: <code>{expires_at}</code> gacha\n\n"
             "Obuna uchun rahmat! Barcha xizmatlar to'liq faol."
         ),
@@ -485,27 +487,32 @@ def get_main_keyboard(lang: str = "ru") -> InlineKeyboardMarkup:
                 InlineKeyboardButton(
                     text=get_text("btn_connect", lang),
                     url="tg://settings/edit",
-                    style="success"
+                    style="success",
+                    icon_custom_emoji_id="5271604874419647061"
                 )
             ],
             [
                 InlineKeyboardButton(
                     text=get_text("btn_plans", lang),
-                    callback_data="show_plans"
+                    callback_data="show_plans",
+                    icon_custom_emoji_id="5346309121794659890"
                 ),
                 InlineKeyboardButton(
                     text=get_text("btn_referral", lang),
-                    callback_data="show_referral"
+                    callback_data="show_referral",
+                    icon_custom_emoji_id="5913600088856334619"
                 )
             ],
             [
                 InlineKeyboardButton(
                     text=get_text("btn_language", lang),
-                    callback_data="choose_lang"
+                    callback_data="choose_lang",
+                    icon_custom_emoji_id="5188381825701021648"
                 ),
                 InlineKeyboardButton(
                     text=get_text("btn_privacy", lang),
-                    url=PRIVACY_POLICY_URL
+                    url=PRIVACY_POLICY_URL,
+                    icon_custom_emoji_id="5316825511337408327"
                 )
             ]
         ]
@@ -518,23 +525,27 @@ def get_connected_keyboard(lang: str = "ru", is_admin: bool = False) -> InlineKe
         [
             InlineKeyboardButton(
                 text=get_text("btn_manage_sub", lang),
-                callback_data="show_plans"
+                callback_data="show_plans",
+                icon_custom_emoji_id="5346309121794659890"
             )
         ],
         [
             InlineKeyboardButton(
                 text=get_text("btn_get_free_day", lang),
-                callback_data="show_referral"
+                callback_data="show_referral",
+                icon_custom_emoji_id="5913600088856334619"
             )
         ],
         [
             InlineKeyboardButton(
                 text=get_text("btn_guide", lang),
-                callback_data="show_guide"
+                callback_data="show_guide",
+                icon_custom_emoji_id="5837003105228558796"
             ),
             InlineKeyboardButton(
                 text=get_text("btn_lang_short", lang),
-                callback_data="choose_lang"
+                callback_data="choose_lang",
+                icon_custom_emoji_id="5188381825701021648"
             )
         ]
     ]
@@ -578,10 +589,10 @@ def get_plans_keyboard(lang: str = "ru") -> InlineKeyboardMarkup:
 
     return InlineKeyboardMarkup(
         inline_keyboard=[
-            [InlineKeyboardButton(text=w_text, callback_data="buy:week")],
-            [InlineKeyboardButton(text=m_text, callback_data="buy:month")],
-            [InlineKeyboardButton(text=y_text, callback_data="buy:year")],
-            [InlineKeyboardButton(text=som_text, url="https://t.me/m/lEyBVNZ3MmYy")],
+            [InlineKeyboardButton(text=w_text, callback_data="buy:week", icon_custom_emoji_id="5839049953497844833")],
+            [InlineKeyboardButton(text=m_text, callback_data="buy:month", icon_custom_emoji_id="5839049953497844833")],
+            [InlineKeyboardButton(text=y_text, callback_data="buy:year", icon_custom_emoji_id="5839049953497844833")],
+            [InlineKeyboardButton(text=som_text, url="https://t.me/m/lEyBVNZ3MmYy", icon_custom_emoji_id="5424585953031234078")],
             [InlineKeyboardButton(text=get_text("btn_back", lang), callback_data="back_to_menu")]
         ]
     )

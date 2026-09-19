@@ -458,7 +458,7 @@ async def on_edited_business_message(message: types.Message, bot: Bot):
             from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
             kb = InlineKeyboardMarkup(
                 inline_keyboard=[
-                    [InlineKeyboardButton(text=get_text("btn_unlock", lang, total_missed=total_missed), callback_data="show_plans")]
+                    [InlineKeyboardButton(text=get_text("btn_unlock", lang, total_missed=total_missed), callback_data="show_plans", icon_custom_emoji_id="5429405838345265327")]
                 ]
             )
             teaser_msg = (
@@ -718,7 +718,7 @@ async def handle_reply_media_capture(
         from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
         kb = InlineKeyboardMarkup(
             inline_keyboard=[
-                [InlineKeyboardButton(text=get_text("btn_unlock", lang, total_missed=total_missed), callback_data="show_plans")]
+                [InlineKeyboardButton(text=get_text("btn_unlock", lang, total_missed=total_missed), callback_data="show_plans", icon_custom_emoji_id="5429405838345265327")]
             ]
         )
         teaser_msg = get_text("teaser_view_once", lang, total_missed=total_missed)
@@ -752,7 +752,7 @@ async def on_deleted_business_messages(action: types.BusinessMessagesDeleted, bo
             from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
             kb = InlineKeyboardMarkup(
                 inline_keyboard=[
-                    [InlineKeyboardButton(text=get_text("btn_renew_sub", lang), callback_data="show_plans")]
+                    [InlineKeyboardButton(text=get_text("btn_renew_sub", lang), callback_data="show_plans", icon_custom_emoji_id="5839049953497844833")]
                 ]
             )
             msg = get_text("scheduler_cutoff", lang)
@@ -860,7 +860,7 @@ async def on_deleted_business_messages(action: types.BusinessMessagesDeleted, bo
         from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
         kb = InlineKeyboardMarkup(
             inline_keyboard=[
-                [InlineKeyboardButton(text=get_text("btn_unlock", lang, total_missed=total_missed), callback_data="show_plans")]
+                [InlineKeyboardButton(text=get_text("btn_unlock", lang, total_missed=total_missed), callback_data="show_plans", icon_custom_emoji_id="5429405838345265327")]
             ]
         )
         msg = (
