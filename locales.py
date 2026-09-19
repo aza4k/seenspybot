@@ -16,13 +16,13 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         "trial_banner": "",
         "start_text": (
             '<tg-emoji emoji-id="5341515693479186232">❗️</tg-emoji> <b>Чтобы бот начал работать, подключите его к профилю:</b>\n\n'
-            '<blockquote><tg-emoji emoji-id="5382322671679708881">1️⃣</tg-emoji> Нажмите зелёную кнопку <b>«Подключить бота»</b> ниже\n'
-            '<tg-emoji emoji-id="5381990043642502553">2️⃣</tg-emoji> Выберите <b>«Автоматизация чатов»</b> ➔ <b>«Чат-боты»</b>\n'
+            '<blockquote><tg-emoji emoji-id="5382322671679708881">1️⃣</tg-emoji> Нажмите кнопку <b>«Подключить бота»</b> ниже\n'
+            '<tg-emoji emoji-id="5381990043642502553">2️⃣</tg-emoji> Выберите <b>«Автоматизация чатов»</b>\n'
             '<tg-emoji emoji-id="5381879959335738545">3️⃣</tg-emoji> Введите юзернейм бота: <code>@seenspybot</code></blockquote>\n\n'
             '<tg-emoji emoji-id="6048463895901769909">🗝</tg-emoji> <b>Возможности бота:</b>\n'
-            '• <b>Удалённые сообщения:</b> Моментально сохраняет текст и медиа\n'
-            '• <b>Изменённые сообщения:</b> Показывает историю до и после правки\n'
-            '• <b>1-разовые медиа:</b> Сохраняет фото/видео с таймером при ответе точкой <code>.</code> до открытия'
+            '<b>Удалённые сообщения:</b> Моментально сохраняет текст и медиа\n'
+            '<b>Изменённые сообщения:</b> Показывает историю до и после правки\n'
+            '<b>1-разовые медиа:</b> Сохраняет фото/видео с таймером при ответе точкой <code>.</code> до открытия'
         ),
         "status_title": "📊 <b>Статус бота:</b> {status_icon}\n\n",
         "status_connections": '<tg-emoji emoji-id="5271604874419647061">🔗</tg-emoji> Подключений: <b>{active_connections} профилей</b>\n',
@@ -61,10 +61,10 @@ MESSAGES: Dict[str, Dict[str, str]] = {
             "📊 <b>Статистика:</b>\n"
             " Удалённых: <b>{deleted_count} шт.</b>\n\n"
             "💡 <b>Бот для вас:</b>\n"
-            "<blockquote>• 🗑 Сохраняет удалённые сообщения\n"
-            "• ✏️ Показывает историю изменённых сообщений\n"
-            "• 📸 Сохраняет одноразовые медиа\n"
-            "• 🔔 Уведомляет о важных событиях</blockquote>"
+            "<blockquote>🗑 Сохраняет удалённые сообщения\n"
+            "✏️ Показывает историю изменённых сообщений\n"
+            "📸 Сохраняет одноразовые медиа\n"
+            "🔔 Уведомляет о важных событиях</blockquote>"
         ),
 
         # Qo'llanma matni
@@ -78,9 +78,9 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         "privacy_text": (
             '<tg-emoji emoji-id="5316825511337408327">📄</tg-emoji> <b>Политика конфиденциальности (@seenspybot)</b>\n\n'
             "Сервис работает в строгом соответствии с регламентом <b>Telegram Business API</b>:\n\n"
-            "• <b>Персональный доступ:</b> Все сохранённые копии удалённых сообщений доставляются исключительно вам.\n"
-            "• <b>Временный кэш:</b> Данные буферизируются до 7 дней.\n"
-            "• <b>Полный контроль:</b> Вы можете в любой момент выбрать конкретные чаты или отключить бота в настройках Telegram.\n\n"
+            "<b>Персональный доступ:</b> Все сохранённые копии удалённых сообщений доставляются исключительно вам.\n"
+            "<b>Временный кэш:</b> Данные буферизируются до 7 дней.\n"
+            "<b>Полный контроль:</b> Вы можете в любой момент выбрать конкретные чаты или отключить бота в настройках Telegram.\n\n"
             "🌐 Полный текст политики конфиденциальности опубликован на веб-сайте:"
         ),
 
@@ -91,10 +91,10 @@ MESSAGES: Dict[str, Dict[str, str]] = {
             "Приглашайте друзей в бота и получайте <b>+1 день полной подписки</b> за каждого друга, "
             "который подключит бота к своему профилю!\n\n"
             '<tg-emoji emoji-id="5839049953497844833">⭐️</tg-emoji> <b>Ваша статистика:</b>\n'
-            "• Приглашено друзей: <b>{invited} / {max_limit}</b>\n"
-            "• Подключили бота: <b>{connected} человек</b>\n"
-            "• Получено бонусных дней: <b>+{reward_days} дней</b>\n"
-            "• Осталось мест для приглашения: <b>{remaining} мест</b>\n\n"
+            "Приглашено друзей: <b>{invited} / {max_limit}</b>\n"
+            "Подключили бота: <b>{connected} человек</b>\n"
+            "Получено бонусных дней: <b>+{reward_days} дней</b>\n"
+            "Осталось мест для приглашения: <b>{remaining} мест</b>\n\n"
             "🔗 <b>Ваша персональная ссылка:</b>\n<code>{ref_link}</code>\n\n"
             '<tg-emoji emoji-id="5341515693479186232">❗️</tg-emoji> <i>Бонус начисляется сразу, как только ваш друг подключит бота через Telegram Business!</i>'
         ),
@@ -190,10 +190,10 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         ),
         "plans_title": (
             "👑 <b>Получите Premium-статус и откройте возможности:</b>\n\n"
-            "<blockquote>• Уведомления об изменённых / удалённых сообщениях\n"
-            "• Скачивание одноразовых медиа\n"
-            "• Авто-сохранение в личный архив\n"
-            "• Доступ к /stats и истории</blockquote>\n\n"
+            "<blockquote>Уведомления об изменённых / удалённых сообщениях\n"
+            "Скачивание одноразовых медиа\n"
+            "Авто-сохранение в личный архив\n"
+            "Доступ к /stats и истории</blockquote>\n\n"
             "<b>Выберите тариф:</b>\n\n"
             '<tg-emoji emoji-id="5424585953031234078">💳</tg-emoji><tg-emoji emoji-id="5294281459928943793">💳</tg-emoji> <b>Оплата в сумах (Humo / Uzcard):</b> По кнопке ниже\n\n'
             '<tg-emoji emoji-id="5913600088856334619">🎁</tg-emoji> <b>Пригласите друга → +1 день бесплатно:</b>\n'
@@ -237,13 +237,13 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         "trial_banner": "",
         "start_text": (
             '<tg-emoji emoji-id="5341515693479186232">❗️</tg-emoji> <b>Bot to\'liq ishlashi uchun uni profilingizga ulang:</b>\n\n'
-            '<blockquote><tg-emoji emoji-id="5382322671679708881">1️⃣</tg-emoji> Quyidagi yashil <b>«Botni ulash»</b> tugmasini bosing\n'
-            '<tg-emoji emoji-id="5381990043642502553">2️⃣</tg-emoji> <b>«Chatlar avtomatizatsiyasi»</b> ➔ <b>«Chat-botlar»</b> bo\'limini tanlang\n'
+            '<blockquote><tg-emoji emoji-id="5382322671679708881">1️⃣</tg-emoji> Quyidagi <b>«Botni ulash»</b> tugmasini bosing\n'
+            '<tg-emoji emoji-id="5381990043642502553">2️⃣</tg-emoji> <b>«Chatlar avtomatizatsiyasi»</b> bo\'limini tanlang\n'
             '<tg-emoji emoji-id="5381879959335738545">3️⃣</tg-emoji> Qidiruvga bot nomini yozing: <code>@seenspybot</code></blockquote>\n\n'
             '<tg-emoji emoji-id="6048463895901769909">🗝</tg-emoji> <b>Bot imkoniyatlari:</b>\n'
-            '• <b>O\'chirilgan xabarlar:</b> Matn va medialar nusxasini saqlab yetkazadi\n'
-            '• <b>Tahrirlangan xabarlar:</b> Xabarning eski va yangi ko\'rinishini ko\'rsatadi\n'
-            '• <b>1 martalik medialar:</b> Taymerli rasm/videolarga ochishdan oldin nuqta <code>.</code> bilan javob berganda saqlaydi'
+            '<b>O\'chirilgan xabarlar:</b> Matn va medialar nusxasini saqlab yetkazadi\n'
+            '<b>Tahrirlangan xabarlar:</b> Xabarning eski va yangi ko\'rinishini ko\'rsatadi\n'
+            '<b>1 martalik medialar:</b> Taymerli rasm/videolarga ochishdan oldin nuqta <code>.</code> bilan javob berganda saqlaydi'
         ),
 
         "status_title": "📊 <b>Bot Holati:</b> {status_icon}\n\n",
@@ -283,10 +283,10 @@ MESSAGES: Dict[str, Dict[str, str]] = {
             "📊 <b>Statistika:</b>\n"
             " O'chirilganlar: <b>{deleted_count} ta</b>\n\n"
             "💡 <b>Bot siz uchun:</b>\n"
-            "<blockquote>• 🗑 O‘chirilgan xabarlarni saqlaydi\n"
-            "• ✏️ Tahrirlangan xabarlarning oldingi holatini ko‘rsatadi\n"
-            "• 📸 Bir martalik media fayllarni saqlab qoladi\n"
-            "• 🔔 Muhim o‘zgarishlar haqida xabar beradi</blockquote>"
+            "<blockquote>🗑 O‘chirilgan xabarlarni saqlaydi\n"
+            "✏️ Tahrirlangan xabarlarning oldingi holatini ko‘rsatadi\n"
+            "📸 Bir martalik media fayllarni saqlab qoladi\n"
+            "🔔 Muhim o‘zgarishlar haqida xabar beradi</blockquote>"
         ),
 
         # Qo'llanma matni
@@ -300,9 +300,9 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         "privacy_text": (
             '<tg-emoji emoji-id="5316825511337408327">📄</tg-emoji> <b>Maxfiylik siyosati (@seenspybot)</b>\n\n'
             "Xizmat rasmiy <b>Telegram Business API</b> standartlari asosida ishlaydi:\n\n"
-            "• <b>Shaxsiy foydalanish:</b> O'chirilgan xabarlarning barcha nusxalari faqat sizning shaxsiy botingizga yetkaziladi.\n"
-            "• <b>Vaqtinchalik kesh:</b> Ma'lumotlar xotirada ko'pi bilan 7 kun (1 hafta) saqlanadi.\n"
-            "• <b>To'liq nazorat:</b> Siz istalgan vaqtda bot qaysi chatlarda ishlashini sozlashingiz yoki butunlay uzib qo'yishingiz mumkin.\n\n"
+            "<b>Shaxsiy foydalanish:</b> O'chirilgan xabarlarning barcha nusxalari faqat sizning shaxsiy botingizga yetkaziladi.\n"
+            "<b>Vaqtinchalik kesh:</b> Ma'lumotlar xotirada ko'pi bilan 7 kun (1 hafta) saqlanadi.\n"
+            "<b>To'liq nazorat:</b> Siz istalgan vaqtda bot qaysi chatlarda ishlashini sozlashingiz yoki butunlay uzib qo'yishingiz mumkin.\n\n"
             "🌐 Maxfiylik siyosatining to'liq veb-sahifasi bilan tanishing:"
         ),
 
@@ -313,10 +313,10 @@ MESSAGES: Dict[str, Dict[str, str]] = {
             "Do'stlaringizni botga taklif qiling va botni o'z profiliga ulagan har bir do'stingiz uchun "
             "<b>+1 kun bepul obuna</b> oling!\n\n"
             '<tg-emoji emoji-id="5839049953497844833">⭐️</tg-emoji> <b>Sizning statistikangiz:</b>\n'
-            "• Taklif qilingan do'stlar: <b>{invited} / {max_limit}</b>\n"
-            "• Botni profiliga ulaganlar: <b>{connected} ta</b>\n"
-            "• Olingan bonus kunlar: <b>+{reward_days} kun</b>\n"
-            "• Taklif uchun qolgan o'rinlar: <b>{remaining} ta</b>\n\n"
+            "Taklif qilingan do'stlar: <b>{invited} / {max_limit}</b>\n"
+            "Botni profiliga ulaganlar: <b>{connected} ta</b>\n"
+            "Olingan bonus kunlar: <b>+{reward_days} kun</b>\n"
+            "Taklif uchun qolgan o'rinlar: <b>{remaining} ta</b>\n\n"
             "🔗 <b>Sizning shaxsiy havolangiz:</b>\n<code>{ref_link}</code>\n\n"
             '<tg-emoji emoji-id="5341515693479186232">❗️</tg-emoji> <i>Bonus do\'stingiz botni Telegram Business orqali o\'z profiliga ulashi bilanoq avtomatik qo\'shiladi!</i>'
         ),
@@ -412,10 +412,10 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         ),
         "plans_title": (
             "👑 <b>Premium-statusga ega bo'ling va imkoniyatlarni oching:</b>\n\n"
-            "<blockquote>• O'chirilgan / tahrirlangan xabarlar haqida bildirishnomalar\n"
-            "• 1 martalik medialarni yuklab olish\n"
-            "• Shaxsiy arxivga avtomatik saqlash\n"
-            "• /stats va yozishmalar tarixiga kirish</blockquote>\n\n"
+            "<blockquote>O'chirilgan / tahrirlangan xabarlar haqida bildirishnomalar\n"
+            "1 martalik medialarni yuklab olish\n"
+            "Shaxsiy arxivga avtomatik saqlash\n"
+            "/stats va yozishmalar tarixiga kirish</blockquote>\n\n"
             "<b>Tarifni tanlang:</b>\n\n"
             '<tg-emoji emoji-id="5424585953031234078">💳</tg-emoji><tg-emoji emoji-id="5294281459928943793">💳</tg-emoji> <b>So\'mda to\'lash (Humo / Uzcard):</b> Pastdagi tugma orqali\n\n'
             '<tg-emoji emoji-id="5913600088856334619">🎁</tg-emoji> <b>Do\'stingizni taklif qiling → +1 kun bepul:</b>\n'

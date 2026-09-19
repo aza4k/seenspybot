@@ -160,16 +160,16 @@ async def cb_admin_stats(call: types.CallbackQuery):
         f"👥 <b>Jami unikal foydalanuvchilar:</b> {stats['total_users']} ta\n"
         f"🔌 <b>Faol Business ulanishlar:</b> {stats['active_conns']} ta\n\n"
         "💬 <b>Xabarlar xotirasi:</b>\n"
-        f"• Jami saqlangan: <b>{stats['total_msgs']} ta</b>\n"
-        f"• Media fayllar: <b>{stats['total_media']} ta</b>\n\n"
+        f"Jami saqlangan: <b>{stats['total_msgs']} ta</b>\n"
+        f"Media fayllar: <b>{stats['total_media']} ta</b>\n\n"
         '<tg-emoji emoji-id="5388909270316114329">⭐️</tg-emoji> <b>Obunalar taqsimoti:</b>\n'
-        f'• <tg-emoji emoji-id="5193085063998224234">🎁</tg-emoji> Faol Free Trial: <b>{stats["active_trials"]} ta</b>\n'
-        f"• 🟢 Faol to'lovli obunachilar: <b>{stats['active_paid']} ta</b>\n"
-        f"• ⏳ Obuna muddati tugaganlar: <b>{stats['expired_count']} ta</b>\n\n"
+        f'<tg-emoji emoji-id="5193085063998224234">🎁</tg-emoji> Faol Free Trial: <b>{stats["active_trials"]} ta</b>\n'
+        f"🟢 Faol to'lovli obunachilar: <b>{stats['active_paid']} ta</b>\n"
+        f"⏳ Obuna muddati tugaganlar: <b>{stats['expired_count']} ta</b>\n\n"
         f'💰 <b>Jami tushgan daromad:</b> <tg-emoji emoji-id="5388909270316114329">⭐️</tg-emoji> <b>{stats["total_stars"]} Stars</b>\n\n'
         "📦 <b>Arxiv kanali ko'rsatkichlari:</b>\n"
-        f"• Jami arxivlangan: <b>{stats['total_archive']} ta</b>\n"
-        f"• To'lov kutilayotgan (ochilmagan): <b>{stats['undelivered_archive']} ta</b>"
+        f"Jami arxivlangan: <b>{stats['total_archive']} ta</b>\n"
+        f"To'lov kutilayotgan (ochilmagan): <b>{stats['undelivered_archive']} ta</b>"
     )
 
     kb = InlineKeyboardMarkup(
@@ -411,10 +411,10 @@ async def cb_broadcast_confirm(call: types.CallbackQuery, state: FSMContext, bot
         "✅ <b>Xabar tarqatish muvaffaqiyatli yakunlandi!</b>\n\n"
         f"🎯 <b>Segment:</b> {segment_title}\n"
         f"📊 <b>Natijalar:</b>\n"
-        f"• Jami auditoriya: <b>{total} ta</b>\n"
-        f"• Yetkazildi: <b>{success_count} ta</b>\n"
-        f"• Bloklaganlar: <b>{blocked_count} ta</b>\n"
-        f"• Boshqa xatoliklar: <b>{error_count} ta</b>"
+        f"Jami auditoriya: <b>{total} ta</b>\n"
+        f"Yetkazildi: <b>{success_count} ta</b>\n"
+        f"Bloklaganlar: <b>{blocked_count} ta</b>\n"
+        f"Boshqa xatoliklar: <b>{error_count} ta</b>"
     )
     await progress_msg.edit_text(report_text, reply_markup=get_admin_main_keyboard(), parse_mode="HTML")
 
