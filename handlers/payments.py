@@ -28,15 +28,15 @@ router = Router(name="payments_router")
 PLANS = {
     "week": {
         "days": 7,
-        "stars": 6,
+        "stars": 35,
     },
     "month": {
         "days": 28,
-        "stars": 20,
+        "stars": 89,
     },
     "year": {
         "days": 365,
-        "stars": 200,
+        "stars": 420,
     },
 }
 
@@ -105,9 +105,10 @@ async def get_plans_text(user_id: int, lang: str) -> str:
             expires_at=expires_at_str,
         )
     else:
-        header = get_text("plans_current_inactive", lang)
+        header = ""
 
-    return header + get_text("plans_title", lang)
+    ref_link = f"https://t.me/seenspybot?start=ref_{user_id}"
+    return header + get_text("plans_title", lang, ref_link=ref_link)
 
 
 @router.message(Command("buy"))

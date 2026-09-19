@@ -210,12 +210,14 @@ MESSAGES: Dict[str, Dict[str, str]] = {
             "➖➖➖➖➖➖➖➖➖➖\n\n"
         ),
         "plans_title": (
-            '<tg-emoji emoji-id="5388909270316114329">⭐️</tg-emoji> <b>Тарифные планы</b>\n\n'
-            "Выберите период для подключения или продления доступа:\n\n"
-            "• <b>1 Неделя</b> — 6 Stars\n"
-            "• <b>1 Месяц</b> — 20 Stars <i>(Скидка)</i>\n"
-            "• <b>1 Год</b> — 200 Stars <i>(Самый выгодный)</i>\n\n"
-            'Оплата производится безопасно через официальные <b>Telegram Stars</b> <tg-emoji emoji-id="5388909270316114329">⭐️</tg-emoji>'
+            "👑 <b>Получите Premium-статус и откройте возможности:</b>\n\n"
+            "<blockquote>• Уведомления об изменённых / удалённых сообщениях\n"
+            "• Скачивание одноразовых медиа\n"
+            "• Авто-сохранение в личный архив\n"
+            "• Доступ к /stats и истории</blockquote>\n\n"
+            "<b>Выберите тариф:</b>\n\n"
+            '<tg-emoji emoji-id="5193085063998224234">🎁</tg-emoji> <b>Пригласите друга → +1 день бесплатно:</b>\n'
+            "{ref_link}"
         ),
         "plan_week_name": "1 Неделя (7 дней)",
         "plan_week_desc": "Доступ к удалённым и одноразовым сообщениям на 7 дней",
@@ -452,12 +454,14 @@ MESSAGES: Dict[str, Dict[str, str]] = {
             "➖➖➖➖➖➖➖➖➖➖\n\n"
         ),
         "plans_title": (
-            '<tg-emoji emoji-id="5388909270316114329">⭐️</tg-emoji> <b>Obuna tariflari</b>\n\n'
-            "Ulanish yoki muddatni uzaytirish uchun tarifni tanlang:\n\n"
-            "• <b>1 Hafta</b> — 6 Stars\n"
-            "• <b>1 Oy</b> — 20 Stars <i>(Chegirma)</i>\n"
-            "• <b>1 Yil</b> — 200 Stars <i>(Eng manfaatli)</i>\n\n"
-            'To\'lov xavfsiz tarzda rasmiy <b>Telegram Stars</b> <tg-emoji emoji-id="5388909270316114329">⭐️</tg-emoji> orqali amalga oshiriladi.'
+            "👑 <b>Premium-statusga ega bo'ling va imkoniyatlarni oching:</b>\n\n"
+            "<blockquote>• O'chirilgan / tahrirlangan xabarlar haqida bildirishnomalar\n"
+            "• 1 martalik medialarni yuklab olish\n"
+            "• Shaxsiy arxivga avtomatik saqlash\n"
+            "• /stats va yozishmalar tarixiga kirish</blockquote>\n\n"
+            "<b>Tarifni tanlang:</b>\n\n"
+            '<tg-emoji emoji-id="5193085063998224234">🎁</tg-emoji> <b>Do\'stingizni taklif qiling → +1 kun bepul:</b>\n'
+            "{ref_link}"
         ),
         "plan_week_name": "1 Hafta (7 kun)",
         "plan_week_desc": "O'chirilgan va 1 martalik xabarlarni 7 kun davomida tutib olish xizmati",
@@ -603,18 +607,18 @@ def get_language_keyboard(lang: str = "ru", is_first_time: bool = False) -> Inli
 
 def get_plans_keyboard(lang: str = "ru") -> InlineKeyboardMarkup:
     """Tariflar tanlash klaviaturasi (Tanlangan tilda)."""
-    w_stars = 6
-    m_stars = 20
-    y_stars = 200
+    w_stars = 35
+    m_stars = 89
+    y_stars = 420
 
     if lang == "uz":
-        w_text = f"⭐ 1 Hafta — {w_stars} Stars"
-        m_text = f"⭐ 1 Oy — {m_stars} Stars"
-        y_text = f"⭐ 1 Yil — {y_stars} Stars (Eng manfaatli)"
+        w_text = f"Hafta • {w_stars} ⭐️"
+        m_text = f"🔥 Oy (28 kun) • {m_stars} ⭐️"
+        y_text = f"Yil • {y_stars} ⭐️"
     else:
-        w_text = f"⭐ 1 Неделя — {w_stars} Stars"
-        m_text = f"⭐ 1 Месяц — {m_stars} Stars"
-        y_text = f"⭐ 1 Год — {y_stars} Stars (Выгодно)"
+        w_text = f"Неделя • {w_stars} ⭐️"
+        m_text = f"🔥 Месяц (28 дней) • {m_stars} ⭐️"
+        y_text = f"Год • {y_stars} ⭐️"
 
     som_text = get_text("btn_buy_som", lang)
 
