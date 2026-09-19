@@ -346,7 +346,7 @@ async def cb_show_referral(event: types.Message | types.CallbackQuery, bot: Bot)
 
     kb = InlineKeyboardMarkup(
         inline_keyboard=[
-            [InlineKeyboardButton(text=get_text("btn_share_ref", lang), url=share_url)],
+            [InlineKeyboardButton(text=get_text("btn_share_ref", lang), url=share_url, icon_custom_emoji_id="5798697374247291954")],
             [InlineKeyboardButton(text=get_text("btn_back", lang), callback_data="back_to_menu")],
         ]
     )

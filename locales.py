@@ -37,19 +37,19 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         "sub_inactive": "⚪️ Не активна",
 
         # Tugmalar
-        "btn_connect": "🟢 Подключить бота",
+        "btn_connect": "Подключить бота",
 
-        "btn_plans": "⭐ Тарифы",
-        "btn_manage_sub": "⭐️ Управление подпиской",
-        "btn_get_free_day": "🎁 +1 День бесплатно",
-        "btn_buy_som": "💳 Оплата в сумах (Humo / Uzcard)",
-        "btn_guide": "📖 Инструкция",
-        "btn_lang_short": "🌐 Язык",
-        "btn_stats": "📊 Статус",
-        "btn_language": "🌐 Язык",
+        "btn_plans": "Тарифы",
+        "btn_manage_sub": "Управление подпиской",
+        "btn_get_free_day": "+1 День бесплатно",
+        "btn_buy_som": "Оплата в сумах (Humo / Uzcard)",
+        "btn_guide": "Инструкция",
+        "btn_lang_short": "Язык",
+        "btn_stats": "Статус",
+        "btn_language": "Язык",
         "btn_back": "🔙 Назад",
-        "btn_referral": "🎁 Пригласить друзей",
-        "btn_privacy": "📄 Политика конфиденциальности",
+        "btn_referral": "Пригласить друзей",
+        "btn_privacy": "Политика конфиденциальности",
 
         # Подключенный дашборд
         "start_connected_text": (
@@ -105,7 +105,7 @@ MESSAGES: Dict[str, Dict[str, str]] = {
             'Вам начислено: <b>+1 день подписки</b> <tg-emoji emoji-id="5913600088856334619">🎁</tg-emoji>\n'
             "Новый срок действия: <code>{expires_at}</code>."
         ),
-        "btn_share_ref": "📲 Поделиться с друзьями",
+        "btn_share_ref": "Поделиться с друзьями",
         "share_text": "Привет! Попробуй этого бота для Telegram Business — он сохраняет удалённые сообщения и одноразовые фото/видео:",
 
         # Язык
@@ -171,7 +171,7 @@ MESSAGES: Dict[str, Dict[str, str]] = {
             "📦 Пропущено событий: <b>{total_missed} шт.</b>\n\n"
             "Чтобы увидеть, введите /buy."
         ),
-        "btn_unlock": "🔓 Посмотреть сообщения ({total_missed} шт.)",
+        "btn_unlock": "Посмотреть сообщения ({total_missed} шт.)",
 
         # Tariflar va to'lovlar
         "plans_current_active": (
@@ -225,7 +225,7 @@ MESSAGES: Dict[str, Dict[str, str]] = {
             "Новые сообщения сохраняются в архиве.\n\n"
             "👉 Продлить: /buy"
         ),
-        "btn_renew_sub": "⭐ Продлить подписку",
+        "btn_renew_sub": "Продлить подписку",
         "scheduler_cutoff": (
             "❗️ <b>С момента окончания подписки прошло 30 дней.</b>\n\n"
             "Сохранение сообщений приостановлено.\n"
@@ -259,19 +259,19 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         "sub_inactive": "⚪️ Faol emas",
 
         # Tugmalar
-        "btn_connect": "🟢 Botni ulash",
+        "btn_connect": "Botni ulash",
 
-        "btn_plans": "⭐ Tariflar",
-        "btn_manage_sub": "⭐️ Obunani boshqarish",
-        "btn_get_free_day": "🎁 +1 Kun bepul",
-        "btn_buy_som": "💳 So'mda to'lash (Humo / Uzcard)",
-        "btn_guide": "📖 Qo'llanma",
-        "btn_lang_short": "🌐 Til",
-        "btn_stats": "📊 Statistika",
-        "btn_language": "🌐 Til",
+        "btn_plans": "Tariflar",
+        "btn_manage_sub": "Obunani boshqarish",
+        "btn_get_free_day": "+1 Kun bepul",
+        "btn_buy_som": "So'mda to'lash (Humo / Uzcard)",
+        "btn_guide": "Qo'llanma",
+        "btn_lang_short": "Til",
+        "btn_stats": "Statistika",
+        "btn_language": "Til",
         "btn_back": "🔙 Orqaga",
-        "btn_referral": "🎁 Do'stlarni taklif qilish",
-        "btn_privacy": "📄 Maxfiylik siyosati",
+        "btn_referral": "Do'stlarni taklif qilish",
+        "btn_privacy": "Maxfiylik siyosati",
 
         # Ulangan foydalanuvchining Asosiy Dashboard matni (/start)
         "start_connected_text": (
@@ -327,7 +327,7 @@ MESSAGES: Dict[str, Dict[str, str]] = {
             'Sizga taqdim etildi: <b>+1 kun bepul obuna</b> <tg-emoji emoji-id="5913600088856334619">🎁</tg-emoji>\n'
             "Yangi amal qilish muddati: <code>{expires_at}</code>."
         ),
-        "btn_share_ref": "📲 Do'stlarga ulashish",
+        "btn_share_ref": "Do'stlarga ulashish",
         "share_text": "Salom! Telegram Business uchun bu botni sinab ko'r — o'chirilgan xabarlar va 1 martalik rasm/videolarni saqlab beradi:",
 
         # Tilni o'zgartirish
@@ -393,7 +393,7 @@ MESSAGES: Dict[str, Dict[str, str]] = {
             "📦 Arxivdagi xabarlar: <b>{total_missed} ta</b>\n\n"
             "Ko'rish uchun /buy buyrug'ini bosing."
         ),
-        "btn_unlock": "🔓 Xabarlarni ko'rish ({total_missed} ta)",
+        "btn_unlock": "Xabarlarni ko'rish ({total_missed} ta)",
 
         # Tariflar va to'lovlar
         "plans_current_active": (
@@ -447,7 +447,7 @@ MESSAGES: Dict[str, Dict[str, str]] = {
             "Yangi xabarlar arxivda saqlanib turadi.\n\n"
             "👉 Yangilash uchun: /buy"
         ),
-        "btn_renew_sub": "⭐ Obunani yangilash",
+        "btn_renew_sub": "Obunani yangilash",
         "scheduler_cutoff": (
             "❗️ <b>Obunangiz tugaganiga 30 kundan oshdi.</b>\n\n"
             "Xabarlarni saqlash to'xtatildi.\n"
@@ -580,19 +580,32 @@ def get_plans_keyboard(lang: str = "ru") -> InlineKeyboardMarkup:
         w_text = f"Hafta — {w_stars} ⭐️"
         m_text = f"🔥 Oy — {m_stars} ⭐️"
         y_text = f"Yil — {y_stars} ⭐️"
+        humo_text = "Humo (So'm)"
+        uzcard_text = "Uzcard (So'm)"
     else:
         w_text = f"Неделя — {w_stars} ⭐️"
         m_text = f"🔥 Месяц — {m_stars} ⭐️"
         y_text = f"Год — {y_stars} ⭐️"
-
-    som_text = get_text("btn_buy_som", lang)
+        humo_text = "Humo (UZS)"
+        uzcard_text = "Uzcard (UZS)"
 
     return InlineKeyboardMarkup(
         inline_keyboard=[
-            [InlineKeyboardButton(text=w_text, callback_data="buy:week", icon_custom_emoji_id="5839049953497844833")],
-            [InlineKeyboardButton(text=m_text, callback_data="buy:month", icon_custom_emoji_id="5839049953497844833")],
-            [InlineKeyboardButton(text=y_text, callback_data="buy:year", icon_custom_emoji_id="5839049953497844833")],
-            [InlineKeyboardButton(text=som_text, url="https://t.me/m/lEyBVNZ3MmYy", icon_custom_emoji_id="5424585953031234078")],
+            [InlineKeyboardButton(text=w_text, callback_data="buy:week")],
+            [InlineKeyboardButton(text=m_text, callback_data="buy:month")],
+            [InlineKeyboardButton(text=y_text, callback_data="buy:year")],
+            [
+                InlineKeyboardButton(
+                    text=humo_text,
+                    url="https://t.me/m/lEyBVNZ3MmYy",
+                    icon_custom_emoji_id="5424585953031234078"
+                ),
+                InlineKeyboardButton(
+                    text=uzcard_text,
+                    url="https://t.me/m/lEyBVNZ3MmYy",
+                    icon_custom_emoji_id="5294281459928943793"
+                )
+            ],
             [InlineKeyboardButton(text=get_text("btn_back", lang), callback_data="back_to_menu")]
         ]
     )
