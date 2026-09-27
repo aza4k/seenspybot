@@ -23,6 +23,7 @@ from database import (
     get_user_language,
     is_subscription_active,
     ensure_free_trial,
+    is_user_business_connected,
 )
 from locales import get_text
 
@@ -56,11 +57,18 @@ async def show_snippets_list(target: types.Message | types.CallbackQuery, user_i
     title = get_text("quick_replies_title", lang)
     desc = get_text("quick_replies_desc", lang, count=count)
 
+    is_connected = await is_user_business_connected(user_id)
+    if not is_connected:
+        desc += get_text("quick_not_connected_notice", lang)
+
     if not snippets:
         body = get_text("quick_replies_empty", lang)
         full_text = f"{title}{desc}{body}"
+        conn_btn = []
+        if not is_connected:
+            conn_btn.append([InlineKeyboardButton(text=get_text("btn_connect_business", lang), url="tg://settings/edit")])
         kb = InlineKeyboardMarkup(
-            inline_keyboard=[
+            inline_keyboard=conn_btn + [
                 [InlineKeyboardButton(text=get_text("btn_add_quick_reply", lang), callback_data="snippet:add")],
                 [InlineKeyboardButton(text=get_text("btn_back", lang), callback_data="back_to_menu")]
             ]
@@ -85,6 +93,8 @@ async def show_snippets_list(target: types.Message | types.CallbackQuery, user_i
         full_text = f"{title}{desc}" + "\n".join(list_lines)
 
         control_buttons = []
+        if not is_connected:
+            control_buttons.append([InlineKeyboardButton(text=get_text("btn_connect_business", lang), url="tg://settings/edit")])
         if count < MAX_SNIPPETS:
             control_buttons.append([InlineKeyboardButton(text=get_text("btn_add_quick_reply", lang), callback_data="snippet:add")])
         control_buttons.append([InlineKeyboardButton(text=get_text("btn_back", lang), callback_data="back_to_menu")])
@@ -134,11 +144,13 @@ async def cmd_quick(message: types.Message, state: FSMContext):
         await set_user_snippet(user_id, kw, content)
         await state.clear()
         res_text = get_text("quick_saved_success", lang, kw=kw, content=html.escape(content))
-        kb = InlineKeyboardMarkup(
-            inline_keyboard=[
-                [InlineKeyboardButton(text=get_text("btn_quick_replies", lang), callback_data="snippet:list")]
-            ]
-        )
+        is_conn = await is_user_business_connected(user_id)
+        kb_rows = []
+        if not is_conn:
+            res_text += get_text("quick_not_connected_notice", lang)
+            kb_rows.append([InlineKeyboardButton(text=get_text("btn_connect_business", lang), url="tg://settings/edit")])
+        kb_rows.append([InlineKeyboardButton(text=get_text("btn_quick_replies", lang), callback_data="snippet:list")])
+        kb = InlineKeyboardMarkup(inline_keyboard=kb_rows)
         await message.answer(res_text, reply_markup=kb, parse_mode="HTML")
         return
 
@@ -158,11 +170,13 @@ async def cmd_card_shortcut(message: types.Message, state: FSMContext):
         await set_user_snippet(user_id, "card", content)
         await state.clear()
         res_text = get_text("quick_saved_success", lang, kw="card", content=html.escape(content))
-        kb = InlineKeyboardMarkup(
-            inline_keyboard=[
-                [InlineKeyboardButton(text=get_text("btn_quick_replies", lang), callback_data="snippet:list")]
-            ]
-        )
+        is_conn = await is_user_business_connected(user_id)
+        kb_rows = []
+        if not is_conn:
+            res_text += get_text("quick_not_connected_notice", lang)
+            kb_rows.append([InlineKeyboardButton(text=get_text("btn_connect_business", lang), url="tg://settings/edit")])
+        kb_rows.append([InlineKeyboardButton(text=get_text("btn_quick_replies", lang), callback_data="snippet:list")])
+        kb = InlineKeyboardMarkup(inline_keyboard=kb_rows)
         await message.answer(res_text, reply_markup=kb, parse_mode="HTML")
         return
 
@@ -321,12 +335,14 @@ async def process_content_input(message: types.Message, state: FSMContext):
     await state.clear()
 
     res_text = get_text("quick_saved_success", lang, kw=kw, content=html.escape(content))
-    kb = InlineKeyboardMarkup(
-        inline_keyboard=[
-            [InlineKeyboardButton(text=get_text("btn_quick_replies", lang), callback_data="snippet:list")],
-            [InlineKeyboardButton(text=get_text("btn_back", lang), callback_data="back_to_menu")]
-        ]
-    )
+    is_conn = await is_user_business_connected(user_id)
+    kb_rows = []
+    if not is_conn:
+        res_text += get_text("quick_not_connected_notice", lang)
+        kb_rows.append([InlineKeyboardButton(text=get_text("btn_connect_business", lang), url="tg://settings/edit")])
+    kb_rows.append([InlineKeyboardButton(text=get_text("btn_quick_replies", lang), callback_data="snippet:list")])
+    kb_rows.append([InlineKeyboardButton(text=get_text("btn_back", lang), callback_data="back_to_menu")])
+    kb = InlineKeyboardMarkup(inline_keyboard=kb_rows)
     await message.answer(res_text, reply_markup=kb, parse_mode="HTML")
 
 

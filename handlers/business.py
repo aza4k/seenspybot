@@ -293,10 +293,21 @@ async def on_business_connection(connection: types.BusinessConnection, bot: Bot)
     if target_chat:
         lang = await get_user_language(target_chat)
         user_name = html.escape(format_sender_name(connection.user))
+        reply_kb = None
         if connection.is_enabled:
-            # Faqat birinchi marta trial berilganida 30 kunlik sinov matnini ko'rsatamiz
+            # Faqat birinchi marta trial berilganida sinov matnini ko'rsatamiz
             trial_text = get_text("conn_trial", lang) if is_new_trial else ""
-            text = get_text("conn_success", lang, user_name=user_name, user_id=user_id, trial_text=trial_text)
+
+            # Manage Messages (can_reply) ruxsati berilganligini tekshirish
+            if not connection.can_reply:
+                text = get_text("conn_success_no_reply_perm", lang, user_name=user_name, user_id=user_id, trial_text=trial_text)
+                reply_kb = InlineKeyboardMarkup(
+                    inline_keyboard=[
+                        [InlineKeyboardButton(text=get_text("btn_fix_business_perm", lang), url="tg://settings/edit")]
+                    ]
+                )
+            else:
+                text = get_text("conn_success", lang, user_name=user_name, user_id=user_id, trial_text=trial_text)
 
             # Agar bu user biror kishining referali bo'lsa, taklif qilganga +1 kun berish
             ref_reward = await process_referral_connection_reward(user_id)
@@ -311,7 +322,7 @@ async def on_business_connection(connection: types.BusinessConnection, bot: Bot)
         else:
             text = get_text("conn_disabled", lang, user_name=user_name, user_id=user_id)
         try:
-            await bot.send_message(target_chat, text, parse_mode="HTML")
+            await bot.send_message(target_chat, text, reply_markup=reply_kb, parse_mode="HTML")
         except Exception:
             pass
 
@@ -469,6 +480,18 @@ async def handle_business_snippet(
                 logger.info(f"✅ .{keyword} fallback (delete+send) orqali yetkazildi: user={sender_id}")
             except Exception as e_send:
                 logger.error(f"Fallback send_message ham xatolik berdi: {e_send}")
+                err_str = str(e_send).lower()
+                if any(w in err_str for w in ["forbidden", "rights", "not allowed", "permission", "reply", "disabled", "cannot"]):
+                    alert_text = get_text("quick_no_reply_perm_alert", lang, kw=keyword)
+                    perm_kb = InlineKeyboardMarkup(
+                        inline_keyboard=[
+                            [InlineKeyboardButton(text=get_text("btn_fix_business_perm", lang), url="tg://settings/edit")]
+                        ]
+                    )
+                    try:
+                        await bot.send_message(sender_id, alert_text, reply_markup=perm_kb, parse_mode="HTML")
+                    except Exception:
+                        pass
 
         # Agar foydalanuvchi aynan .card yoki .karta deb yozgan bo'lsa, lekin hali kartasini kiritmagan bo'lsa
         elif keyword in ["card", "karta"] and not snippet_text:

@@ -118,9 +118,28 @@ MESSAGES: Dict[str, Dict[str, str]] = {
             "🟢 <b>Бот подключён к профилю!</b>\n\n"
             "Теперь удалённые и одноразовые сообщения приходят сюда.{trial_text}"
         ),
+        "conn_success_no_reply_perm": (
+            "⚠️ <b>Бот подключён, но разрешение не выдано!</b>\n\n"
+            "Вы не включили переключатель <b>«Управление сообщениями» (Manage Messages)</b>.\n\n"
+            "Чтобы быстрые команды (<code>.card</code>, <code>.tel</code>) и автозамена работали, "
+            "перейдите в настройки Telegram в раздел «Автоматизация чатов» и включите разрешение для бота 👇{trial_text}"
+        ),
         "conn_disabled": (
             "🔴 <b>Бот отключён от профиля!</b>\n\n"
             "Чтобы подключить снова: /start"
+        ),
+        "btn_fix_business_perm": "⚙️ Включить Manage Messages",
+        "quick_not_connected_notice": (
+            "\n\n⚠️ <b>Внимание:</b> Бот ещё не подключён к вашему Telegram Business. "
+            "Чтобы в личных чатах работали команды <code>.card</code> и автозамена, подключите бота в разделе "
+            "«Автоматизация чатов» и включите разрешение <b>Manage Messages</b>."
+        ),
+        "btn_connect_business": "🔗 Подключить к профилю",
+        "quick_no_reply_perm_alert": (
+            "⚠️ <b>Разрешение на управление сообщениями выключено!</b>\n\n"
+            "Вы ввели команду <code>.{kw}</code>, но в настройках Telegram Business не выдали боту "
+            "разрешение <b>«Manage Messages»</b>.\n\n"
+            "Чтобы автозамена работала, перейдите в настройки и включите разрешение 👇"
         ),
 
         # Tahrirlangan xabar
@@ -376,9 +395,28 @@ MESSAGES: Dict[str, Dict[str, str]] = {
             "🟢 <b>Bot profilingizga ulandi!</b>\n\n"
             "Endi o'chirilgan va 1 martalik xabarlar shu yerga keladi.{trial_text}"
         ),
+        "conn_success_no_reply_perm": (
+            "⚠️ <b>Bot profilingizga ulandi, ammo ruxsat berilmagan!</b>\n\n"
+            "Siz <b>«Xabarlarni boshqarish» (Manage Messages)</b> ruxsatini yoqmabsiz.\n\n"
+            "Tezkor buyruqlar (<code>.card</code>, <code>.tel</code>) va avtomatlashtirish to'liq ishlashi uchun "
+            "Telegram sozlamalaridagi «Chatlarni avtomatlashtirish» bo'limiga kirib, botga ruxsatni yoqib qo'ying 👇{trial_text}"
+        ),
         "conn_disabled": (
             "🔴 <b>Bot profilingizdan uzildi!</b>\n\n"
             "Qayta ulash uchun: /start"
+        ),
+        "btn_fix_business_perm": "⚙️ Manage Messages ruxsatini yoqish",
+        "quick_not_connected_notice": (
+            "\n\n⚠️ <b>Diqqat:</b> Bot hali Telegram Business profilingizga ulanmagan. "
+            "Shaxsiy chatlarda <code>.card</code> va boshqa buyruqlardan foydalanish uchun botni "
+            "«Chatlarni avtomatlashtirish» bo'limida ulab, <b>Xabarlarni boshqarish (Manage Messages)</b> ruxsatini yoqing."
+        ),
+        "btn_connect_business": "🔗 Botni profilga ulash",
+        "quick_no_reply_perm_alert": (
+            "⚠️ <b>Xabarlarni boshqarish ruxsati yoqilmagan!</b>\n\n"
+            "Siz <code>.{kw}</code> buyrug'ini yozdingiz, ammo Telegram Business sozlamalarida botga "
+            "<b>«Xabarlarni boshqarish» (Manage Messages)</b> ruxsatini bermagansiz.\n\n"
+            "Buyruqlar ishlashi uchun «Chatlarni avtomatlashtirish» bo'limiga kirib ruxsatni yoqing 👇"
         ),
 
         # Tahrirlangan xabar
