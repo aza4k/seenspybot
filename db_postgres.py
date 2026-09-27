@@ -140,6 +140,18 @@ async def init_db():
             );
         """)
 
+        # Maxsus shablonlar (Custom Snippets: .card va h.k.)
+        await conn.execute("""
+            CREATE TABLE IF NOT EXISTS user_snippets (
+                user_id BIGINT,
+                keyword TEXT,
+                content TEXT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (user_id, keyword)
+            );
+        """)
+
         # 8. Referrals
         await conn.execute("""
             CREATE TABLE IF NOT EXISTS referrals (
@@ -924,4 +936,105 @@ async def get_user_deleted_messages_count(user_id: int) -> int:
     except Exception as e:
         logger.error(f"get_user_deleted_messages_count xatolik: {e}")
         return 0
+
+
+DEFAULT_PLAN_PRICES = {
+    "week": 25,
+    "month": 59,
+    "year": 290
+}
+
+
+async def get_plan_prices() -> dict:
+    """Tariflar narxlarini olish (Stars soni)."""
+    prices = dict(DEFAULT_PLAN_PRICES)
+    try:
+        pool = await get_pg_pool()
+        for plan_key in ["week", "month", "year"]:
+            val = await pool.fetchval(
+                "SELECT value FROM system_settings WHERE key = $1",
+                f"plan_price_{plan_key}"
+            )
+            if val and str(val).isdigit():
+                prices[plan_key] = int(val)
+    except Exception as e:
+        logger.error(f"get_plan_prices (PG) xatolik: {e}")
+    return prices
+
+
+async def set_plan_price(plan_key: str, price_stars: int) -> None:
+    """Tarif narxini yangilash (Stars soni)."""
+    try:
+        pool = await get_pg_pool()
+        await pool.execute("""
+            INSERT INTO system_settings (key, value, updated_at)
+            VALUES ($1, $2, CURRENT_TIMESTAMP)
+            ON CONFLICT(key) DO UPDATE SET
+                value = EXCLUDED.value,
+                updated_at = CURRENT_TIMESTAMP
+        """, f"plan_price_{plan_key}", str(price_stars))
+    except Exception as e:
+        logger.error(f"set_plan_price (PG) xatolik: {e}")
+
+
+async def get_user_snippet(user_id: int, keyword: str) -> Optional[str]:
+    """Foydalanuvchining shaxsiy shablonini olish (masalan: 'card')."""
+    try:
+        clean_kw = keyword.strip().lstrip(".").lower()
+        pool = await get_pg_pool()
+        return await pool.fetchval(
+            "SELECT content FROM user_snippets WHERE user_id = $1 AND keyword = $2",
+            user_id, clean_kw
+        )
+    except Exception as e:
+        logger.error(f"get_user_snippet (PG) xatolik: {e}")
+        return None
+
+
+async def set_user_snippet(user_id: int, keyword: str, content: str) -> None:
+    """Foydalanuvchining shaxsiy shablonini saqlash yoki yangilash."""
+    try:
+        clean_kw = keyword.strip().lstrip(".").lower()
+        pool = await get_pg_pool()
+        await pool.execute("""
+            INSERT INTO user_snippets (user_id, keyword, content, updated_at)
+            VALUES ($1, $2, $3, CURRENT_TIMESTAMP)
+            ON CONFLICT(user_id, keyword) DO UPDATE SET
+                content = EXCLUDED.content,
+                updated_at = CURRENT_TIMESTAMP
+        """, user_id, clean_kw, content.strip())
+    except Exception as e:
+        logger.error(f"set_user_snippet (PG) xatolik: {e}")
+
+
+async def delete_user_snippet(user_id: int, keyword: str) -> bool:
+    """Foydalanuvchining shaxsiy shablonini o'chirish."""
+    try:
+        clean_kw = keyword.strip().lstrip(".").lower()
+        pool = await get_pg_pool()
+        res = await pool.execute(
+            "DELETE FROM user_snippets WHERE user_id = $1 AND keyword = $2",
+            user_id, clean_kw
+        )
+        return "DELETE 1" in str(res)
+    except Exception as e:
+        logger.error(f"delete_user_snippet (PG) xatolik: {e}")
+        return False
+
+
+async def get_all_user_snippets(user_id: int) -> dict:
+    """Foydalanuvchining barcha saqlangan shablonlarini olish."""
+    snippets = {}
+    try:
+        pool = await get_pg_pool()
+        rows = await pool.fetch(
+            "SELECT keyword, content FROM user_snippets WHERE user_id = $1",
+            user_id
+        )
+        for r in rows:
+            snippets[r["keyword"]] = r["content"]
+    except Exception as e:
+        logger.error(f"get_all_user_snippets (PG) xatolik: {e}")
+    return snippets
+
 

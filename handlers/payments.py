@@ -18,6 +18,7 @@ from database import (
     mark_archive_logs_delivered,
     get_user_language,
     get_user_subscription_status,
+    get_plan_prices,
 )
 from config import ADMIN_ID, ARCHIVE_CHANNEL_ID
 from locales import get_text, get_plans_keyboard, MESSAGES
@@ -25,20 +26,25 @@ from locales import get_text, get_plans_keyboard, MESSAGES
 logger = logging.getLogger(__name__)
 router = Router(name="payments_router")
 
-PLANS = {
-    "week": {
-        "days": 7,
-        "stars": 25,
-    },
-    "month": {
-        "days": 28,
-        "stars": 59,
-    },
-    "year": {
-        "days": 365,
-        "stars": 290,
-    },
-}
+
+async def get_plan_config(plan_key: str) -> dict:
+    """Tarif ma'lumotlarini bazadagi yangilangan narxlar bilan olish."""
+    prices = await get_plan_prices()
+    base_plans = {
+        "week": {
+            "days": 7,
+            "stars": prices.get("week", 25),
+        },
+        "month": {
+            "days": 28,
+            "stars": prices.get("month", 59),
+        },
+        "year": {
+            "days": 365,
+            "stars": prices.get("year", 290),
+        },
+    }
+    return base_plans.get(plan_key, base_plans["week"])
 
 
 def format_remaining_time(days: int, hours: int, lang: str) -> str:
@@ -116,19 +122,21 @@ async def get_plans_text(user_id: int, lang: str) -> str:
 async def cmd_buy(message: types.Message):
     """Tariflar menyusini ochish."""
     lang = await get_user_language(message.from_user.id)
+    prices = await get_plan_prices()
     text = await get_plans_text(message.from_user.id, lang)
-    await message.answer(text, reply_markup=get_plans_keyboard(lang), parse_mode="HTML")
+    await message.answer(text, reply_markup=get_plans_keyboard(lang, prices=prices), parse_mode="HTML")
 
 
 @router.callback_query(F.data == "show_plans")
 async def cb_show_plans(call: types.CallbackQuery):
     """Inline tugma orqali tariflar menyusi."""
     lang = await get_user_language(call.from_user.id)
+    prices = await get_plan_prices()
     text = await get_plans_text(call.from_user.id, lang)
     try:
-        await call.message.edit_text(text, reply_markup=get_plans_keyboard(lang), parse_mode="HTML")
+        await call.message.edit_text(text, reply_markup=get_plans_keyboard(lang, prices=prices), parse_mode="HTML")
     except Exception:
-        await call.message.answer(text, reply_markup=get_plans_keyboard(lang), parse_mode="HTML")
+        await call.message.answer(text, reply_markup=get_plans_keyboard(lang, prices=prices), parse_mode="HTML")
     await call.answer()
 
 
@@ -136,7 +144,7 @@ async def cb_show_plans(call: types.CallbackQuery):
 async def cb_buy_plan(call: types.CallbackQuery, bot: Bot):
     """Telegram Stars Invoice (to'lov hisobini) chiqarish."""
     plan_key = call.data.split(":")[1]
-    plan = PLANS.get(plan_key)
+    plan = await get_plan_config(plan_key)
 
     if not plan:
         await call.answer("Tarif topilmadi!", show_alert=True)
@@ -184,7 +192,7 @@ async def on_successful_payment(message: types.Message, bot: Bot):
     elif "year" in payload:
         plan_key = "year"
 
-    plan = PLANS.get(plan_key, PLANS["week"])
+    plan = await get_plan_config(plan_key)
     new_expiry = await add_subscription(
         user_id=message.from_user.id,
         days=plan["days"],

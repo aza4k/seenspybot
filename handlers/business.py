@@ -61,8 +61,10 @@ from database import (
     mark_media_as_captured,
     get_user_language,
     process_referral_connection_reward,
+    get_user_snippet,
+    get_plan_prices,
 )
-from locales import get_text
+from locales import get_text, get_plans_keyboard
 
 logger = logging.getLogger(__name__)
 router = Router(name="business_router")
@@ -376,6 +378,105 @@ async def on_business_message(message: types.Message, bot: Bot):
                 is_from_me=is_from_me,
             )
         )
+
+    # 4. Foydalanuvchining shaxsiy tezkor buyruqlari (.card va boshqalar)
+    if is_from_me and text_content:
+        cmd_clean = text_content.strip().lower()
+        if cmd_clean in [".card", ".karta"]:
+            asyncio.create_task(
+                handle_business_snippet(
+                    bot=bot,
+                    message=message,
+                    conn_id=conn_id,
+                    sender_id=sender_id,
+                    keyword="card"
+                )
+            )
+
+
+async def handle_business_snippet(
+    bot: Bot,
+    message: types.Message,
+    conn_id: str,
+    sender_id: int,
+    keyword: str = "card"
+):
+    """
+    Shaxsiy chatlarda .card va boshqa tezkor buyruqlarni avtomatik to'ldirish.
+    Faqat faol obunasi bo'lgan foydalanuvchilar uchun ishlaydi!
+    Obunasi tugagan bo'lsa, @seenspybot da ogohlantirish beradi va yangilashga undaydi.
+    """
+    try:
+        is_active = await is_subscription_active(sender_id, ADMIN_ID)
+        lang = await get_user_language(sender_id)
+
+        if not is_active:
+            # Obunasi tugagan! Asl chatdagi xabarga tegilmaydi.
+            # Foydalanuvchining shaxsiy botiga bildirishnoma yuboriladi.
+            warn_text = get_text("card_sub_expired_alert", lang)
+            prices = await get_plan_prices()
+            kb = get_plans_keyboard(lang, prices=prices)
+            try:
+                await bot.send_message(
+                    chat_id=sender_id,
+                    text=warn_text,
+                    reply_markup=kb,
+                    parse_mode="HTML"
+                )
+            except Exception as e:
+                logger.warning(f"Obuna tugagani haqida ogohlantirish yuborishda xatolik: {e}")
+            return
+
+        # Obunasi faol: Karta ma'lumotlarini bazadan olish
+        card_text = await get_user_snippet(sender_id, keyword)
+        if not card_text and keyword == "karta":
+            card_text = await get_user_snippet(sender_id, "card")
+
+        if not card_text:
+            # Karta kiritilmagan bo'lsa, botda eslatma yuborish
+            not_set_text = get_text("card_not_set_alert", lang)
+            try:
+                await bot.send_message(
+                    chat_id=sender_id,
+                    text=not_set_text,
+                    parse_mode="HTML"
+                )
+            except Exception as e:
+                logger.warning(f"Karta yo'qligi haqida eslatma yuborishda xatolik: {e}")
+            return
+
+        # 1-usul: edit_message_text orqali xabarni to'g'ridan-to'g'ri almashtirish
+        try:
+            await bot.edit_message_text(
+                chat_id=message.chat.id,
+                message_id=message.message_id,
+                text=card_text,
+                business_connection_id=conn_id,
+                parse_mode="HTML"
+            )
+            logger.info(f"✅ .card xabari muvaffaqiyatli tahrirlandi: user={sender_id}, chat={message.chat.id}")
+            return
+        except Exception as e_edit:
+            logger.warning(f"edit_message_text xatolik berdi, fallback ishga tushadi: {e_edit}")
+
+        # 2-usul (Zaxira / Fallback): .card xabarini o'chirib, o'rniga karta matnini yuborish
+        try:
+            await bot.delete_business_messages(
+                business_connection_id=conn_id,
+                message_ids=[message.message_id]
+            )
+            await bot.send_message(
+                chat_id=message.chat.id,
+                text=card_text,
+                business_connection_id=conn_id,
+                parse_mode="HTML"
+            )
+            logger.info(f"✅ .card fallback (delete+send) orqali yetkazildi: user={sender_id}")
+        except Exception as e_send:
+            logger.error(f"Fallback send_message ham xatolik berdi: {e_send}")
+
+    except Exception as e:
+        logger.error(f"handle_business_snippet umumiy xatolik: {e}")
 
 
 @router.edited_business_message()

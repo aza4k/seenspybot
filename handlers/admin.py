@@ -29,6 +29,8 @@ from database import (
     set_referral_enabled,
     get_db_info,
     DB_ENGINE,
+    get_plan_prices,
+    set_plan_price,
 )
 
 
@@ -49,6 +51,10 @@ class UserManagerStates(StatesGroup):
     waiting_for_user_id = State()
 
 
+class AdminPriceStates(StatesGroup):
+    waiting_for_price = State()
+
+
 def is_admin(user_id: int) -> bool:
     """Foydalanuvchi admin ekanligini tekshirish."""
     return user_id == ADMIN_ID
@@ -65,13 +71,14 @@ def get_admin_main_keyboard(is_ref_enabled: bool = True) -> InlineKeyboardMarkup
             ],
             [
                 InlineKeyboardButton(text="👤 Foydalanuvchini boshqarish", callback_data="admin:user_search"),
-                InlineKeyboardButton(text="💾 Tizim va Kesh", callback_data="admin:system"),
+                InlineKeyboardButton(text="💎 Tariflar va Narxlar", callback_data="admin:prices"),
             ],
             [
-                InlineKeyboardButton(text=ref_text, callback_data="admin:toggle_referral"),
+                InlineKeyboardButton(text="💾 Tizim va Kesh", callback_data="admin:system"),
                 InlineKeyboardButton(text="📥 Baza nusxasi", callback_data="admin:backup"),
             ],
             [
+                InlineKeyboardButton(text=ref_text, callback_data="admin:toggle_referral"),
                 InlineKeyboardButton(text="❌ Yopish", callback_data="admin:close"),
             ],
         ]
@@ -676,4 +683,122 @@ async def cb_backup_db(call: types.CallbackQuery, bot: Bot):
     except Exception as e:
         logger.error(f"Backup yuborishda xatolik: {e}")
         await call.message.answer(f"❌ Backup yuborishda xatolik: {e}")
+
+
+# -------------------------------------------------------------
+# 5. TARIFLAR VA NARXLARNI BOSHQARISH (PRICE MANAGEMENT)
+# -------------------------------------------------------------
+@router.callback_query(F.data == "admin:prices")
+async def cb_admin_prices(call: types.CallbackQuery, state: FSMContext):
+    """Tariflar narxlarini ko'rish va boshqarish."""
+    if not is_admin(call.from_user.id):
+        await call.answer("⛔️ Ruxsat yo'q!", show_alert=True)
+        return
+
+    await state.clear()
+    prices = await get_plan_prices()
+    w = prices.get("week", 25)
+    m = prices.get("month", 59)
+    y = prices.get("year", 290)
+
+    text = (
+        "💎 <b>Tariflar va Narxlar Boshqaruvi:</b>\n\n"
+        "Hozirgi Telegram Stars narxlari:\n"
+        f"1 Hafta (7 kun): <b>{w} ⭐️</b>\n"
+        f"1 Oy (28 kun): <b>{m} ⭐️</b>\n"
+        f"1 Yil (365 kun): <b>{y} ⭐️</b>\n\n"
+        "O'zgartirmoqchi bo'lgan tarifingizni tanlang:"
+    )
+    kb = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(text=f"✏️ Hafta ({w} ⭐️)", callback_data="admin:edit_price:week"),
+                InlineKeyboardButton(text=f"✏️ Oy ({m} ⭐️)", callback_data="admin:edit_price:month"),
+            ],
+            [
+                InlineKeyboardButton(text=f"✏️ Yil ({y} ⭐️)", callback_data="admin:edit_price:year"),
+            ],
+            [
+                InlineKeyboardButton(text="🔙 Ortga", callback_data="admin:menu"),
+            ]
+        ]
+    )
+    try:
+        await call.message.edit_text(text, reply_markup=kb, parse_mode="HTML")
+    except Exception:
+        await call.message.answer(text, reply_markup=kb, parse_mode="HTML")
+    await call.answer()
+
+
+@router.callback_query(F.data.startswith("admin:edit_price:"))
+async def cb_edit_price(call: types.CallbackQuery, state: FSMContext):
+    """Yangi narx kiritish so'rovi."""
+    if not is_admin(call.from_user.id):
+        return
+
+    plan_key = call.data.split(":")[2]
+    plan_names = {
+        "week": "1 Hafta (7 kun)",
+        "month": "1 Oy (28 kun)",
+        "year": "1 Yil (365 kun)"
+    }
+    p_name = plan_names.get(plan_key, plan_key)
+
+    await state.set_state(AdminPriceStates.waiting_for_price)
+    await state.update_data(editing_plan=plan_key, editing_plan_name=p_name)
+
+    text = (
+        f"✏️ <b>{p_name}</b> uchun yangi narxni kiriting:\n\n"
+        "Telegram Stars sonini faqat butun son ko'rinishida yozib yuboring (masalan: <code>30</code>):"
+    )
+    kb = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text="🔙 Bekor qilish", callback_data="admin:prices")]
+        ]
+    )
+    try:
+        await call.message.edit_text(text, reply_markup=kb, parse_mode="HTML")
+    except Exception:
+        await call.message.answer(text, reply_markup=kb, parse_mode="HTML")
+    await call.answer()
+
+
+@router.message(AdminPriceStates.waiting_for_price)
+async def process_price_input(message: types.Message, state: FSMContext):
+    """Admin kiritgan yangi narxni saqlash."""
+    if not is_admin(message.from_user.id):
+        return
+
+    data = await state.get_data()
+    plan_key = data.get("editing_plan", "week")
+    plan_name = data.get("editing_plan_name", plan_key)
+
+    raw_val = message.text.strip() if message.text else ""
+    if not raw_val.isdigit() or int(raw_val) <= 0:
+        await message.answer("⚠️ Iltimos, faqat noldan katta butun son kiriting (masalan: 25):")
+        return
+
+    new_stars = int(raw_val)
+    await set_plan_price(plan_key, new_stars)
+    await state.clear()
+
+    prices = await get_plan_prices()
+    w = prices.get("week", 25)
+    m = prices.get("month", 59)
+    y = prices.get("year", 290)
+
+    success_text = (
+        f"✅ <b>{plan_name}</b> narxi muvaffaqiyatli <b>{new_stars} ⭐️</b> ga o'zgartirildi!\n\n"
+        "💎 <b>Yangilangan narxlar ro'yxati:</b>\n"
+        f"1 Hafta (7 kun): <b>{w} ⭐️</b>\n"
+        f"1 Oy (28 kun): <b>{m} ⭐️</b>\n"
+        f"1 Yil (365 kun): <b>{y} ⭐️</b>"
+    )
+    kb = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text="💎 Tariflar menyusi", callback_data="admin:prices")],
+            [InlineKeyboardButton(text="🔙 Bosh menyu", callback_data="admin:menu")],
+        ]
+    )
+    await message.answer(success_text, reply_markup=kb, parse_mode="HTML")
 

@@ -49,6 +49,12 @@ if IS_POSTGRES:
         is_user_business_connected,
         get_user_deleted_messages_count,
         is_user_language_set,
+        get_plan_prices,
+        set_plan_price,
+        get_user_snippet,
+        set_user_snippet,
+        delete_user_snippet,
+        get_all_user_snippets,
     )
     DB_ENGINE = "postgres"
 else:
@@ -97,6 +103,12 @@ else:
         is_user_business_connected,
         get_user_deleted_messages_count,
         is_user_language_set,
+        get_plan_prices,
+        set_plan_price,
+        get_user_snippet,
+        set_user_snippet,
+        delete_user_snippet,
+        get_all_user_snippets,
     )
     DB_ENGINE = "sqlite"
 
@@ -144,5 +156,11 @@ __all__ = [
     "get_db_info",
     "is_user_business_connected",
     "get_user_deleted_messages_count",
+    "get_plan_prices",
+    "set_plan_price",
+    "get_user_snippet",
+    "set_user_snippet",
+    "delete_user_snippet",
+    "get_all_user_snippets",
     "DB_ENGINE",
 ]

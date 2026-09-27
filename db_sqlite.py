@@ -141,6 +141,18 @@ async def init_db():
         );
     """)
 
+    # Maxsus shablonlar (Custom Snippets: .card va h.k.)
+    await db.execute("""
+        CREATE TABLE IF NOT EXISTS user_snippets (
+            user_id INTEGER,
+            keyword TEXT,
+            content TEXT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (user_id, keyword)
+        );
+    """)
+
     # Referal tizimi jadvali (Maksimal 7 ta taklif, ulanishda +1 kun)
     await db.execute("""
         CREATE TABLE IF NOT EXISTS referrals (
@@ -1009,5 +1021,113 @@ async def get_user_deleted_messages_count(user_id: int) -> int:
     except Exception as e:
         logger.error(f"get_user_deleted_messages_count xatolik: {e}")
         return 0
+
+
+DEFAULT_PLAN_PRICES = {
+    "week": 25,
+    "month": 59,
+    "year": 290
+}
+
+
+async def get_plan_prices() -> dict:
+    """Tariflar narxlarini olish (Stars soni)."""
+    prices = dict(DEFAULT_PLAN_PRICES)
+    try:
+        db = await get_db()
+        for plan_key in ["week", "month", "year"]:
+            async with db.execute(
+                "SELECT value FROM system_settings WHERE key = ?",
+                (f"plan_price_{plan_key}",)
+            ) as cur:
+                row = await cur.fetchone()
+                if row and row[0] and str(row[0]).isdigit():
+                    prices[plan_key] = int(row[0])
+    except Exception as e:
+        logger.error(f"get_plan_prices xatolik: {e}")
+    return prices
+
+
+async def set_plan_price(plan_key: str, price_stars: int) -> None:
+    """Tarif narxini yangilash (Stars soni)."""
+    try:
+        db = await get_db()
+        await db.execute("""
+            INSERT INTO system_settings (key, value, updated_at)
+            VALUES (?, ?, CURRENT_TIMESTAMP)
+            ON CONFLICT(key) DO UPDATE SET
+                value = excluded.value,
+                updated_at = CURRENT_TIMESTAMP
+        """, (f"plan_price_{plan_key}", str(price_stars)))
+        await db.commit()
+    except Exception as e:
+        logger.error(f"set_plan_price xatolik: {e}")
+
+
+async def get_user_snippet(user_id: int, keyword: str) -> Optional[str]:
+    """Foydalanuvchining shaxsiy shablonini olish (masalan: 'card')."""
+    try:
+        clean_kw = keyword.strip().lstrip(".").lower()
+        db = await get_db()
+        async with db.execute(
+            "SELECT content FROM user_snippets WHERE user_id = ? AND keyword = ?",
+            (user_id, clean_kw)
+        ) as cur:
+            row = await cur.fetchone()
+            return row[0] if row else None
+    except Exception as e:
+        logger.error(f"get_user_snippet xatolik: {e}")
+        return None
+
+
+async def set_user_snippet(user_id: int, keyword: str, content: str) -> None:
+    """Foydalanuvchining shaxsiy shablonini saqlash yoki yangilash."""
+    try:
+        clean_kw = keyword.strip().lstrip(".").lower()
+        db = await get_db()
+        await db.execute("""
+            INSERT INTO user_snippets (user_id, keyword, content, updated_at)
+            VALUES (?, ?, ?, CURRENT_TIMESTAMP)
+            ON CONFLICT(user_id, keyword) DO UPDATE SET
+                content = excluded.content,
+                updated_at = CURRENT_TIMESTAMP
+        """, (user_id, clean_kw, content.strip()))
+        await db.commit()
+    except Exception as e:
+        logger.error(f"set_user_snippet xatolik: {e}")
+
+
+async def delete_user_snippet(user_id: int, keyword: str) -> bool:
+    """Foydalanuvchining shaxsiy shablonini o'chirish."""
+    try:
+        clean_kw = keyword.strip().lstrip(".").lower()
+        db = await get_db()
+        res = await db.execute(
+            "DELETE FROM user_snippets WHERE user_id = ? AND keyword = ?",
+            (user_id, clean_kw)
+        )
+        await db.commit()
+        return res.rowcount > 0
+    except Exception as e:
+        logger.error(f"delete_user_snippet xatolik: {e}")
+        return False
+
+
+async def get_all_user_snippets(user_id: int) -> dict:
+    """Foydalanuvchining barcha saqlangan shablonlarini olish."""
+    snippets = {}
+    try:
+        db = await get_db()
+        async with db.execute(
+            "SELECT keyword, content FROM user_snippets WHERE user_id = ?",
+            (user_id,)
+        ) as cur:
+            rows = await cur.fetchall()
+            for r in rows:
+                snippets[r[0]] = r[1]
+    except Exception as e:
+        logger.error(f"get_all_user_snippets xatolik: {e}")
+    return snippets
+
 
 

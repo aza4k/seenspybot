@@ -7,7 +7,7 @@ from aiogram.enums import ParseMode
 
 from config import BOT_TOKEN
 from database import init_db
-from handlers import admin_router, common_router, business_router, payments_router
+from handlers import admin_router, common_router, business_router, payments_router, snippets_router
 
 # Log tizimini sozlash
 logging.basicConfig(
@@ -40,15 +40,16 @@ async def main():
     dp = Dispatcher()
 
     # Routerlarni ulash
-    dp.include_routers(admin_router, common_router, business_router, payments_router)
+    dp.include_routers(admin_router, common_router, business_router, payments_router, snippets_router)
 
-    # Bot buyruqlari menyusini o'rnatish (/start va /buy)
+    # Bot buyruqlari menyusini o'rnatish (/start, /buy, /card)
     try:
         from aiogram.types import BotCommand, BotCommandScopeDefault
         await bot.set_my_commands(
             [
                 BotCommand(command="start", description="Bosh menyu / Главное меню"),
                 BotCommand(command="buy", description="Tariflar / Тарифы"),
+                BotCommand(command="card", description="Mening kartam (.card) / Моя карта (.card)"),
             ],
             scope=BotCommandScopeDefault()
         )
@@ -56,6 +57,7 @@ async def main():
             [
                 BotCommand(command="start", description="Bosh menyu"),
                 BotCommand(command="buy", description="Tariflar"),
+                BotCommand(command="card", description="Mening kartam (.card)"),
             ],
             language_code="uz"
         )
@@ -63,10 +65,11 @@ async def main():
             [
                 BotCommand(command="start", description="Главное меню"),
                 BotCommand(command="buy", description="Тарифы"),
+                BotCommand(command="card", description="Моя карта (.card)"),
             ],
             language_code="ru"
         )
-        logger.info("Bot buyruqlari muvaffaqiyatli o'rnatildi (/start, /buy).")
+        logger.info("Bot buyruqlari muvaffaqiyatli o'rnatildi (/start, /buy, /card).")
     except Exception as e:
         logger.warning(f"Bot buyruqlarini o'rnatishda xatolik: {e}")
 
