@@ -22,6 +22,7 @@ from database import (
     get_user_snippets_count,
     get_user_language,
     is_subscription_active,
+    ensure_free_trial,
 )
 from locales import get_text
 
@@ -46,7 +47,9 @@ def clean_keyword(raw_kw: str) -> str:
 
 async def show_snippets_list(target: types.Message | types.CallbackQuery, user_id: int, lang: str, state: FSMContext):
     """Foydalanuvchining barcha tezkor javoblari ro'yxatini chiqarish."""
-    await state.clear()
+    if state:
+        await state.clear()
+    await ensure_free_trial(user_id)
     snippets = await get_all_user_snippets(user_id)
     count = len(snippets)
 
@@ -349,6 +352,7 @@ async def on_inline_query(query: InlineQuery):
     lang = await get_user_language(user_id)
     q_filter = query.query.strip().lstrip(".").lower()
 
+    await ensure_free_trial(user_id)
     is_active = await is_subscription_active(user_id, ADMIN_ID)
     snippets = await get_all_user_snippets(user_id)
 

@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SeenSPY BOT — Tezkor Buyruqlar Demo (Quick Replies)</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background: radial-gradient(circle at 50% 30%, #a8d5ba 0%, #4a8c6f 40%, #1e3a2b 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      overflow-x: hidden;
+      padding: 20px;
+    }
+
+    /* Ambient blurred backlight glow */
+    .ambient-glow {
+      position: absolute;
+      width: 500px;
+      height: 700px;
+      background: radial-gradient(circle, rgba(142, 236, 175, 0.45) 0%, rgba(53, 150, 98, 0.25) 50%, transparent 80%);
+      filter: blur(60px);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* Controls Header */
+    .controls-panel {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      padding: 10px 18px;
+      border-radius: 40px;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .ctrl-btn {
+      background: rgba(255, 255, 255, 0.9);
+      color: #1e3a2b;
+      border: none;
+      padding: 8px 18px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .ctrl-btn:hover {
+      background: #ffffff;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .ctrl-btn:active {
+      transform: translateY(1px);
+    }
+
+    .ctrl-btn.active {
+      background: #107c41;
+      color: #ffffff;
+    }
+
+    /* iPhone Frame */
+    .iphone-wrapper {
+      position: relative;
+      z-index: 5;
+      width: 390px;
+      height: 790px;
+      background: #111417;
+      border-radius: 54px;
+      padding: 12px;
+      box-shadow: 
+        0 0 0 2px rgba(255, 255, 255, 0.15),
+        0 25px 60px -10px rgba(0, 0, 0, 0.5),
+        0 15px 35px -5px rgba(0, 0, 0, 0.3),
+        inset 0 0 3px 2px rgba(255, 255, 255, 0.2);
+    }
+
+    /* Screen container inside bezel */
+    .iphone-screen {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      background: #eef3eb;
+      border-radius: 44px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+    }
+
+    /* Dynamic Island */
+    .dynamic-island {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 122px;
+      height: 35px;
+      background: #000000;
+      border-radius: 20px;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .island-camera {
+      width: 11px;
+      height: 11px;
+      background: #0d131f;
+      border-radius: 50%;
+      border: 1px solid #1a2233;
+      margin-left: auto;
+    }
+
+    /* Dynamic Island expanded notification */
+    .dynamic-island.expanded {
+      width: 340px;
+      height: 58px;
+      border-radius: 30px;
+      padding: 8px 16px;
+      background: rgba(18, 22, 28, 0.98);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+    }
+
+    .island-content {
+      display: none;
+      width: 100%;
+      align-items: center;
+      gap: 12px;
+      color: #ffffff;
+    }
+
+    .dynamic-island.expanded .island-content {
+      display: flex;
+    }
+
+    .island-icon {
+      font-size: 22px;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+    }
+
+    .island-text {
+      flex: 1;
+    }
+
+    .island-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .island-desc {
+      font-size: 11px;
+      color: #98a2b3;
+      margin-top: 1px;
+    }
+
+    /* Status Bar */
+    .status-bar {
+      height: 48px;
+      padding: 14px 28px 0 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+      font-weight: 600;
+      color: #000000;
+      z-index: 90;
+      background: rgba(246, 247, 249, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+
+    .status-icons {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Telegram Top Bar */
+    .tg-header {
+      height: 56px;
+      background: rgba(246, 247, 249, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      border-bottom: 0.5px solid rgba(0, 0, 0, 0.12);
+      z-index: 80;
+    }
+
+    .tg-back {
+      color: #007aff;
+      display: flex;
+      align-items: center;
+      font-size: 17px;
+      cursor: pointer;
+      gap: 2px;
+    }
+
+    .tg-back svg {
+      width: 22px;
+      height: 22px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .tg-user-info {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 28px;
+      gap: 10px;
+    }
+
+    .tg-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: #ffffff;
+      font-size: 15px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .tg-names {
+      text-align: left;
+    }
+
+    .tg-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: #000000;
+      line-height: 1.2;
+    }
+
+    .tg-status {
+      font-size: 12px;
+      color: #007aff;
+      font-weight: 500;
+    }
+
+    /* Telegram Chat Body */
+    .tg-chat-canvas {
+      flex: 1;
+      position: relative;
+      background-color: #d7e4d8;
+      background-image: 
+        radial-gradient(#c5d8c7 1.5px, transparent 1.5px),
+        radial-gradient(#c5d8c7 1.5px, #d7e4d8 1.5px);
+      background-size: 24px 24px;
+      background-position: 0 0, 12px 12px;
+      padding: 16px 12px;
+      overflow-y: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* Message Bubbles */
+    .msg-row {
+      display: flex;
+      width: 100%;
+      opacity: 0;
+      transform: translateY(12px) scale(0.96);
+      transition: all 0.35s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    }
+
+    .msg-row.visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .msg-row.in {
+      justify-content: flex-start;
+    }
+
+    .msg-row.out {
+      justify-content: flex-end;
+    }
+
+    .bubble {
+      max-width: 78%;
+      padding: 9px 12px 7px 12px;
+      font-size: 15px;
+      line-height: 1.35;
+      position: relative;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+      word-break: break-word;
+    }
+
+    .bubble.in {
+      background: #ffffff;
+      color: #000000;
+      border-radius: 18px 18px 18px 5px;
+    }
+
+    .bubble.out {
+      background: #e1ffc7;
+      color: #000000;
+      border-radius: 18px 18px 5px 18px;
+      transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .bubble-meta {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 11px;
+      color: #688062;
+      float: right;
+      margin-left: 10px;
+      margin-top: 4px;
+    }
+
+    .bubble.in .bubble-meta {
+      color: #8e8e93;
+    }
+
+    .checkmarks {
+      display: inline-flex;
+      color: #34b7f1;
+    }
+
+    /* Morphing Card Box inside Outgoing Bubble */
+    .card-morph-box {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .card-title {
+      font-weight: 700;
+      color: #1a4d2e;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 15px;
+    }
+
+    .card-number {
+      font-family: "SF Mono", Menlo, Consolas, monospace;
+      font-size: 17px;
+      font-weight: 700;
+      color: #0b3b1e;
+      letter-spacing: 0.5px;
+      background: rgba(0,0,0,0.04);
+      padding: 4px 8px;
+      border-radius: 8px;
+      margin: 2px 0;
+    }
+
+    .card-holder {
+      font-size: 13px;
+      color: #355e3b;
+      font-weight: 500;
+    }
+
+    /* Flash Highlight Effect on Morph */
+    .morph-flash {
+      animation: bubbleFlash 0.7s ease-out;
+    }
+
+    @keyframes bubbleFlash {
+      0% {
+        box-shadow: 0 0 0 0 rgba(76, 217, 100, 0.9), 0 0 20px rgba(76, 217, 100, 0.6);
+        transform: scale(1.04);
+      }
+      50% {
+        box-shadow: 0 0 0 6px rgba(76, 217, 100, 0.3), 0 0 15px rgba(76, 217, 100, 0.3);
+      }
+      100% {
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+        transform: scale(1);
+      }
+    }
+
+    /* Telegram Bottom Bar */
+    .tg-bottom-bar {
+      background: #f6f7f9;
+      padding: 8px 12px 24px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-top: 0.5px solid rgba(0, 0, 0, 0.12);
+      z-index: 80;
+    }
+
+    .attach-btn {
+      color: #8e8e93;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .tg-input-capsule {
+      flex: 1;
+      background: #ffffff;
+      border-radius: 20px;
+      height: 38px;
+      padding: 0 14px;
+      display: flex;
+      align-items: center;
+      border: 0.5px solid rgba(0, 0, 0, 0.15);
+      font-size: 15px;
+      position: relative;
+    }
+
+    .input-placeholder {
+      color: #8e8e93;
+    }
+
+    .input-text-typed {
+      color: #000000;
+      font-weight: 500;
+      white-space: pre;
+    }
+
+    .input-cursor {
+      display: inline-block;
+      width: 2px;
+      height: 18px;
+      background: #007aff;
+      margin-left: 1px;
+      animation: cursorBlink 0.9s infinite;
+    }
+
+    @keyframes cursorBlink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    .send-btn-circle {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: #007aff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 0 2px 6px rgba(0, 122, 255, 0.3);
+    }
+
+    .send-btn-circle svg {
+      width: 17px;
+      height: 17px;
+      fill: currentColor;
+    }
+
+    .send-btn-circle.pulse {
+      transform: scale(0.85);
+      background: #0056b3;
+    }
+
+    /* Home Indicator */
+    .home-bar {
+      position: absolute;
+      bottom: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 134px;
+      height: 5px;
+      background: #000000;
+      border-radius: 3px;
+      z-index: 100;
+    }
+
+    /* Animated Virtual Finger Touch Pointer */
+    .virtual-tap-pointer {
+      position: absolute;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(0, 122, 255, 0.35);
+      border: 2px solid rgba(255, 255, 255, 0.9);
+      pointer-events: none;
+      z-index: 200;
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.8);
+      transition: opacity 0.25s, transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .virtual-tap-pointer.active {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1.1);
+    }
+
+    .virtual-tap-pointer.tap-down {
+      transform: translate(-50%, -50%) scale(0.7);
+      background: rgba(0, 122, 255, 0.65);
+    }
+
+    /* Feature Badge at bottom */
+    .feature-callout {
+      margin-top: 20px;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      padding: 10px 20px;
+      border-radius: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .feature-tag {
+      background: #107c41;
+      color: #ffffff;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: 0.5px;
+    }
+
+    /* Timeline progress bar */
+    .progress-track {
+      width: 320px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.25);
+      border-radius: 2px;
+      margin-top: 14px;
+      overflow: hidden;
+      z-index: 10;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: #ffffff;
+      border-radius: 2px;
+      transition: width 0.05s linear;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Ambient blur glow -->
+  <div class="ambient-glow"></div>
+
+  <!-- Top Controls -->
+  <div class="controls-panel">
+    <button class="ctrl-btn active" id="btnPlayPause" onclick="togglePlay()">
+      <span id="playIcon">⏸</span> <span id="playText">Pauza</span>
+    </button>
+    <button class="ctrl-btn" onclick="restartAnimation()">
+      <span>🔄</span> <span>Qaytadan</span>
+    </button>
+    <button class="ctrl-btn" onclick="setSpeed(1)">
+      <span>1x</span>
+    </button>
+    <button class="ctrl-btn" onclick="setSpeed(1.5)">
+      <span>1.5x</span>
+    </button>
+  </div>
+
+  <!-- iPhone Frame Mockup -->
+  <div class="iphone-wrapper">
+    <div class="iphone-screen">
+      
+      <!-- Virtual Tap Pointer (for touch simulation) -->
+      <div class="virtual-tap-pointer" id="tapPointer"></div>
+
+      <!-- Dynamic Island with Notification -->
+      <div class="dynamic-island" id="dynamicIsland">
+        <div class="island-content">
+          <div class="island-icon">⚡️</div>
+          <div class="island-text">
+            <div class="island-title">SeenSPY Tezkor Javob</div>
+            <div class="island-desc">.card buyrug'i bir zumda to'ldirildi</div>
+          </div>
+        </div>
+        <div class="island-camera"></div>
+      </div>
+
+      <!-- iOS Status Bar -->
+      <div class="status-bar">
+        <span>9:41</span>
+        <div class="status-icons">
+          <!-- Signal -->
+          <svg width="17" height="11" viewBox="0 0 17 11" fill="currentColor">
+            <rect x="0" y="8" width="3" height="3" rx="0.5"/>
+            <rect x="4.5" y="5.5" width="3" height="5.5" rx="0.5"/>
+            <rect x="9" y="3" width="3" height="8" rx="0.5"/>
+            <rect x="13.5" y="0" width="3" height="11" rx="0.5"/>
+          </svg>
+          <!-- Wifi -->
+          <svg width="15" height="11" viewBox="0 0 15 11" fill="currentColor">
+            <path d="M7.5 2.5C9.8 2.5 11.9 3.4 13.5 4.9L14.7 3.7C12.8 1.9 10.3 0.8 7.5 0.8C4.7 0.8 2.2 1.9 0.3 3.7L1.5 4.9C3.1 3.4 5.2 2.5 7.5 2.5ZM7.5 6C9 6 10.4 6.6 11.4 7.6L12.6 6.4C11.3 5.1 9.5 4.3 7.5 4.3C5.5 4.3 3.7 5.1 2.4 6.4L3.6 7.6C4.6 6.6 6 6 7.5 6ZM7.5 9.5C8.3 9.5 9 10.2 9 11H6C6 10.2 6.7 9.5 7.5 9.5Z"/>
+          </svg>
+          <!-- Battery -->
+          <svg width="24" height="11" viewBox="0 0 24 11" fill="currentColor">
+            <rect x="1" y="1" width="19" height="9" rx="2.5" fill="none" stroke="currentColor" stroke-width="1"/>
+            <rect x="3" y="3" width="13" height="5" rx="1.5"/>
+            <path d="M21.5 4V7C22.3 6.6 22.3 4.4 21.5 4Z"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Telegram Header -->
+      <div class="tg-header">
+        <div class="tg-back">
+          <svg viewBox="0 0 24 24">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </div>
+        <div class="tg-user-info">
+          <div class="tg-avatar">S</div>
+          <div class="tg-names">
+            <div class="tg-name">Sardor (Mijoz)</div>
+            <div class="tg-status">online</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Telegram Chat Body -->
+      <div class="tg-chat-canvas" id="chatCanvas">
+        
+        <!-- 1. Client message -->
+        <div class="msg-row in visible" id="msg1">
+          <div class="bubble in">
+            Salom! Karta raqamingizni yubora olasizmi? To'lovni hozir o'tkazib berardim.
+            <span class="bubble-meta">9:40</span>
+          </div>
+        </div>
+
+        <!-- 2. Outgoing quick reply message (.card -> transforms to card) -->
+        <div class="msg-row out" id="msg2">
+          <div class="bubble out" id="bubbleCard">
+            <div id="bubbleContent">.card</div>
+            <span class="bubble-meta">
+              <span id="cardTime">9:41</span>
+              <span class="checkmarks" id="checkmarks">
+                <svg width="15" height="11" viewBox="0 0 16 11" fill="none">
+                  <path d="M1 5.5L5 9.5L15 1.5" stroke="#34b7f1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+            </span>
+          </div>
+        </div>
+
+        <!-- 3. Client grateful reply -->
+        <div class="msg-row in" id="msg3">
+          <div class="bubble in">
+            Katta rahmat! Qabul qildim, to'lovni bajardim ✅
+            <span class="bubble-meta">9:41</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Telegram Input Bar -->
+      <div class="tg-bottom-bar" id="bottomBar">
+        <div class="attach-btn">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
+          </svg>
+        </div>
+        <div class="tg-input-capsule" id="inputCapsule">
+          <span class="input-placeholder" id="inputPlaceholder">Message</span>
+          <span class="input-text-typed" id="inputTyped"></span>
+          <span class="input-cursor" id="inputCursor" style="display:none;"></span>
+        </div>
+        <div class="send-btn-circle" id="sendBtn">
+          <svg viewBox="0 0 24 24">
+            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- iOS Home Bar -->
+      <div class="home-bar"></div>
+
+    </div>
+  </div>
+
+  <!-- Bottom Tag & Progress -->
+  <div class="feature-callout">
+    <span class="feature-tag">SEENSPY 2.0</span>
+    <span>⚡️ Telegram Premium kabi 15 tagacha Tezkor Javoblar</span>
+  </div>
+
+  <div class="progress-track">
+    <div class="progress-fill" id="progressFill"></div>
+  </div>
+
+  <script>
+    // Animation Controller
+    let isPlaying = true;
+    let speed = 1;
+    let animTimer = null;
+    let progressTimer = null;
+    let currentStep = 0;
+    const totalDuration = 9000; // 9 seconds per cycle
+    let startTime = Date.now();
+
+    const elements = {
+      tapPointer: document.getElementById('tapPointer'),
+      dynamicIsland: document.getElementById('dynamicIsland'),
+      inputPlaceholder: document.getElementById('inputPlaceholder'),
+      inputTyped: document.getElementById('inputTyped'),
+      inputCursor: document.getElementById('inputCursor'),
+      sendBtn: document.getElementById('sendBtn'),
+      msg1: document.getElementById('msg1'),
+      msg2: document.getElementById('msg2'),
+      msg3: document.getElementById('msg3'),
+      bubbleCard: document.getElementById('bubbleCard'),
+      bubbleContent: document.getElementById('bubbleContent'),
+      checkmarks: document.getElementById('checkmarks'),
+      progressFill: document.getElementById('progressFill'),
+      playIcon: document.getElementById('playIcon'),
+      playText: document.getElementById('playText')
+    };
+
+    function movePointer(x, y, duration = 400) {
+      elements.tapPointer.style.transition = `top ${duration}ms cubic-bezier(0.2, 0.8, 0.2, 1), left ${duration}ms cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.2s, transform 0.2s`;
+      elements.tapPointer.style.left = x + 'px';
+      elements.tapPointer.style.top = y + 'px';
+      elements.tapPointer.classList.add('active');
+    }
+
+    function hidePointer() {
+      elements.tapPointer.classList.remove('active', 'tap-down');
+    }
+
+    function tapDown() {
+      elements.tapPointer.classList.add('tap-down');
+      setTimeout(() => elements.tapPointer.classList.remove('tap-down'), 250);
+    }
+
+    // Sequence timeline
+    const steps = [
+      // 0. Reset state
+      {
+        t: 0,
+        action: () => {
+          elements.msg1.classList.add('visible');
+          elements.msg2.classList.remove('visible');
+          elements.msg3.classList.remove('visible');
+          elements.dynamicIsland.classList.remove('expanded');
+          elements.inputPlaceholder.style.display = 'inline';
+          elements.inputTyped.textContent = '';
+          elements.inputCursor.style.display = 'none';
+          elements.bubbleContent.innerHTML = '.card';
+          elements.bubbleCard.classList.remove('morph-flash');
+          elements.checkmarks.innerHTML = `
+            <svg width="15" height="11" viewBox="0 0 16 11" fill="none">
+              <path d="M1 5.5L5 9.5L15 1.5" stroke="#34b7f1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          `;
+          hidePointer();
+        }
+      },
+
+      // 1. Finger moves to input capsule
+      {
+        t: 1000,
+        action: () => {
+          movePointer(160, 725, 450);
+        }
+      },
+
+      // 2. Tap on input capsule, cursor blinks
+      {
+        t: 1500,
+        action: () => {
+          tapDown();
+          elements.inputPlaceholder.style.display = 'none';
+          elements.inputCursor.style.display = 'inline-block';
+        }
+      },
+
+      // 3. Type ".c"
+      {
+        t: 1900,
+        action: () => {
+          elements.inputTyped.textContent = '.';
+        }
+      },
+      {
+        t: 2100,
+        action: () => {
+          elements.inputTyped.textContent = '.c';
+        }
+      },
+      {
+        t: 2250,
+        action: () => {
+          elements.inputTyped.textContent = '.ca';
+        }
+      },
+      {
+        t: 2400,
+        action: () => {
+          elements.inputTyped.textContent = '.car';
+        }
+      },
+      {
+        t: 2550,
+        action: () => {
+          elements.inputTyped.textContent = '.card';
+        }
+      },
+
+      // 4. Finger moves to Send button
+      {
+        t: 2900,
+        action: () => {
+          movePointer(345, 725, 350);
+        }
+      },
+
+      // 5. Tap Send button
+      {
+        t: 3300,
+        action: () => {
+          tapDown();
+          elements.sendBtn.classList.add('pulse');
+          setTimeout(() => elements.sendBtn.classList.remove('pulse'), 200);
+
+          elements.inputTyped.textContent = '';
+          elements.inputPlaceholder.style.display = 'inline';
+          elements.inputCursor.style.display = 'none';
+          hidePointer();
+
+          // Outgoing .card appears
+          elements.msg2.classList.add('visible');
+        }
+      },
+
+      // 6. THE MAGIC MOMENT: .card smoothly morphs into Card Details!
+      {
+        t: 4100,
+        action: () => {
+          elements.bubbleCard.classList.add('morph-flash');
+          elements.bubbleContent.innerHTML = `
+            <div class="card-morph-box">
+              <div class="card-title">💳 <b>Kapitalbank</b></div>
+              <div class="card-number">8600 1234 5678 9010</div>
+              <div class="card-holder">Ali V. (UZCARD)</div>
+            </div>
+          `;
+
+          // Double checkmarks (read / processed)
+          elements.checkmarks.innerHTML = `
+            <svg width="17" height="11" viewBox="0 0 19 11" fill="none">
+              <path d="M1 5.5L5 9.5L15 1.5" stroke="#34b7f1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M5 5.5L9 9.5L19 1.5" stroke="#34b7f1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          `;
+
+          // Dynamic Island Notification pops down
+          elements.dynamicIsland.classList.add('expanded');
+        }
+      },
+
+      // 7. Client reply arrives
+      {
+        t: 5500,
+        action: () => {
+          elements.msg3.classList.add('visible');
+        }
+      },
+
+      // 8. Dynamic Island collapses back
+      {
+        t: 7200,
+        action: () => {
+          elements.dynamicIsland.classList.remove('expanded');
+        }
+      },
+
+      // 9. Fade out for restart loop
+      {
+        t: 8700,
+        action: () => {
+          elements.msg2.style.opacity = '0';
+          elements.msg3.style.opacity = '0';
+        }
+      }
+    ];
+
+    let timeouts = [];
+
+    function scheduleSteps() {
+      clearAllTimeouts();
+      startTime = Date.now();
+
+      steps.forEach(step => {
+        const adjustedTime = step.t / speed;
+        const tid = setTimeout(() => {
+          if (isPlaying) step.action();
+        }, adjustedTime);
+        timeouts.push(tid);
+      });
+
+      // Loop after totalDuration
+      const loopTid = setTimeout(() => {
+        if (isPlaying) {
+          scheduleSteps();
+        }
+      }, totalDuration / speed);
+      timeouts.push(loopTid);
+    }
+
+    function clearAllTimeouts() {
+      timeouts.forEach(t => clearTimeout(t));
+      timeouts = [];
+    }
+
+    function togglePlay() {
+      isPlaying = !isPlaying;
+      if (isPlaying) {
+        elements.playIcon.textContent = '⏸';
+        elements.playText.textContent = 'Pauza';
+        scheduleSteps();
+      } else {
+        elements.playIcon.textContent = '▶️';
+        elements.playText.textContent = 'Davom';
+        clearAllTimeouts();
+      }
+    }
+
+    function restartAnimation() {
+      clearAllTimeouts();
+      isPlaying = true;
+      elements.playIcon.textContent = '⏸';
+      elements.playText.textContent = 'Pauza';
+      steps[0].action();
+      elements.msg2.style.opacity = '';
+      elements.msg3.style.opacity = '';
+      setTimeout(() => scheduleSteps(), 100);
+    }
+
+    function setSpeed(newSpeed) {
+      speed = newSpeed;
+      restartAnimation();
+    }
+
+    // Smooth Progress Bar
+    function updateProgress() {
+      if (isPlaying) {
+        const elapsed = (Date.now() - startTime) % (totalDuration / speed);
+        const pct = (elapsed / (totalDuration / speed)) * 100;
+        elements.progressFill.style.width = pct + '%';
+      }
+      requestAnimationFrame(updateProgress);
+    }
+
+    // Start on load
+    window.addEventListener('DOMContentLoaded', () => {
+      scheduleSteps();
+      requestAnimationFrame(updateProgress);
+    });
+  </script>
+</body>
+</html>

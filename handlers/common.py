@@ -18,6 +18,7 @@ from database import (
     get_user_deleted_messages_count,
     get_user_subscription_status,
     is_user_language_set,
+    ensure_free_trial,
 )
 from config import ADMIN_ID, PRIVACY_POLICY_URL, GUIDE_CHANNEL_ID, GUIDE_MESSAGE_IDS
 from locales import (
@@ -99,6 +100,9 @@ async def get_start_payload(user_id: int, user_name: str, lang: str) -> tuple[st
 async def cmd_start(message: types.Message):
     user_id = message.from_user.id
     user_name = html.escape(message.from_user.full_name or message.from_user.first_name or "Foydalanuvchi")
+
+    # Yangi foydalanuvchiga 14 kunlik bepul sinov (Free Trial) muddatini ta'minlash
+    await ensure_free_trial(user_id)
 
     # Referal parametrini tekshirish (masalan: /start ref_123456)
     if message.text:

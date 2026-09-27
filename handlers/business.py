@@ -416,6 +416,9 @@ async def handle_business_snippet(
         if not snippet_text and keyword == "karta":
             snippet_text = await get_user_snippet(sender_id, "card")
 
+        # Obunasi mavjud bo'lmagan yangi foydalanuvchiga Free Trial (14 kun) berilishini ta'minlash
+        await ensure_free_trial(sender_id)
+
         is_active = await is_subscription_active(sender_id, ADMIN_ID)
         lang = await get_user_language(sender_id)
 

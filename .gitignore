@@ -16,10 +16,12 @@ media_cache/
 downloads/
 temp/
 
-# Logs
+# Logs & Media artifacts
 *.log
 bot.log
 ttl_saver.log
+*.mp4
+*.gif
 
 # Python bytecode & cache
 __pycache__/
