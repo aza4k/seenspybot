@@ -1130,4 +1130,20 @@ async def get_all_user_snippets(user_id: int) -> dict:
     return snippets
 
 
+async def get_user_snippets_count(user_id: int) -> int:
+    """Foydalanuvchining saqlangan shablonlari sonini olish."""
+    try:
+        db = await get_db()
+        async with db.execute(
+            "SELECT COUNT(*) FROM user_snippets WHERE user_id = ?",
+            (user_id,)
+        ) as cur:
+            row = await cur.fetchone()
+            return int(row[0] if row else 0)
+    except Exception as e:
+        logger.error(f"get_user_snippets_count xatolik: {e}")
+        return 0
+
+
+
 

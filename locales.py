@@ -151,25 +151,41 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         ),
         "promo_footer": "\n\n🤖 @seenspybot",
 
-        # Karta (.card) va Tezkor shablonlar
-        "btn_my_card": "Моя карта (.card)",
-        "card_info_title": "💳 <b>Управление быстрой картой (.card)</b>\n\n",
-        "card_current": "Ваша сохранённая карта:\n<blockquote>{card_text}</blockquote>\n\nВ любом личном чате напишите <code>.card</code>, и бот автоматически заменит это сообщение на ваши реквизиты!",
-        "card_empty": "У вас пока нет сохранённой карты.\n\nНажмите кнопку ниже или отправьте команду: <code>/card [реквизиты карты]</code>",
-        "card_prompt_enter": "✍️ Отправьте номер карты и имя владельца (например: <code>8600 1234 5678 9010 Иван И.</code>):",
-        "card_saved_success": "✅ <b>Реквизиты карты сохранены!</b>\n\n<blockquote>{card_text}</blockquote>\n\nТеперь в любом личном чате отправьте <code>.card</code>, и бот мгновенно подставит вашу карту.",
-        "card_deleted_success": "🗑 <b>Реквизиты карты удалены.</b>",
-        "btn_enter_card": "Ввести карту",
-        "btn_edit_card": "Изменить карту",
-        "btn_delete_card": "Удалить карту",
-        "card_sub_expired_alert": (
+        # Tezkor javoblar (Quick Replies / .card, .tel, .adress)
+        "btn_quick_replies": "⚡️ Быстрые ответы (.команды)",
+        "quick_replies_title": "⚡️ <b>Быстрые ответы (Quick Replies)</b>\n\n",
+        "quick_replies_desc": (
+            "Персональные быстрые ответы как в Telegram Premium!\n"
+            "Напишите в любом личном чате команду с точкой (например: <code>.card</code>, <code>.tel</code>, <code>.adress</code>), "
+            "и бот моментально заменит её на ваш заготовленный текст.\n\n"
+            "Сохранено команд: <b>{count} / 15</b>\n\n"
+        ),
+        "quick_replies_empty": "У вас пока нет сохранённых быстрых ответов.\nНажмите кнопку ниже, чтобы добавить первую команду!",
+        "btn_add_quick_reply": "➕ Добавить команду",
+        "quick_prompt_kw": (
+            "✏️ <b>Шаг 1 из 2:</b> Введите короткое имя команды (без пробелов, например: <code>card</code>, <code>tel</code>, <code>adress</code>):\n\n"
+            "<i>(В чатах вы будете писать её с точкой: <code>.card</code>, <code>.tel</code>)</i>"
+        ),
+        "quick_prompt_content": (
+            "✍️ <b>Шаг 2 из 2:</b> Введите текст, который бот должен отправлять вместо команды <code>.{kw}</code>:\n\n"
+            "<i>(Номер карты, телефон, адрес, прайс-лист или шаблоны ответов)</i>"
+        ),
+        "quick_saved_success": (
+            "✅ Команда <b>.{kw}</b> успешно сохранена!\n\n"
+            "📄 <b>Текст:</b>\n<blockquote>{content}</blockquote>\n\n"
+            "Теперь в любом личном чате напишите <code>.{kw}</code>, и бот мгновенно вставит этот текст."
+        ),
+        "quick_limit_reached": "⚠️ Вы достигли максимального лимита (15 команд). Удалите ненужную команду, чтобы добавить новую.",
+        "quick_view_title": "⚡️ <b>Команда:</b> <code>.{kw}</code>\n\n📄 <b>Текст:</b>\n<blockquote>{content}</blockquote>",
+        "quick_deleted_success": "🗑 Команда <b>.{kw}</b> удалена.",
+        "quick_invalid_kw": "⚠️ Неверное имя команды! Используйте только буквы и цифры без пробелов (например: <code>tel</code>, <code>card</code>):",
+        "quick_sub_expired_alert": (
             "⚠️ <b>Срок вашей подписки истёк!</b>\n\n"
-            "Чтобы использовать быструю команду <code>.card</code> и автозамену, пожалуйста, продлите подписку."
+            "Чтобы использовать быстрые ответы (<code>.{kw}</code>) и автозамену в чатах, пожалуйста, продлите подписку."
         ),
-        "card_not_set_alert": (
-            "ℹ️ <b>Карта ещё не добавлена!</b>\n\n"
-            "Вы использовали команду <code>.card</code>, но ещё не сохранили номер карты. Введите /card в боте, чтобы сохранить."
-        ),
+        "btn_edit_quick": "Изменить текст",
+        "btn_delete_quick": "Удалить команду",
+
 
 
         # Teaserlar (obunasi yo'q foydalanuvchilar uchun)
@@ -393,25 +409,41 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         ),
         "promo_footer": "\n\n🤖 @seenspybot",
 
-        # Karta (.card) va Tezkor shablonlar
-        "btn_my_card": "Mening kartam (.card)",
-        "card_info_title": "💳 <b>Tezkor karta boshqaruvi (.card)</b>\n\n",
-        "card_current": "Sizning saqlangan kartangiz:\n<blockquote>{card_text}</blockquote>\n\nIstalgan shaxsiy chatda <code>.card</code> deb yozsangiz, bot uni avtomatik ushbu karta ma'lumotlariga almashtirib beradi!",
-        "card_empty": "Sizda hali saqlangan karta yo'q.\n\nQuyidagi tugmani bosing yoki quyidagicha yuboring: <code>/card [karta raqami va ism]</code>",
-        "card_prompt_enter": "✍️ Karta raqamingiz va karta egasining ismini yuboring (masalan: <code>8600 1234 5678 9010 Ali V.</code>):",
-        "card_saved_success": "✅ <b>Karta ma'lumotlaringiz saqlandi!</b>\n\n<blockquote>{card_text}</blockquote>\n\nEndi istalgan shaxsiy chatda <code>.card</code> deb yozsangiz, bot bir zumda kartangizni joylab beradi.",
-        "card_deleted_success": "🗑 <b>Karta ma'lumotlari o'chirildi.</b>",
-        "btn_enter_card": "Karta kiritish",
-        "btn_edit_card": "O'zgartirish",
-        "btn_delete_card": "O'chirish",
-        "card_sub_expired_alert": (
+        # Tezkor javoblar (Quick Replies / .card, .tel, .adress)
+        "btn_quick_replies": "⚡️ Tezkor javoblar (.buyruqlar)",
+        "quick_replies_title": "⚡️ <b>Tezkor javoblar (Quick Replies)</b>\n\n",
+        "quick_replies_desc": (
+            "Telegram Premium kabi shaxsiy tezkor javoblar!\n"
+            "Istalgan shaxsiy chatda nuqta bilan buyruq yozsangiz (masalan: <code>.card</code>, <code>.tel</code>, <code>.adress</code>), "
+            "bot uni bir zumda to'liq matningizga almashtirib beradi.\n\n"
+            "Saqlangan buyruqlar: <b>{count} / 15 ta</b>\n\n"
+        ),
+        "quick_replies_empty": "Sizda hali saqlangan tezkor javoblar yo'q.\nYangi buyruq qo'shish uchun quyidagi tugmani bosing!",
+        "btn_add_quick_reply": "➕ Yangi buyruq qo'shish",
+        "quick_prompt_kw": (
+            "✏️ <b>1/2 bosqich:</b> Qisqa buyruq nomini kiriting (bo'sh joylarsiz, masalan: <code>card</code>, <code>tel</code>, <code>adress</code>):\n\n"
+            "<i>(Chatlarda uni nuqta bilan yozasiz: <code>.card</code>, <code>.tel</code>)</i>"
+        ),
+        "quick_prompt_content": (
+            "✍️ <b>2/2 bosqich:</b> <code>.{kw}</code> yozilganda bot almashtirib berishi kerak bo'lgan matnni kiriting:\n\n"
+            "<i>(Karta raqami, telefon, manzil, narxlar ro'yxati yoki standart javoblar)</i>"
+        ),
+        "quick_saved_success": (
+            "✅ <b>.{kw}</b> buyrug'i muvaffaqiyatli saqlandi!\n\n"
+            "📄 <b>Matn:</b>\n<blockquote>{content}</blockquote>\n\n"
+            "Endi istalgan shaxsiy chatda <code>.{kw}</code> deb yozsangiz, bot uni bir soniyada ushbu matnga almashtirib beradi."
+        ),
+        "quick_limit_reached": "⚠️ Maksimal limitga yetdingiz (15 ta buyruq). Yangi buyruq qo'shish uchun eskisini o'chiring.",
+        "quick_view_title": "⚡️ <b>Buyruq:</b> <code>.{kw}</code>\n\n📄 <b>Matn:</b>\n<blockquote>{content}</blockquote>",
+        "quick_deleted_success": "🗑 <b>.{kw}</b> buyrug'i o'chirildi.",
+        "quick_invalid_kw": "⚠️ Noto'g'ri buyruq nomi! Bo'sh joylarsiz faqat harf va sonlardan foydalaning (masalan: <code>tel</code>, <code>card</code>):",
+        "quick_sub_expired_alert": (
             "⚠️ <b>Obunangiz muddati tugagan!</b>\n\n"
-            "Tezkor <code>.card</code> buyrug'idan foydalanish va xabarlarni avtomatik to'ldirish uchun obunani yangilang."
+            "Tezkor javoblar (<code>.{kw}</code>) va xabarlarni avtomatik to'ldirishdan foydalanish uchun obunani yangilang."
         ),
-        "card_not_set_alert": (
-            "ℹ️ <b>Karta kiritilmagan!</b>\n\n"
-            "Siz <code>.card</code> buyrug'ini yozdingiz, ammo hali karta raqamingizni saqlamagansiz. Kartangizni kiritish uchun botga /card buyrug'ini yuboring."
-        ),
+        "btn_edit_quick": "Matnni o'zgartirish",
+        "btn_delete_quick": "O'chirish",
+
 
 
         # Teaserlar
@@ -571,8 +603,8 @@ def get_connected_keyboard(lang: str = "ru", is_admin: bool = False) -> InlineKe
         ],
         [
             InlineKeyboardButton(
-                text=get_text("btn_my_card", lang),
-                callback_data="snippet:manage_card",
+                text=get_text("btn_quick_replies", lang),
+                callback_data="snippet:list",
                 icon_custom_emoji_id="5424585953031234078"
             )
         ],

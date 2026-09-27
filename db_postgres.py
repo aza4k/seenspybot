@@ -1038,3 +1038,18 @@ async def get_all_user_snippets(user_id: int) -> dict:
     return snippets
 
 
+async def get_user_snippets_count(user_id: int) -> int:
+    """Foydalanuvchining saqlangan shablonlari sonini olish."""
+    try:
+        pool = await get_pg_pool()
+        val = await pool.fetchval(
+            "SELECT COUNT(*) FROM user_snippets WHERE user_id = $1",
+            user_id
+        )
+        return int(val or 0)
+    except Exception as e:
+        logger.error(f"get_user_snippets_count (PG) xatolik: {e}")
+        return 0
+
+
+

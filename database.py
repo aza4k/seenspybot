@@ -55,6 +55,7 @@ if IS_POSTGRES:
         set_user_snippet,
         delete_user_snippet,
         get_all_user_snippets,
+        get_user_snippets_count,
     )
     DB_ENGINE = "postgres"
 else:
@@ -109,6 +110,7 @@ else:
         set_user_snippet,
         delete_user_snippet,
         get_all_user_snippets,
+        get_user_snippets_count,
     )
     DB_ENGINE = "sqlite"
 
@@ -162,5 +164,6 @@ __all__ = [
     "set_user_snippet",
     "delete_user_snippet",
     "get_all_user_snippets",
+    "get_user_snippets_count",
     "DB_ENGINE",
 ]

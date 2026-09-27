@@ -379,19 +379,23 @@ async def on_business_message(message: types.Message, bot: Bot):
             )
         )
 
-    # 4. Foydalanuvchining shaxsiy tezkor buyruqlari (.card va boshqalar)
+    # 4. Foydalanuvchining shaxsiy tezkor javoblari (.card, .tel, .adress va boshqalar)
     if is_from_me and text_content:
-        cmd_clean = text_content.strip().lower()
-        if cmd_clean in [".card", ".karta"]:
-            asyncio.create_task(
-                handle_business_snippet(
-                    bot=bot,
-                    message=message,
-                    conn_id=conn_id,
-                    sender_id=sender_id,
-                    keyword="card"
-                )
-            )
+        clean_text = text_content.strip()
+        if clean_text.startswith(".") and not clean_text.startswith(".."):
+            words = clean_text.split()
+            if len(words) == 1:
+                kw = words[0][1:].lower()
+                if kw:
+                    asyncio.create_task(
+                        handle_business_snippet(
+                            bot=bot,
+                            message=message,
+                            conn_id=conn_id,
+                            sender_id=sender_id,
+                            keyword=kw
+                        )
+                    )
 
 
 async def handle_business_snippet(
@@ -399,21 +403,25 @@ async def handle_business_snippet(
     message: types.Message,
     conn_id: str,
     sender_id: int,
-    keyword: str = "card"
+    keyword: str
 ):
     """
-    Shaxsiy chatlarda .card va boshqa tezkor buyruqlarni avtomatik to'ldirish.
+    Shaxsiy chatlarda .card, .tel, .adress kabi tezkor javoblarni (Quick Replies) avtomatik to'ldirish.
     Faqat faol obunasi bo'lgan foydalanuvchilar uchun ishlaydi!
     Obunasi tugagan bo'lsa, @seenspybot da ogohlantirish beradi va yangilashga undaydi.
     """
     try:
+        # Avval bu foydalanuvchida rostdan ham shu buyruq mavjudligini tekshiramiz
+        snippet_text = await get_user_snippet(sender_id, keyword)
+        if not snippet_text and keyword == "karta":
+            snippet_text = await get_user_snippet(sender_id, "card")
+
         is_active = await is_subscription_active(sender_id, ADMIN_ID)
         lang = await get_user_language(sender_id)
 
-        if not is_active:
-            # Obunasi tugagan! Asl chatdagi xabarga tegilmaydi.
-            # Foydalanuvchining shaxsiy botiga bildirishnoma yuboriladi.
-            warn_text = get_text("card_sub_expired_alert", lang)
+        # Agar foydalanuvchining saqlangan buyrug'i bo'lsa, lekin obunasi tugagan bo'lsa:
+        if snippet_text and not is_active:
+            warn_text = get_text("quick_sub_expired_alert", lang, kw=keyword)
             prices = await get_plan_prices()
             kb = get_plans_keyboard(lang, prices=prices)
             try:
@@ -427,56 +435,62 @@ async def handle_business_snippet(
                 logger.warning(f"Obuna tugagani haqida ogohlantirish yuborishda xatolik: {e}")
             return
 
-        # Obunasi faol: Karta ma'lumotlarini bazadan olish
-        card_text = await get_user_snippet(sender_id, keyword)
-        if not card_text and keyword == "karta":
-            card_text = await get_user_snippet(sender_id, "card")
-
-        if not card_text:
-            # Karta kiritilmagan bo'lsa, botda eslatma yuborish
-            not_set_text = get_text("card_not_set_alert", lang)
+        # Agar obunasi faol bo'lsa va buyruq mavjud bo'lsa:
+        if snippet_text and is_active:
+            # 1-usul: edit_message_text orqali xabarni to'g'ridan-to'g'ri almashtirish
             try:
-                await bot.send_message(
-                    chat_id=sender_id,
-                    text=not_set_text,
+                await bot.edit_message_text(
+                    chat_id=message.chat.id,
+                    message_id=message.message_id,
+                    text=snippet_text,
+                    business_connection_id=conn_id,
                     parse_mode="HTML"
                 )
-            except Exception as e:
-                logger.warning(f"Karta yo'qligi haqida eslatma yuborishda xatolik: {e}")
-            return
+                logger.info(f"✅ .{keyword} tezkor javobi tahrirlandi: user={sender_id}, chat={message.chat.id}")
+                return
+            except Exception as e_edit:
+                logger.warning(f"edit_message_text xatolik berdi, fallback ishga tushadi: {e_edit}")
 
-        # 1-usul: edit_message_text orqali xabarni to'g'ridan-to'g'ri almashtirish
-        try:
-            await bot.edit_message_text(
-                chat_id=message.chat.id,
-                message_id=message.message_id,
-                text=card_text,
-                business_connection_id=conn_id,
-                parse_mode="HTML"
-            )
-            logger.info(f"✅ .card xabari muvaffaqiyatli tahrirlandi: user={sender_id}, chat={message.chat.id}")
-            return
-        except Exception as e_edit:
-            logger.warning(f"edit_message_text xatolik berdi, fallback ishga tushadi: {e_edit}")
+            # 2-usul (Fallback): buyruqni o'chirib, o'rniga matnni yuborish
+            try:
+                await bot.delete_business_messages(
+                    business_connection_id=conn_id,
+                    message_ids=[message.message_id]
+                )
+                await bot.send_message(
+                    chat_id=message.chat.id,
+                    text=snippet_text,
+                    business_connection_id=conn_id,
+                    parse_mode="HTML"
+                )
+                logger.info(f"✅ .{keyword} fallback (delete+send) orqali yetkazildi: user={sender_id}")
+            except Exception as e_send:
+                logger.error(f"Fallback send_message ham xatolik berdi: {e_send}")
 
-        # 2-usul (Zaxira / Fallback): .card xabarini o'chirib, o'rniga karta matnini yuborish
-        try:
-            await bot.delete_business_messages(
-                business_connection_id=conn_id,
-                message_ids=[message.message_id]
-            )
-            await bot.send_message(
-                chat_id=message.chat.id,
-                text=card_text,
-                business_connection_id=conn_id,
-                parse_mode="HTML"
-            )
-            logger.info(f"✅ .card fallback (delete+send) orqali yetkazildi: user={sender_id}")
-        except Exception as e_send:
-            logger.error(f"Fallback send_message ham xatolik berdi: {e_send}")
-
+        # Agar foydalanuvchi aynan .card yoki .karta deb yozgan bo'lsa, lekin hali kartasini kiritmagan bo'lsa
+        elif keyword in ["card", "karta"] and not snippet_text:
+            if not is_active:
+                warn_text = get_text("quick_sub_expired_alert", lang, kw=keyword)
+                prices = await get_plan_prices()
+                kb = get_plans_keyboard(lang, prices=prices)
+                try:
+                    await bot.send_message(sender_id, warn_text, reply_markup=kb, parse_mode="HTML")
+                except Exception:
+                    pass
+            else:
+                not_set_text = (
+                    "ℹ️ <b>Karta ma'lumoti topilmadi!</b>\n\n"
+                    "Siz <code>.card</code> buyrug'ini yozdingiz, ammo hali kartangizni saqlamagansiz. Kiritish uchun botga /card buyrug'ini yuboring."
+                    if lang == "uz" else
+                    "ℹ️ <b>Карта не сохранена!</b>\n\n"
+                    "Вы отправили <code>.card</code>, но ещё не сохранили реквизиты. Отправьте /card в боте, чтобы сохранить."
+                )
+                try:
+                    await bot.send_message(sender_id, not_set_text, parse_mode="HTML")
+                except Exception:
+                    pass
     except Exception as e:
-        logger.error(f"handle_business_snippet umumiy xatolik: {e}")
+        logger.error(f"handle_business_snippet xatolik: {e}")
 
 
 @router.edited_business_message()

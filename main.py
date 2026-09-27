@@ -48,6 +48,7 @@ async def main():
         await bot.set_my_commands(
             [
                 BotCommand(command="start", description="Bosh menyu / Главное меню"),
+                BotCommand(command="quick", description="Tezkor javoblar / Быстрые ответы"),
                 BotCommand(command="buy", description="Tariflar / Тарифы"),
                 BotCommand(command="card", description="Mening kartam (.card) / Моя карта (.card)"),
             ],
@@ -56,6 +57,7 @@ async def main():
         await bot.set_my_commands(
             [
                 BotCommand(command="start", description="Bosh menyu"),
+                BotCommand(command="quick", description="Tezkor javoblar (.buyruqlar)"),
                 BotCommand(command="buy", description="Tariflar"),
                 BotCommand(command="card", description="Mening kartam (.card)"),
             ],
@@ -64,12 +66,13 @@ async def main():
         await bot.set_my_commands(
             [
                 BotCommand(command="start", description="Главное меню"),
+                BotCommand(command="quick", description="Быстрые ответы (.команды)"),
                 BotCommand(command="buy", description="Тарифы"),
                 BotCommand(command="card", description="Моя карта (.card)"),
             ],
             language_code="ru"
         )
-        logger.info("Bot buyruqlari muvaffaqiyatli o'rnatildi (/start, /buy, /card).")
+        logger.info("Bot buyruqlari muvaffaqiyatli o'rnatildi (/start, /quick, /buy, /card).")
     except Exception as e:
         logger.warning(f"Bot buyruqlarini o'rnatishda xatolik: {e}")
 
